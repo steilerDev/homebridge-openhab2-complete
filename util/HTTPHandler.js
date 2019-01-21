@@ -14,17 +14,41 @@ class HTTPHandler {
         }
     }
 
-    getRequest(habItem, callback) {
-        this._url.pathname = '/rest/items/' + habItem + '/state';
+    getState(habItem, callback) {
+        this._url.pathname = `/rest/items/${habItem}/state`;
         request({
-                url: this._url.href,
-                method: 'GET'
-            },
-            function (error, response, body) {
-                callback(error, response, body)
+            url: this._url.href,
+            method: 'GET'
+        },
+        function (error, response, body) {
+            callback(error, response, body)
         })
     }
 
+    sendCommand(habItem, command, callback) {
+        this._url.pathname = `/rest/items/${habItem}`;
+        request({
+            url: this._url.href,
+            method: 'POST',
+            body: body
+        },
+        function(error, response, body) {
+            callback(error, response, body);
+        })
+    }
+
+    updateState(habItem, state, callback) {
+        this._url.pathname = `/rest/items/${habItem}/state`;
+        request({
+                url: this._url.href,
+                method: 'PUT',
+                body: body
+        },
+        function(error, response, body) {
+            callback(error, response, body);
+        })
+
+    }
 }
 
 module.exports = HTTPHandler;
