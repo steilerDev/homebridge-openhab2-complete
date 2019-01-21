@@ -53,6 +53,7 @@ class SwitchAccessory {
     }
 
     getSwitchService() {
+        this.log(`Creating switch service for ${this.name}`);
         this._switchService = new Service.Switch(this.name);
         this._switchService.getCharacteristic(Characteristic.On)
             .on('set', this._setState.bind(this))
