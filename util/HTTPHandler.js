@@ -15,7 +15,7 @@ class HTTPHandler {
     }
 
     getRequest(habItem, callback) {
-        this._url.pathname = '/rest/items/' + habItem;
+        this._url.pathname = '/rest/items/' + habItem + '/state';
         request({
                 url: this._url.href,
                 method: 'GET'

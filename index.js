@@ -3,7 +3,7 @@ Config file:
     "platforms" : [
         {
             platform: "openHAB2-REST"
-            host: "http://openhab.steilergroup.net"
+            host: "http://hc.steilergroup.net"
             port: 80
             accessories: [
                 {
@@ -33,6 +33,7 @@ const HOMEBRIDGE = {
 
 const platformName = 'homebridge-openhab2-rest';
 const platformPrettyName = 'openHAB2-REST';
+const accessorySwitchPrettyName = 'openHAB2-REST-Switch';
 
 module.exports = (homebridge) => {
     HOMEBRIDGE.Accessory = homebridge.platformAccessory;
@@ -40,7 +41,8 @@ module.exports = (homebridge) => {
     HOMEBRIDGE.Characteristic = homebridge.hap.Characteristic;
     HOMEBRIDGE.UUIDGen = homebridge.hap.uuid;
 
-    homebridge.registerPlatform(platformName, platformPrettyName, OpenHABREST, true);
+    homebridge.registerPlatform(platformName, platformPrettyName, OpenHABREST);
+    homebridge.registerAccessory(platformName, accessorySwitchPrettyName, SwitchAccessory);
 };
 
 const SerialNumberPrefixes = {
@@ -62,7 +64,6 @@ const OpenHABREST = class {
     accessories(callback) {
         let _accessories = [];
         const { accessories } = this.config;
-
         accessories.forEach(acc => {
             this.log(`Found accessory in config: "${acc.name}"`);
             if (acc.type === undefined || acc.type.length === 0) {
@@ -83,7 +84,6 @@ const OpenHABREST = class {
             const accessory = factory(acc);
             _accessories.push(accessory);
         });
-
         callback(_accessories);
     }
 
