@@ -189,7 +189,7 @@ class LightAccessory {
                 this._log.error(`Unable to send command: ${error.message}`);
                 callback(error);
             } else {
-                this._log.debug(`Changed target state of ${name}`);
+                this._log.debug(`Changed target state of ${this.name}`);
                 callback();
             }
         }.bind(this));
@@ -203,7 +203,7 @@ class LightAccessory {
                 this._log.error(`Unable to send command: ${error.message}`);
                 callback(error);
             } else {
-                this._log.debug(`Changed target state of ${name}`);
+                this._log.debug(`Changed target state of ${this.name}`);
                 callback();
             }
         }.bind(this));
@@ -221,7 +221,7 @@ class LightAccessory {
                         this._log.error(`Unable to send command: ${error.message}`);
                         callback(error);
                     } else {
-                        this._log.debug(`Changed target state of ${name}`);
+                        this._log.debug(`Changed target state of ${this.name}`);
                         callback();
                     }
                 }.bind(this));
@@ -241,7 +241,7 @@ class LightAccessory {
                         this._log.error(`Unable to send command: ${error.message}`);
                         callback(error);
                     } else {
-                        this._log.debug(`Changed target state of ${name}`);
+                        this._log.debug(`Changed target state of ${this.name}`);
                         callback();
                     }
                 }.bind(this));
