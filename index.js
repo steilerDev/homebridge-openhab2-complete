@@ -80,6 +80,7 @@ const OpenHABREST = class {
             acc.serialNumber = SerialNumberGenerator.generate(SerialNumberPrefixes[acc.type], acc.name);
 
             acc.version = version;
+            // check that habItem is defined
 
             const accessory = factory(acc);
             _accessories.push(accessory);
