@@ -2,6 +2,7 @@
 
 const url = require('url');
 const request = require('request');
+const syncRequest = require('sync-request');
 
 class OpenHAB {
 
@@ -72,27 +73,19 @@ class OpenHAB {
     }
 
     // Will call callback with callback(error, type)
-    getItemType(habItem, callback) {
+    getItemType(habItem) {
         this._url.pathname = `/rest/items/${habItem}`;
-        request({
-            url: this._url.href,
-            method: 'GET'
-        }, function(error, response, body) {
-            if(error) {
-                callback(error);
+        const response = syncRequest('GET', this._url.href);
+        if (response.statusCode === 404) {
+            return new Error(`Item does not exist!`);
+        } else {
+            const type = JSON.parse(response.body).type;
+            if (!(type)) {
+                return new Error(`Unable to retrieve type`);
             } else {
-                if (response.statusCode === 404) {
-                    callback(new Error(`Item does not exist!`));
-                } else {
-                    const type = JSON.parse(body).type;
-                    if (!(type)) {
-                        callback(new Error(`Unable to retrieve type`));
-                    } else {
-                        callback(null, type);
-                    }
-                }
+                return type;
             }
-        })
+        }
     }
 }
 

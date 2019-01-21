@@ -3,16 +3,16 @@
 let Accessory, Characteristic, Service;
 
 class SwitchAccessory {
-    constructor(api, log, config, openHAB) {
-        log.debug(`Creating new switch accessory: ${config.name}`);
+    constructor(platform, config) {
+        this._log = platform["log"];
+        this._log.debug(`Creating new switch accessory: ${config.name}`);
 
-        Accessory = api.hap.Accessory;
-        Characteristic = api.hap.Characteristic;
-        Service = api.hap.Service;
+        Accessory = platform["api"].hap.Accessory;
+        Characteristic = platform["api"].hap.Characteristic;
+        Service = platform["api"].hap.Service;
 
         this._config = config;
-        this._log = log;
-        this._openHAB = openHAB;
+        this._openHAB = platform["openHAB"];
         this.name = config.name;
         this.uuid_base = config.serialNumber;
 
@@ -22,17 +22,12 @@ class SwitchAccessory {
             this._habItem = config.habItem;
         }
 
-        this._openHAB.getItemType(this._habItem, function (error, type) {
-            if(error) {
-                throw error;
-            } else {
-                if(type !== "Switch") {
-                    const msg = `${this._habItem}'s type (${type}) is not as expected: 'Switch'`;
-                    this._log.error(msg);
-                    throw new Error(msg);
-                }
-            }
-        }.bind(this));
+        this._type = this._openHAB.getItemType(this._habItem);
+        if(this._type instanceof Error) {
+            throw this._type;
+        } else if(this._type !== "Switch") {
+            throw new Error(`${this._habItem}'s type (${this._type}) is not as expected ('Switch')`)
+        }
 
         this._services = [
             this._getAccessoryInformationService(),

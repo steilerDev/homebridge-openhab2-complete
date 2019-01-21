@@ -12,7 +12,7 @@ Config file:
                     habItem: "abcde" // This is expected to be a "Switch" item
                 },
                 {
-                    type: "light",
+                    type: "light", // This is expected to be a "Switch", "Dimmer" or "Color"
                     name: "abc",
                     habItem: "abcde"
                 }
@@ -27,6 +27,7 @@ const util = require("util");
 const version = require('./package.json').version;
 const SerialNumberGenerator = require('./util/SerialNumberGenerator');
 const SwitchAccessory = require('./accessory/Switch');
+const LightAccessory = require('./accessory/Light');
 const OpenHAB = require('./util/OpenHAB');
 
 const platformName = 'homebridge-openhab2-rest';
@@ -38,6 +39,7 @@ module.exports = (homebridge) => {
 
 const SerialNumberPrefixes = {
     switch: 'SW',
+    light: "LI"
 };
 
 const OpenHABREST = class {
@@ -45,24 +47,25 @@ const OpenHABREST = class {
         this._log = log;
         this._config = config;
 
-        if(this._config.host) {
-            this._openHAB = new OpenHAB(config.host, config.port);
-        } else {
+        if(!(this._config.host)) {
             const msg = `OpenHAB host not configured!`;
             this._log.error(msg);
             throw new Error(msg);
-        }
-
-       if(api) {
-           this._api = api;
-       } else {
+        } else if(!(api)) {
            const msg = `API element not set, please update your homebridge installation`;
            this._log.error(msg);
            throw new Error(msg);
-       }
+       } else {
+            this._platform = {
+                openHAB: new OpenHAB(config.host, config.port),
+                api:  api,
+                log: log
+            };
+        }
 
         this._factories = {
-            switch: this._createSwitch.bind(this)
+            switch: this._createSwitch.bind(this),
+            light: this._createLight.bind(this)
         };
 
         this._log.info(`OpenHAB2 REST Plugin Loaded - Version ${version}`);
@@ -100,14 +103,17 @@ const OpenHABREST = class {
                 _accessories.push(accessory);
                 this._log.info(`Added accessory ${acc.name}`);
             } catch (e) {
-                this._log(`Unable to add accessory ${acc.name}: ${e}, skipping`)
-                return;
+                this._log(`Unable to add accessory ${acc.name}: ${e}, skipping`);
             }
         });
         callback(_accessories);
     }
 
-    _createSwitch(acc) {
-        return new SwitchAccessory(this._api, this._log, acc, this._openHAB);
+    _createSwitch(config) {
+        return new SwitchAccessory(this._platform, config);
+    }
+
+    _createLight(config) {
+        return new LightAccessory(this._platform, config);
     }
 };
