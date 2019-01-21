@@ -2,6 +2,7 @@
   "name": "homebridge-openhab2-rest",
   "version": "1.0.0",
   "description": "A homebridge plugin for OpenHAB2 using its REST interface and explicit accessory declaration",
+  "license": "GPLV3",
   "author": {
     "email": "frank@steilerdev.de",
     "name": "Frank Steiler"
@@ -15,10 +16,11 @@
   },
   "engines": {
     "node": ">=10.15.0",
-    "homebridge": ">=0.4.45",
+    "homebridge": ">=0.4.45"
   },
   "dependencies": {
     "request": "^2.88.0",
-    "sync-request": "^6.0.0"
+    "sync-request": "^6.0.0",
+    "clone": "^2.1.2"
   }
 }

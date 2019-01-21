@@ -3,21 +3,9 @@
 let Accessory, Characteristic, Service;
 
 class LightAccessory {
-
-
-
-    //
-    // Todo adopt for light
-    //
-
-
-
-
-
-
     constructor(platform, config) {
         this._log = platform["log"];
-        this._log.debug(`Creating new switch accessory: ${config.name}`);
+        this._log.debug(`Creating new light accessory: ${config.name}`);
 
         Accessory = platform["api"].hap.Accessory;
         Characteristic = platform["api"].hap.Characteristic;
@@ -37,14 +25,17 @@ class LightAccessory {
         this._type = this._openHAB.getItemType(this._habItem);
         if(this._type instanceof Error) {
             throw this._type;
-        } else if(this._type !== "Switch") {
-            throw new Error(`${this._habItem}'s type (${this._type}) is not as expected ('Switch')`)
+        } else if(!(this._type === "Switch" ||
+            this._type === "Dimmer" ||
+            this._type === "Color")) {
+            throw new Error(`${this._habItem}'s type (${this._type}) is not as expected ('Switch', 'Dimmer' or 'Color')`);
         }
 
         this._services = [
             this._getAccessoryInformationService(),
-            this._getSwitchService()
-        ]
+            this._getLightbulbService()
+        ];
+
     }
 
     // Called by homebridge
@@ -63,23 +54,34 @@ class LightAccessory {
         return new Service.AccessoryInformation()
             .setCharacteristic(Characteristic.Name, this.name)
             .setCharacteristic(Characteristic.Manufacturer, 'steilerDev')
-            .setCharacteristic(Characteristic.Model, 'Switch')
+            .setCharacteristic(Characteristic.Model, 'Light')
             .setCharacteristic(Characteristic.SerialNumber, this._config.serialNumber)
             .setCharacteristic(Characteristic.FirmwareRevision, this._config.version)
             .setCharacteristic(Characteristic.HardwareRevision, this._config.version);
     }
 
-    _getSwitchService() {
-        this._log.debug(`Creating switch service for ${this.name}/${this._habItem}`);
-        this._switchService = new Service.Switch(this.name);
-        this._switchService.getCharacteristic(Characteristic.On)
-            .on('set', this._setState.bind(this, this.name, this._habItem))
-            .on('get', this._getState.bind(this, this.name, this._habItem));
+    _getLightbulbService() {
+        this._log.debug(`Creating lightbulb switch service for ${this.name}/${this._habItem}`);
+        this._mainService = new Service.Lightbulb(this.name);
+        this._mainService.getCharacteristic(Characteristic.On)
+            .on('set', this._setBinaryState.bind(this, this.name, this._habItem))
+            .on('get', this._getBinaryState.bind(this, this.name, this._habItem));
 
-        return this._switchService;
+        if(this._type !== "Switch") {
+            this._mainService.getCharacteristic(Characteristic.Brightness)
+                .on('set', this._setBrightnessState.bind(this, this.name, this._habItem))
+                .on('get', this._getBrightnessState.bind(this, this.name, this._habItem))
+            if(this._type !== "Dimmer") {
+                this._mainService.getCharacteristic(Characteristic.Saturation)
+
+                this._mainService.getCharacteristic(Characteristic.Hue)
+            }
+        }
+
+        return this._mainService;
     }
 
-    _setState(name, habItem, value, callback) {
+    _setBinaryState(name, habItem, value, callback) {
         this._log.debug(`Change target state of ${name}/${habItem}) to ${value}`);
 
         var command;
@@ -102,7 +104,7 @@ class LightAccessory {
         }.bind(this));
     }
 
-    _getState(name, habItem, callback) {
+    _getBinaryState(name, habItem, callback) {
         this._log.debug(`Getting state for ${name}/${habItem}`);
         this._openHAB.getState(habItem, function(error, state) {
             if(error) {
@@ -110,13 +112,48 @@ class LightAccessory {
                 callback(error);
             } else {
                 this._log(`Received state: ${state}`);
+
                 if(state === "ON") {
                     callback(null, true);
                 } else if (state === "OFF") {
                     callback(null, false);
                 } else {
-                    callback(null, undefined);
+                    var brightnessValue = parseInt(state);
+                    if(brightnessValue instanceof NaN) {
+                        callback(null, undefined);
+                    } else if (brightnessValue > 0) {
+                        callback(null, true);
+                    } else {
+                        callback(null, false);
+                    }
                 }
+            }
+        }.bind(this));
+    }
+
+    _setBrightnessState(name, habItem, value, callback) {
+        this._log.debug(`Change target state of ${name}/${habItem}) to ${value}`);
+
+        this._openHAB.sendCommand(habItem, value, function(error) {
+            if(error) {
+                this._log.error(`Unable to send command: ${error.message}`);
+                callback(error);
+            } else {
+                this._log.debug(`Changed target state of ${name}`);
+                callback();
+            }
+        }.bind(this));
+    }
+
+    _getBrightnessState(name, habItem, callback) {
+        this._log.debug(`Getting state for ${name}/${habItem}`);
+        this._openHAB.getState(habItem, function(error, state) {
+            if(error) {
+                this._log.error(`Unable to get state: ${error.message}`);
+                callback(error);
+            } else {
+                this._log(`Received state: ${state}`);
+                callback(null, state);
             }
         }.bind(this));
     }

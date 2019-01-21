@@ -61,13 +61,19 @@ class SwitchAccessory {
         this._log.debug(`Creating switch service for ${this.name}/${this._habItem}`);
         this._switchService = new Service.Switch(this.name);
         this._switchService.getCharacteristic(Characteristic.On)
-            .on('set', this._setState.bind(this, this.name, this._habItem))
-            .on('get', this._getState.bind(this, this.name, this._habItem));
+            .on('set', this._setState.bind(this))
+            .on('get', this._getState.bind(this));
+
+            //.on('set', this._setState.bind(this, this.name, this._habItem))
+            //.on('get', this._getState.bind(this, this.name, this._habItem));
 
         return this._switchService;
     }
 
-    _setState(name, habItem, value, callback) {
+//    _setState(name, habItem, value, callback) {
+    _setState(callback, value) {
+        var name = this.name;
+        var habItem = this._habItem;
         this._log.debug(`Change target state of ${name}/${habItem}) to ${value}`);
 
         var command;
@@ -90,7 +96,10 @@ class SwitchAccessory {
         }.bind(this));
     }
 
-    _getState(name, habItem, callback) {
+//    _getState(name, habItem, callback) {
+    _getState(callback) {
+        var name = this.name;
+        var habItem = this._habItem;
         this._log.debug(`Getting state for ${name}/${habItem}`);
         this._openHAB.getState(habItem, function(error, state) {
             if(error) {
