@@ -81,7 +81,7 @@ class SwitchAccessory {
 
     _getState(name, habItem, callback) {
         this.log(`Getting state for ${name} aka as openHAB item ${habItem}`);
-        this._http.getRequest(habitem, function (error, response, body) {
+        this._http.getRequest(habItem, function (error, response, body) {
             if (error) {
                 this.log(`HTTP get power function failed: ${error.message}`);
                 callback(error);
