@@ -8,11 +8,12 @@ class HTTPHandler {
     constructor(hostname, port, log) {
         this._log = log;
         this._url = new URL(hostname);
-        if(port === undefined) {
-            this._log(`Using non-standart port ${port}`);
+        if (port !== undefined) {
+            this._log.info(`Using non-standart port ${port}`);
             this._url.port = port
         }
     }
+
 
     getState(habItem, callback) {
         this._url.pathname = `/rest/items/${habItem}/state`;

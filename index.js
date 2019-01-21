@@ -4,7 +4,7 @@ Config file:
         {
             platform: "openHAB2-REST"
             host: "http://hc.steilergroup.net"
-            port: 80
+            port: 80 // optional
             accessories: [
                 {
                     type: "switch",
@@ -42,7 +42,7 @@ module.exports = (homebridge) => {
     HOMEBRIDGE.UUIDGen = homebridge.hap.uuid;
 
     homebridge.registerPlatform(platformName, platformPrettyName, OpenHABREST);
-    homebridge.registerAccessory(platformName, accessorySwitchPrettyName, SwitchAccessory);
+//    homebridge.registerAccessory(platformName, accessorySwitchPrettyName, SwitchAccessory);
 };
 
 const SerialNumberPrefixes = {
@@ -52,7 +52,7 @@ const SerialNumberPrefixes = {
 const OpenHABREST = class {
     constructor(log, config, api) {
         this.log = log;
-        this.log(`OpenHAB2 REST Plugin Loaded - Version ${version}`);
+        this.log.info(`OpenHAB2 REST Plugin Loaded - Version ${version}`);
         this.config = config;
         this.api = api;
 
@@ -65,25 +65,39 @@ const OpenHABREST = class {
         let _accessories = [];
         const { accessories } = this.config;
         accessories.forEach(acc => {
-            this.log(`Found accessory in config: "${acc.name}"`);
-            if (acc.type === undefined || acc.type.length === 0) {
-                throw new Error('Invalid configuration: Accessory type is invalid.');
+            if (!(acc.type)) {
+                this.log.warn(`Invalid configuration: Accessory type is invalid: ${util.inspect(acc)}, skipping`);
+                return;
             }
 
             const factory = this._factories[acc.type];
             if (factory === undefined) {
-                this.log(`Invalid configuration: Accessory type is unknown: ${util.inspect(acc)}`);
-                this.log('Skipping.');
+                this.log.warn(`Invalid configuration: Accessory type is unknown: ${util.inspect(acc)}, skipping`);
                 return;
             }
 
-            acc.serialNumber = SerialNumberGenerator.generate(SerialNumberPrefixes[acc.type], acc.name);
+            if(acc.name) {
+                acc.serialNumber = SerialNumberGenerator.generate(SerialNumberPrefixes[acc.type], acc.name);
+            } else {
+                this.log.warn(`Invalid configuration: Accessory name is unknown: ${util.inspect(acc)}, skipping`);
+            }
+
+            this.log.debug(`Found accessory in config: "${acc.name}"`);
+
+            if(!(this.config.host)) {
+                this.log.error(`No openHAB host defined, skipping`);
+            }
 
             acc.version = version;
-            // check that habItem is defined
 
-            const accessory = factory(acc);
-            _accessories.push(accessory);
+            try {
+                // Checked that: serial number exists, name exists and type is valid
+                const accessory = factory(acc);
+                _accessories.push(accessory);
+                this.log.info(`Created accessory ${acc.name}`);
+            } catch (e) {
+                this.log(`Unable to create accessory ${acc.name}: ${e}, skipping`)
+            }
         });
         callback(_accessories);
     }
