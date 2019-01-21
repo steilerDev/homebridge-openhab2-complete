@@ -1,57 +1,69 @@
 'use strict';
 
 let Accessory, Characteristic, Service;
-const HTTPHandler = require('../util/HTTPHandler');
 
 class SwitchAccessory {
+    constructor(api, log, config, openHAB) {
+        log.debug(`Creating new switch accessory: ${config.name}`);
 
-    constructor(api, log, config, host, port) {
         Accessory = api.hap.Accessory;
         Characteristic = api.hap.Characteristic;
         Service = api.hap.Service;
 
-        this.log = log;
+        this._config = config;
+        this._log = log;
+        this._openHAB = openHAB;
         this.name = config.name;
-
-        log.info(`Creating new switch accessory: ${config.name}`);
-
-        this.config = config;
         this.uuid_base = config.serialNumber;
-        this._http = new HTTPHandler(host, port, log);
 
-        if(!(config.habItem)) {
+        if(!(this._config.habItem)) {
             throw new Error(`Required habItem not defined: ${util.inspect(acc)}`)
+        } else {
+            this._habItem = config.habItem;
         }
-        this._habItem = config.habItem;
 
-        this._services = this.createServices();
+        this._openHAB.getItemType(this._habItem, function (error, type) {
+            if(error) {
+                throw error;
+            } else {
+                if(type !== "Switch") {
+                    const msg = `${this._habItem}'s type (${type}) is not as expected: 'Switch'`;
+                    this._log.error(msg);
+                    throw new Error(msg);
+                }
+            }
+        }.bind(this));
+
+        this._services = [
+            this._getAccessoryInformationService(),
+            this._getSwitchService()
+        ]
     }
 
+    // Called by homebridge
+    identify(callback) {
+        this._log.debug(`Identify request received!`);
+        callback();
+    }
+
+    // Called by homebridge
     getServices() {
-        this.log.debug("Getting services");
+        this._log.debug("Getting services");
         return this._services;
     }
 
-    createServices() {
-        this.log.debug("Creating services");
-        return [
-            this.getAccessoryInformationService(),
-            this.getSwitchService()
-        ];
-    }
-
-    getAccessoryInformationService() {
+    _getAccessoryInformationService() {
         return new Service.AccessoryInformation()
             .setCharacteristic(Characteristic.Name, this.name)
             .setCharacteristic(Characteristic.Manufacturer, 'steilerDev')
             .setCharacteristic(Characteristic.Model, 'Switch')
-            .setCharacteristic(Characteristic.SerialNumber, this.config.serialNumber)
-            .setCharacteristic(Characteristic.FirmwareRevision, this.config.version)
-            .setCharacteristic(Characteristic.HardwareRevision, this.config.version);
+            .setCharacteristic(Characteristic.SerialNumber, this._config.serialNumber)
+            .setCharacteristic(Characteristic.FirmwareRevision, this._config.version)
+            .setCharacteristic(Characteristic.HardwareRevision, this._config.version);
     }
 
-    getSwitchService() {
-        this.log.debug(`Creating switch service for ${this.name} aka as openHAB item ${this._habItem}`);
+    _getSwitchService() {
+        this._log.debug(`Creating switch service for ${this.name}/${this._habItem}`);
         this._switchService = new Service.Switch(this.name);
         this._switchService.getCharacteristic(Characteristic.On)
             .on('set', this._setState.bind(this, this.name, this._habItem))
@@ -60,46 +72,40 @@ class SwitchAccessory {
         return this._switchService;
     }
 
-    identify(callback) {
-        this.log.debug(`Identify request received!`);
-        callback();
-    }
-
     _setState(name, habItem, value, callback) {
-        this.log.debug(`Change target state of ${name} (aka as openHAB item ${habItem}) to ${value}`);
+        this._log.debug(`Change target state of ${name}/${habItem}) to ${value}`);
 
         var command;
-
         if(value === true) {
             command = "ON";
         } else if (value === false) {
             command = "OFF";
         } else {
-            throw new Error(`Unable to set state for target value ${value}`);
+            this._log.error(`Unable to set state for target value ${value}`);
         }
 
-        this._http.sendCommand(habItem, command, function (error, response, body) {
-            if (error) {
-                this.log.error(`HTTP send command function failed: ${error.message}`);
+        this._openHAB.sendCommand(habItem, command, function(error) {
+            if(error) {
+                this._log.error(`Unable to send command: ${error.message}`);
                 callback(error);
             } else {
-                this.log.debug(`Changed target state of ${name}`);
+                this._log.debug(`Changed target state of ${name}`);
                 callback();
             }
         }.bind(this));
     }
 
     _getState(name, habItem, callback) {
-        this.log.debug(`Getting state for ${name} aka as openHAB item ${habItem}`);
-        this._http.getState(habItem, function (error, response, body) {
-            if (error) {
-                this.log.error(`HTTP get state function failed: ${error.message}`);
+        this._log.debug(`Getting state for ${name}/${habItem}`);
+        this._openHAB.getState(habItem, function(error, state) {
+            if(error) {
+                this._log.error(`Unable to get state: ${error.message}`);
                 callback(error);
             } else {
-                this.log.debug(`Received response: ${body}`);
-                if(body === "ON") {
+                this._log(`Received state: ${state}`);
+                if(state === "ON") {
                     callback(null, true);
-                } else if (body === "OFF") {
+                } else if (state === "OFF") {
                     callback(null, false);
                 } else {
                     callback(null, undefined);
@@ -107,10 +113,6 @@ class SwitchAccessory {
             }
         }.bind(this));
     }
-
-
-
-
 }
 
 module.exports = SwitchAccessory;
