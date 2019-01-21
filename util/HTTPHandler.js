@@ -30,7 +30,7 @@ class HTTPHandler {
         request({
             url: this._url.href,
             method: 'POST',
-            body: body
+            body: command
         },
         function(error, response, body) {
             callback(error, response, body);
