@@ -71,7 +71,7 @@ class SwitchAccessory {
     }
 
 //    _setState(name, habItem, value, callback) {
-    _setState(callback, value) {
+    _setState(value, callback) {
         var name = this.name;
         var habItem = this._habItem;
         this._log.debug(`Change target state of ${name}/${habItem}) to ${value}`);
