@@ -74,11 +74,7 @@ class LightAccessory {
             case "Dimmer": // Dimmer has ON and Brightness Characteristic, not setting ON Characteristic due to double call
                 this._mainService.getCharacteristic(Characteristic.On)
                     .on('set', function(value, callback) {
-                        if(!value) {
-                            this._setBrightnessState(0, callback);
-                        } else {
-                            callback()
-                        }
+                        this._setBrightnessState(value ? "ON" : "OFF", callback);
                     }.bind(this))
                     .on('get', this._getState.bind(this, "binary"));
 
@@ -99,11 +95,7 @@ class LightAccessory {
 
                 this._mainService.getCharacteristic(Characteristic.On)
                     .on('set', function(value, callback){
-                        if(!value) {
-                            this._setHSBState("brightness", 0, callback);
-                        } else {
-                            callback();
-                        }
+                        this._setHSBState("brightness", value ? 100 : 0, callback);
                     }.bind(this))
                     .on('set', this._commitHSBState.bind(this))
                     .on('get', this._getState.bind(this, "binary"));
@@ -252,7 +244,7 @@ class LightAccessory {
 
     // Only used with "Color" type
     _commitHSBState(_, callback) {
-        let cleanup = function(error) {
+        let cleanup = function() {
             this._log.debug(`Cleaning up and releasing locks`);
             this._newState = {
                 hue: undefined,
@@ -261,7 +253,6 @@ class LightAccessory {
             };
             this._commitLock = false;
             this._stateLock = false;
-            callback(error);
         }.bind(this);
 
         if(this._commitLock) {
@@ -278,7 +269,10 @@ class LightAccessory {
                     this._openHAB.sendCommand(
                         this._habItem,
                         `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`,
-                        cleanup
+                        function(error) {
+                            callback(error);
+                            cleanup();
+                        }
                     );
                 } else { // We need to gather current states first
                     this._getState("hsb", function(error, value) {
@@ -301,7 +295,10 @@ class LightAccessory {
                             this._openHAB.sendCommand(
                                 this._habItem,
                                 `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`,
-                                cleanup
+                                function(error) {
+                                    callback(error);
+                                    cleanup();
+                                }
                             );
                         }
                     }.bind(this))
