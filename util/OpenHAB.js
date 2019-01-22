@@ -43,7 +43,7 @@ class OpenHAB {
         } else if (!(response.body)) {
             return new Error(`Unable to retrieve state`);
         } else {
-            return response.body;
+            return response.body.toString('ASCII');
         }
     }
 
