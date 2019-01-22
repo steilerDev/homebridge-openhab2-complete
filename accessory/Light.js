@@ -1,7 +1,5 @@
 'use strict';
 
-const clone = require('clone');
-
 let Accessory, Characteristic, Service;
 
 class LightAccessory {
@@ -34,7 +32,7 @@ class LightAccessory {
             throw new Error(`${this._habItem}'s type (${this._type}) is not as expected ('Switch', 'Dimmer' or 'Color')`);
         }
 
-        // Synchronisation helper for complex HSB type
+        // Synchronisation helper
         this._stateLock = false; // This lock will guard the acceptance of new states
         this._commitLock = false; // This lock will guard the commit process
 
@@ -148,31 +146,6 @@ class LightAccessory {
                             callback (new Error(`Unable to parse saturation state: ${state}`));
                         }
                         break;
-                    case "full":
-                        if(this._type === "Switch") {
-                            callback(null, {
-                                binary: state === "ON",
-                                hue: 0,
-                                saturation: 0,
-                                brightness: state === "ON" ? 100 : 0
-                            });
-                        } else if (this._type === "Dimmer") {
-                            callback(null, {
-                                binary: state > 0,
-                                hue: 0,
-                                saturation: 0,
-                                brightness: state
-                            });
-                        } else if (this._type === "Color") {
-                            let myState = state.split(",");
-                            callback(null, {
-                                binary: myState[2] > 0,
-                                hue: myState[0],
-                                saturation: myState[1],
-                                brightness: myState[2]
-                            });
-                        }
-                        break;
                     default:
                         callback(new Error(`${stateType} unknown`));
                         break;
@@ -182,15 +155,14 @@ class LightAccessory {
     }
 
     // Set the state unless it's locked
-    _setState(stateType, value, callback) {
+    _setState(stateType, value) {
         this._log.debug(`Change ${stateType} target state of ${this.name} [${this._habItem}] to ${value}`);
         if (!(this._stateLock)) {
             this._newState[stateType] = value;
-            //callback();
         }
     }
 
-    // Wait for all states to be set (500ms should be sufficient) and then actually call them once
+    // Wait for all states to be set (250ms should be sufficient) and then commit once
     _commitState(_, callback) {
         if(this._commitLock) {
             this._log.debug(`Not executing commit due to commit lock`);
@@ -200,23 +172,24 @@ class LightAccessory {
             setTimeout(function () {
                 this._stateLock = true;
                 let command;
-                if(this._newState["brightness"] === undefined && this._newState["hue"] === undefined && this._newState["saturation"] === undefined) { // Only binary set
+                if(this._newState["brightness"] === undefined && this._newState["hue"] === undefined && this._newState["saturation"] === undefined) {           // Only binary set
                     if(this._newState["binary"] === undefined) {
                         command = new Error("Race condition! Commit was called before set!")
                     } else {
                         command = this._newState["binary"] ? "ON" : "OFF";
                     }
-                } else if(this._newState["hue"] === undefined && this._newState["saturation"] === undefined) { // Only brightness set
+                } else if(this._newState["hue"] === undefined && this._newState["saturation"] === undefined) {                                                  // Only brightness set
                     if (this._newState["brightness"] === undefined) {
                         command = new Error("Race condition! Commit was called before set!");
                     } else {
                         command = `${this._newState["brightness"] === 100 ? 99 : this._newState["brightness"]}`;
                     }
-                } else { // Either hue or saturation set, therefore we need to update the tuple
-                    if(this._newState["hue"] !== undefined && this._newState["brightness"] !== undefined && this._newState["saturation"] !== undefined) { // All states set, no need to get missing information
+                } else {                                                                                                                                         // Either hue, brightness and/or saturation set, therefore we need to send a tuple
+                    if(this._newState["hue"] !== undefined && this._newState["brightness"] !== undefined && this._newState["saturation"] !== undefined) {        // All states set, no need to get missing information
                         command = `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`;
-                    } else { // We have to get the current state, in order to get new state
+                    } else {                                                                                                                                     // Not all states set , therefore we need to get the current state, in order to get the complete tuple
                         let state = this._openHAB.getStateSync(this._habItem);
+                        this._log.error(`${JSON.stringify(state)}`);
                         if (!(state)) {
                             command = new Error("Unable to retrieve current state");
                         } else if (state instanceof Error) {
@@ -229,7 +202,7 @@ class LightAccessory {
                         }
                     }
                 }
-                this._reset();
+                this._releaseLocks();
                 if(command) {
                     if(command instanceof Error) {
                         this._log.error(command.message);
@@ -241,11 +214,11 @@ class LightAccessory {
                 } else {
                     callback(new Error("Command was not set"));
                 }
-            }.bind(this), 500)
+            }.bind(this), 250);
         }
     }
 
-    _reset() {
+    _releaseLocks() {
         this._log.debug(`Cleaning up and releasing locks`);
         this._newState = {
             binary: undefined,

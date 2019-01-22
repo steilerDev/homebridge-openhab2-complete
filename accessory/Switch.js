@@ -92,7 +92,6 @@ class SwitchAccessory {
         }.bind(this));
     }
 
-//    _getState(name, habItem, callback) {
     _getState(callback) {
         let name = this.name;
         let habItem = this._habItem;
