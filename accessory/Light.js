@@ -189,15 +189,14 @@ class LightAccessory {
                         command = `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`;
                     } else {                                                                                                                                     // Not all states set , therefore we need to get the current state, in order to get the complete tuple
                         let state = this._openHAB.getStateSync(this._habItem);
-                        this._log.error(`${JSON.stringify(state)}`);
                         if (!(state)) {
                             command = new Error("Unable to retrieve current state");
                         } else if (state instanceof Error) {
                             command = state;
                         } else {
                             let splitState = state.split(",");
-                            command = `${this._newState["hue"] === undefined ? splitState[0] : this._newState["hue"]},
-                                ${this._newState["saturation"] === undefined ? splitState[1] : this._newState["saturation"]},
+                            command = `${this._newState["hue"] === undefined ? splitState[0] : this._newState["hue"]},\
+                                ${this._newState["saturation"] === undefined ? splitState[1] : this._newState["saturation"]},\
                                 ${this._newState["brightness"] === undefined ? splitState[2] : this._newState["brightness"]}`;
                         }
                     }
