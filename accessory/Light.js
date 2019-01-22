@@ -186,7 +186,7 @@ class LightAccessory {
         this._log.debug(`Change ${stateType} target state of ${this.name} [${this._habItem}] to ${value}`);
         if (!(this._stateLock)) {
             this._newState[stateType] = value;
-            callback();
+            //callback();
         }
     }
 
