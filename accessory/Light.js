@@ -3,6 +3,7 @@
 let Accessory, Characteristic, Service;
 
 class LightAccessory {
+
     constructor(platform, config) {
         this._log = platform["log"];
         this._log.debug(`Creating new light accessory: ${config.name}`);
@@ -64,114 +65,129 @@ class LightAccessory {
         this._log.debug(`Creating lightbulb switch service for ${this.name}/${this._habItem}`);
         this._mainService = new Service.Lightbulb(this.name);
 
-        // Every light has ON Characteristic
-        this._mainService.getCharacteristic(Characteristic.On)
-            .on('set', this._setBinaryState.bind(this))
-            .on('get', this._getBinaryState.bind(this));
+        switch (this._type) {
+            case "Switch": // Switch only has ON Characteristic
+                this._mainService.getCharacteristic(Characteristic.On)
+                    .on('set', this._setBinaryState.bind(this))
+                    .on('get', this._getState.bind(this, "binary"));
+                break;
+            case "Dimmer": // Dimmer has ON and Brightness Characteristic, not setting ON Characteristic due to double call
+                this._mainService.getCharacteristic(Characteristic.On)
+                    .on('set', function(){})
+                    .on('get', this._getState.bind(this, "binary"));
 
-        // Only Dimmer and Color (not Switches) have brightness Characteristic
-        if(this._type !== "Switch") {
-            this._mainService.getCharacteristic(Characteristic.Brightness)
-                .on('set', this._setBrightnessState.bind(this))
-                .on('get', this._getBrightnessState.bind(this));
-            // Only Color (not Switches and Dimmer) have saturation and hue Characteristic
-            if(this._type !== "Dimmer") {
+                this._mainService.getCharacteristic(Characteristic.Brightness)
+                    .on('set', this._setBrightnessState.bind(this))
+                    .on('get', this._getState.bind(this, "brightness"));
+                break;
+            case "Color":
+                // Synchronisation helper for complex HSB type
+                this._stateLock = false; // This lock will guard the acceptance of new states
+                this._commitLock = false; // This lock will guard the commit process
+
+                this._newState = {
+                    hue: undefined,
+                    saturation: undefined,
+                    brightness: undefined
+                };
+
+                this._mainService.getCharacteristic(Characteristic.On)
+                    .on('set', function(){})
+                    .on('get', this._getState.bind(this, "binary"));
+
+                this._mainService.getCharacteristic(Characteristic.Brightness)
+                    .on('set', this._setHSBState.bind(this, "brightness"))
+                    .on('set', this._commitHSBState.bind(this))
+                    .on('get', this._getState.bind(this, "brightness"));
+
                 this._mainService.getCharacteristic(Characteristic.Saturation)
-                    .on('set', this._setSaturationState.bind(this))
-                    .on('get', this._getSaturationState.bind(this));
+                    .on('set', this._setHSBState.bind(this, "saturation"))
+                    .on('set', this._commitHSBState.bind(this))
+                    .on('get', this._getState.bind(this, "saturation"));
 
                 this._mainService.getCharacteristic(Characteristic.Hue)
-                    .on('set', this._setHueState.bind(this))
-                    .on('get', this._getHueState.bind(this));
-            }
+                    .on('set', this._setHSBState.bind(this, "hue"))
+                    .on('set', this._commitHSBState.bind(this))
+                    .on('get', this._getState.bind(this, "hue"));
         }
         return this._mainService;
     }
 
-    _getState(callback) {
-        this._log.debug(`Getting state of ${this.name} [${this._habItem}`);
+    _getState(stateType, callback) {
+        this._log.debug(`Getting state of ${this.name} [${this._habItem}]`);
         this._openHAB.getState(this._habItem, function(error, state) {
             if(error) {
                 this._log.error(`Unable to get state: ${error.message}`);
                 callback(error);
             } else {
                 this._log(`Received state: ${state}`);
-                if(this._type === "Switch") {
-                    callback ({
-                        binaryState: state
-                    });
-                } else if (this._type === "Dimmer") {
-                    let myBinaryState = state > 0 ? "ON" : "OFF";
-                    callback({
-                        binaryState: myBinaryState,
-                        brightnessState: state
-                    });
-                } else if (this._type === "Color") {
-                    let hsbState = state.split(",");
-                    if(hsbState.length != 3) {
-                        callback(new Error(`Unable to parse HSB state of ${this.name} [${this._habItem}]: ${state}`));
-                    } else {
-                        let myBinaryState = hsbState[2] > 0 ? "ON": "OFF";
-                        callback({
-                            binaryState: myBinaryState,
-                            hueState: hsbState[0],
-                            saturationState: hsbState[1],
-                            brightnessState: hsbState[2]
-                        });
-                    }
+
+                switch(stateType) {
+                    case "binary":
+                        if(this._type === "Switch") {
+                            callback(null, state === "ON");
+                        } else if (this._type === "Dimmer") {
+                            callback(null, state > 0);
+                        } else if (this._type === "Color") {
+                            callback(null, state.split(",")[2] > 0);
+                        } else {
+                            callback (new Error(`Unable to parse binary state: ${state}`));
+                        }
+                        break;
+                    case "brightness":
+                        if(this._type === "Dimmer") {
+                            callback(null, state);
+                        } else if(this._type === "Color") {
+                            callback(null, state.split(",")[2]);
+                        } else {
+                            callback (new Error(`Unable to parse brightness state: ${state}`));
+                        }
+                        break;
+                    case "hue":
+                        if(this._type ===  "Color") {
+                            callback(null, state.split(",")[0]);
+                        } else {
+                            callback (new Error(`Unable to parse hue state: ${state}`));
+                        }
+                        break;
+                    case "saturation":
+                        if(this._type ===  "Color") {
+                            callback(null, state.split(",")[1]);
+                        } else {
+                            callback (new Error(`Unable to parse saturation state: ${state}`));
+                        }
+                        break;
+                    case "hsb":
+                        if(this._type === "Switch") {
+                            callback(null, {
+                                hue: 0,
+                                saturation: 0,
+                                brightness: state === "ON" ? 100 : 0
+                            });
+                        } else if (this._type === "Dimmer") {
+                            callback(null, {
+                                hue: 0,
+                                saturation: 0,
+                                brightness: state
+                            });
+                        } else if (this._type === "Color") {
+                            let myState = state.split(",");
+                            callback(null, {
+                                hue: myState[0],
+                                saturation: myState[1],
+                                brightness: myState[2]
+                            });
+                        }
+                        break;
+                    default:
+                        callback(new Error(`${stateType} unknown`));
+                        break;
                 }
             }
-        }.bind(this))
-    }
-
-    _getBinaryState(callback) {
-        this._log.debug(`Getting binary state for ${this.name} [${this._habItem}]`);
-        this._getState(function(myState){
-            if(myState instanceof Error) {
-                this._log.error(`Unable to get binary state for ${this.name} [${this._habItem}]: ${myState.message}`);
-                callback(myState);
-            } else {
-                callback(null, myState.binaryState);
-            }
         }.bind(this));
     }
 
-    _getBrightnessState(callback) {
-        this._log.debug(`Getting brightness state for ${this.name} [${this._habItem}]`);
-        this._getState(function(myState){
-            if(myState instanceof Error) {
-                this._log.error(`Unable to get brightness state for ${this.name} [${this._habItem}]: ${myState.message}`);
-                callback(myState);
-            } else {
-                callback(null, myState.brightnessState);
-            }
-        }.bind(this));
-    }
-
-    _getSaturationState(callback) {
-        this._log.debug(`Getting saturation state for ${this.name} [${this._habItem}]`);
-        this._getState(function(myState){
-            if(myState instanceof Error) {
-                this._log.error(`Unable to get saturation state for ${this.name} [${this._habItem}]: ${myState.message}`);
-                callback(myState);
-            } else {
-                callback(null, myState.saturationState);
-            }
-        }.bind(this));
-    }
-
-    _getHueState(callback) {
-        this._log.debug(`Getting hue state for ${this.name} [${this._habItem}]`);
-        this._getState(function(myState){
-            if(myState instanceof Error) {
-                this._log.error(`Unable to get hue state for ${this.name} [${this._habItem}]: ${myState.message}`);
-                callback(myState);
-            } else {
-                callback(null, myState.hueState);
-            }
-        }.bind(this));
-    }
-
+    // Only used with "Switch" type
     _setBinaryState(value, callback) {
         this._log.debug(`Change binary target state of ${this.name} [${this._habItem}] to ${value}`);
 
@@ -195,6 +211,7 @@ class LightAccessory {
         }.bind(this));
     }
 
+    // Only used with "Dimmer" type
     _setBrightnessState(value, callback) {
         this._log.debug(`Change brightness target state of ${this.name} [${this._habItem}] to ${value}`);
 
@@ -209,44 +226,71 @@ class LightAccessory {
         }.bind(this));
     }
 
-    _setSaturationState(value, callback) {
-        this._log.debug(`Change saturation target state of ${this.name} [${this._habItem}] to ${value}`);
-        this.getServices(function (myState) {
-            if(myState instanceof Error) {
-                this._log.error(`Unable to get state for ${this.name} [${this._habItem}]: ${myState.message}`);
-                callback(myState);
-            } else {
-                this._openHAB.sendCommand(this._habItem, `${myState.hueState},${value},${myState.brightnessState}`, function (error) {
-                    if(error) {
-                        this._log.error(`Unable to send command: ${error.message}`);
-                        callback(error);
-                    } else {
-                        this._log.debug(`Changed target state of ${this.name}`);
-                        callback();
-                    }
-                }.bind(this));
-            }
-        }.bind(this));
+    // Only used with "Color" type
+    _setHSBState(stateType, value, callback) {
+        this._log.debug(`Change ${stateType} target state of ${this.name} [${this._habItem}] to ${value}`);
+        if (!(this._stateLock)) {
+            this._newState[stateType] = value;
+            callback();
+        }
     }
 
-    _setHueState(value, callback) {
-        this._log.debug(`Change hue target state of ${this.name} [${this._habItem}] to ${value}`);
-        this.getServices(function (myState) {
-            if(myState instanceof Error) {
-                this._log.error(`Unable to get state for ${this.name} [${this._habItem}]: ${myState.message}`);
-                callback(myState);
-            } else {
-                this._openHAB.sendCommand(this._habItem, `${value},${myState.saturationState},${myState.brightnessState}`, function (error) {
-                    if(error) {
-                        this._log.error(`Unable to send command: ${error.message}`);
-                        callback(error);
-                    } else {
-                        this._log.debug(`Changed target state of ${this.name}`);
-                        callback();
-                    }
-                }.bind(this));
-            }
-        }.bind(this));
+    // Only used with "Color" type
+    _commitHSBState(callback) {
+        let cleanup = function(error) {
+            this._log.debug(`Cleaning up and releasing locks`);
+            this._newState = {
+                hue: undefined,
+                saturation: undefined,
+                brightness: undefined
+            };
+            this._commitLock = false;
+            this._stateLock = false;
+            callback(error);
+        }.bind(this);
+
+        if(this._commitLock) {
+            this._log.debug(`Not executing commit due to commit lock`);
+        } else {
+            this._commitLock = true;
+            setTimeout(function () {
+                this._stateLock = true;
+                if(this._newState["hue"] !== undefined &&
+                    this._newState["brightness"] !== undefined &&
+                    this._newState["saturation"] !== undefined
+                ) { // All states set
+                    this._openHAB.sendCommand(
+                        this._habItem,
+                        `${this._newState["hue"]},${this._newState["saturation"]},${this._newState}`,
+                        cleanup
+                    );
+                } else { // We need to gather current states first
+                    this._getState("hsb", function(error, value) {
+                        if(error) {
+                            this._log.error(`Unable to get state of ${this._habItem}: ${error.message}`)
+                        } else {
+                            if(this._newState["hue"] === undefined) {
+                                this._log.error(`Setting undefined hue value to ${value["hue"]}`);
+                                this._newState["hue"] = value["hue"];
+                            }
+                            if(this._newState["brightness"] === undefined) {
+                                this._log.error(`Setting undefined brightness value to ${value["brightness"]}`);
+                                this._newState["brightness"] = value["brightness"];
+                            }
+                            if(this._newState["saturation"] === undefined) {
+                                this._log.error(`Setting undefined saturation value to ${value["saturation"]}`);
+                                this._newState["saturation"] = value["saturation"];
+                            }
+                            this._openHAB.sendCommand(
+                                this._habItem,
+                                `${this._newState["hue"]},${this._newState["saturation"]},${this._newState}`,
+                                cleanup
+                            );
+                        }
+                    }.bind(this))
+                }
+            }.bind(this), 500)
+        }
     }
 }
 
