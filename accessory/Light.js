@@ -73,7 +73,7 @@ class LightAccessory {
                 break;
             case "Dimmer": // Dimmer has ON and Brightness Characteristic, not setting ON Characteristic due to double call
                 this._mainService.getCharacteristic(Characteristic.On)
-                    .on('set', function(){})
+                    .on('set', function(_, callback){callback()})
                     .on('get', this._getState.bind(this, "binary"));
 
                 this._mainService.getCharacteristic(Characteristic.Brightness)
@@ -92,7 +92,7 @@ class LightAccessory {
                 };
 
                 this._mainService.getCharacteristic(Characteristic.On)
-                    .on('set', function(){})
+                    .on('set', function(_, callback){callback()})
                     .on('get', this._getState.bind(this, "binary"));
 
                 this._mainService.getCharacteristic(Characteristic.Brightness)
