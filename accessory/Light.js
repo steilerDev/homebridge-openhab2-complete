@@ -194,6 +194,7 @@ class LightAccessory {
     _commitState(_, callback) {
         if(this._commitLock) {
             this._log.debug(`Not executing commit due to commit lock`);
+            callback();
         } else {
             this._commitLock = true;
             setTimeout(function () {
@@ -209,7 +210,7 @@ class LightAccessory {
                     if (this._newState["brightness"] === undefined) {
                         command = new Error("Race condition! Commit was called before set!");
                     } else {
-                        command = `${this._newState["brightness"]}`;
+                        command = `${this._newState["brightness"] === 100 ? 99 : this._newState["brightness"]}`;
                     }
                 } else { // Either hue or saturation set, therefore we need to update the tuple
                     if(this._newState["hue"] !== undefined && this._newState["brightness"] !== undefined && this._newState["saturation"] !== undefined) { // All states set, no need to get missing information
@@ -237,6 +238,8 @@ class LightAccessory {
                         this._log.debug(`Updating state of ${this._habItem} to ${command}`);
                         this._openHAB.sendCommand(this._habItem, command , callback);
                     }
+                } else {
+                    callback(new Error("Command was not set"));
                 }
             }.bind(this), 500)
         }
