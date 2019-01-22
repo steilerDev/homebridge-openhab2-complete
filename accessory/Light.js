@@ -62,7 +62,7 @@ class LightAccessory {
     }
 
     _getLightbulbService() {
-        this._log.debug(`Creating lightbulb switch service for ${this.name}/${this._habItem}`);
+        this._log.debug(`Creating lightbulb service for ${this.name}/${this._habItem}`);
         this._mainService = new Service.Lightbulb(this.name);
 
         switch (this._type) {
@@ -215,7 +215,7 @@ class LightAccessory {
     _setBrightnessState(value, callback) {
         this._log.debug(`Change brightness target state of ${this.name} [${this._habItem}] to ${value}`);
 
-        this._openHAB.sendCommand(this._habItem, value, function(error) {
+        this._openHAB.sendCommand(this._habItem, `${value}`, function(error) {
             if(error) {
                 this._log.error(`Unable to send command: ${error.message}`);
                 callback(error);
@@ -236,7 +236,7 @@ class LightAccessory {
     }
 
     // Only used with "Color" type
-    _commitHSBState(callback) {
+    _commitHSBState(_, callback) {
         let cleanup = function(error) {
             this._log.debug(`Cleaning up and releasing locks`);
             this._newState = {
@@ -259,6 +259,7 @@ class LightAccessory {
                     this._newState["brightness"] !== undefined &&
                     this._newState["saturation"] !== undefined
                 ) { // All states set
+                    this._log.debug(`All states are set, updating ${this._habItem} to ${this._newState}`);
                     this._openHAB.sendCommand(
                         this._habItem,
                         `${this._newState["hue"]},${this._newState["saturation"]},${this._newState}`,
@@ -270,17 +271,18 @@ class LightAccessory {
                             this._log.error(`Unable to get state of ${this._habItem}: ${error.message}`)
                         } else {
                             if(this._newState["hue"] === undefined) {
-                                this._log.error(`Setting undefined hue value to ${value["hue"]}`);
+                                this._log.debug(`Setting undefined hue value to ${value["hue"]}`);
                                 this._newState["hue"] = value["hue"];
                             }
                             if(this._newState["brightness"] === undefined) {
-                                this._log.error(`Setting undefined brightness value to ${value["brightness"]}`);
+                                this._log.debug(`Setting undefined brightness value to ${value["brightness"]}`);
                                 this._newState["brightness"] = value["brightness"];
                             }
                             if(this._newState["saturation"] === undefined) {
-                                this._log.error(`Setting undefined saturation value to ${value["saturation"]}`);
+                                this._log.debug(`Setting undefined saturation value to ${value["saturation"]}`);
                                 this._newState["saturation"] = value["saturation"];
                             }
+                            this._log.debug(`Updating ${this._habItem} to ${this._newState}`);
                             this._openHAB.sendCommand(
                                 this._habItem,
                                 `${this._newState["hue"]},${this._newState["saturation"]},${this._newState}`,
