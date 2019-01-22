@@ -73,7 +73,13 @@ class LightAccessory {
                 break;
             case "Dimmer": // Dimmer has ON and Brightness Characteristic, not setting ON Characteristic due to double call
                 this._mainService.getCharacteristic(Characteristic.On)
-                    .on('set', function(_, callback){callback()})
+                    .on('set', function(value, callback) {
+                        if(!value) {
+                            this._setBrightnessState(0, callback);
+                        } else {
+                            callback()
+                        }
+                    }.bind(this))
                     .on('get', this._getState.bind(this, "binary"));
 
                 this._mainService.getCharacteristic(Characteristic.Brightness)
@@ -92,7 +98,14 @@ class LightAccessory {
                 };
 
                 this._mainService.getCharacteristic(Characteristic.On)
-                    .on('set', function(_, callback){callback()})
+                    .on('set', function(value, callback){
+                        if(!value) {
+                            this._setHSBState("brightness", 0, callback);
+                        } else {
+                            callback();
+                        }
+                    }.bind(this))
+                    .on('set', this._commitHSBState.bind(this))
                     .on('get', this._getState.bind(this, "binary"));
 
                 this._mainService.getCharacteristic(Characteristic.Brightness)
@@ -261,10 +274,10 @@ class LightAccessory {
                     this._newState["brightness"] !== undefined &&
                     this._newState["saturation"] !== undefined
                 ) { // All states set
-                    this._log.debug(`All states are set, updating ${this._habItem} to ${JSON.stringify(this._newState)}: command ${this._newState["hue"]},${this._newState["saturation"]},${this._newState}`);
+                    this._log.debug(`All states are set, updating ${this._habItem} to ${JSON.stringify(this._newState)}: command ${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`);
                     this._openHAB.sendCommand(
                         this._habItem,
-                        `${this._newState["hue"]},${this._newState["saturation"]},${this._newState}`,
+                        `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`,
                         cleanup
                     );
                 } else { // We need to gather current states first
@@ -284,10 +297,10 @@ class LightAccessory {
                                 this._log.debug(`Setting undefined saturation value to ${value["saturation"]}`);
                                 this._newState["saturation"] = value["saturation"];
                             }
-                            this._log.debug(`Updating ${this._habItem} to ${JSON.stringify(this._newState)}: command: ${this._newState["hue"]},${this._newState["saturation"]},${this._newState}`);
+                            this._log.debug(`Updating ${this._habItem} to ${JSON.stringify(this._newState)}: command: ${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`);
                             this._openHAB.sendCommand(
                                 this._habItem,
-                                `${this._newState["hue"]},${this._newState["saturation"]},${this._newState}`,
+                                `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`,
                                 cleanup
                             );
                         }
