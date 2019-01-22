@@ -1,5 +1,7 @@
 'use strict';
 
+const clone = require('clone');
+
 let Accessory, Characteristic, Service;
 
 class LightAccessory {
@@ -31,6 +33,17 @@ class LightAccessory {
             this._type === "Color")) {
             throw new Error(`${this._habItem}'s type (${this._type}) is not as expected ('Switch', 'Dimmer' or 'Color')`);
         }
+
+        // Synchronisation helper for complex HSB type
+        this._stateLock = false; // This lock will guard the acceptance of new states
+        this._commitLock = false; // This lock will guard the commit process
+
+        this._newState = {
+            binary: undefined,
+            hue: undefined,
+            saturation: undefined,
+            brightness: undefined
+        };
 
         this._services = [
             this._getAccessoryInformationService(),
@@ -66,54 +79,27 @@ class LightAccessory {
         this._mainService = new Service.Lightbulb(this.name);
 
         switch (this._type) {
-            case "Switch": // Switch only has ON Characteristic
-                this._mainService.getCharacteristic(Characteristic.On)
-                    .on('set', this._setBinaryState.bind(this))
-                    .on('get', this._getState.bind(this, "binary"));
-                break;
-            case "Dimmer": // Dimmer has ON and Brightness Characteristic, not setting ON Characteristic due to double call
-                this._mainService.getCharacteristic(Characteristic.On)
-                    .on('set', function(value, callback) {
-                        this._setBrightnessState(value ? "ON" : "OFF", callback);
-                    }.bind(this))
-                    .on('get', this._getState.bind(this, "binary"));
-
-                this._mainService.getCharacteristic(Characteristic.Brightness)
-                    .on('set', this._setBrightnessState.bind(this))
-                    .on('get', this._getState.bind(this, "brightness"));
-                break;
-            case "Color":
-                // Synchronisation helper for complex HSB type
-                this._stateLock = false; // This lock will guard the acceptance of new states
-                this._commitLock = false; // This lock will guard the commit process
-
-                this._newState = {
-                    hue: undefined,
-                    saturation: undefined,
-                    brightness: undefined
-                };
-
-                this._mainService.getCharacteristic(Characteristic.On)
-                    .on('set', function(value, callback){
-                        this._setHSBState("brightness", value ? 100 : 0, callback);
-                    }.bind(this))
-                    .on('set', this._commitHSBState.bind(this))
-                    .on('get', this._getState.bind(this, "binary"));
-
-                this._mainService.getCharacteristic(Characteristic.Brightness)
-                    .on('set', this._setHSBState.bind(this, "brightness"))
-                    .on('set', this._commitHSBState.bind(this))
-                    .on('get', this._getState.bind(this, "brightness"));
-
+            case "Color": // Color has Saturation, Hue, Brightness and On Characteristic (fall through intended)
                 this._mainService.getCharacteristic(Characteristic.Saturation)
-                    .on('set', this._setHSBState.bind(this, "saturation"))
-                    .on('set', this._commitHSBState.bind(this))
+                    .on('set', this._setState.bind(this, "saturation"))
+                    .on('set', this._commitState.bind(this))
                     .on('get', this._getState.bind(this, "saturation"));
 
                 this._mainService.getCharacteristic(Characteristic.Hue)
-                    .on('set', this._setHSBState.bind(this, "hue"))
-                    .on('set', this._commitHSBState.bind(this))
+                    .on('set', this._setState.bind(this, "hue"))
+                    .on('set', this._commitState.bind(this))
                     .on('get', this._getState.bind(this, "hue"));
+            case "Dimmer": // Dimmer has Brightness and On Characteristic (fall through intended)
+                this._mainService.getCharacteristic(Characteristic.Brightness)
+                    .on('set', this._setState.bind(this, "brightness"))
+                    .on('set', this._commitState.bind(this))
+                    .on('get', this._getState.bind(this, "brightness"));
+            case "Switch": // Switch only has ON Characteristic
+                this._mainService.getCharacteristic(Characteristic.On)
+                    .on('set', this._setState.bind(this, "binary"))
+                    .on('set', this._commitState.bind(this))
+                    .on('get', this._getState.bind(this, "binary"));
+                break;
         }
         return this._mainService;
     }
@@ -128,7 +114,7 @@ class LightAccessory {
                 this._log(`Received state: ${state}`);
 
                 switch(stateType) {
-                    case "binary":
+                    case "binary": // expects true or false
                         if(this._type === "Switch") {
                             callback(null, state === "ON");
                         } else if (this._type === "Dimmer") {
@@ -139,7 +125,7 @@ class LightAccessory {
                             callback (new Error(`Unable to parse binary state: ${state}`));
                         }
                         break;
-                    case "brightness":
+                    case "brightness": // expects number and only called by dimmer or color types
                         if(this._type === "Dimmer") {
                             callback(null, state);
                         } else if(this._type === "Color") {
@@ -148,29 +134,31 @@ class LightAccessory {
                             callback (new Error(`Unable to parse brightness state: ${state}`));
                         }
                         break;
-                    case "hue":
+                    case "hue": // expects number and only called by color types
                         if(this._type ===  "Color") {
                             callback(null, state.split(",")[0]);
                         } else {
                             callback (new Error(`Unable to parse hue state: ${state}`));
                         }
                         break;
-                    case "saturation":
+                    case "saturation": // expects number and only called by color types
                         if(this._type ===  "Color") {
                             callback(null, state.split(",")[1]);
                         } else {
                             callback (new Error(`Unable to parse saturation state: ${state}`));
                         }
                         break;
-                    case "hsb":
+                    case "full":
                         if(this._type === "Switch") {
                             callback(null, {
+                                binary: state === "ON",
                                 hue: 0,
                                 saturation: 0,
                                 brightness: state === "ON" ? 100 : 0
                             });
                         } else if (this._type === "Dimmer") {
                             callback(null, {
+                                binary: state > 0,
                                 hue: 0,
                                 saturation: 0,
                                 brightness: state
@@ -178,6 +166,7 @@ class LightAccessory {
                         } else if (this._type === "Color") {
                             let myState = state.split(",");
                             callback(null, {
+                                binary: myState[2] > 0,
                                 hue: myState[0],
                                 saturation: myState[1],
                                 brightness: myState[2]
@@ -192,49 +181,8 @@ class LightAccessory {
         }.bind(this));
     }
 
-    // Only used with "Switch" type
-    _setBinaryState(value, callback) {
-        this._log.debug(`Change binary target state of ${this.name} [${this._habItem}] to ${value}`);
-
-        let command;
-        if(value === true) {
-            command = "ON";
-        } else if (value === false) {
-            command = "OFF";
-        } else {
-            this._log.error(`Unable to set state for target value ${value}`);
-        }
-
-        this._openHAB.sendCommand(this._habItem, command, function(error) {
-            if(error) {
-                this._log.error(`Unable to send command: ${error.message}`);
-                callback(error);
-            } else {
-                this._log.debug(`Changed target state of ${this.name}`);
-                callback();
-            }
-        }.bind(this));
-    }
-
-    // Only used with "Dimmer" type
-    _setBrightnessState(value, callback) {
-        this._log.debug(`Change brightness target state of ${this.name} [${this._habItem}] to ${value}`);
-
-        let myValue = `${value === 100 ? 99 : value}`;
-
-        this._openHAB.sendCommand(this._habItem, myValue, function(error) {
-            if(error) {
-                this._log.error(`Unable to send command: ${error.message}`);
-                callback(error);
-            } else {
-                this._log.debug(`Changed target state of ${this.name}`);
-                callback();
-            }
-        }.bind(this));
-    }
-
-    // Only used with "Color" type
-    _setHSBState(stateType, value, callback) {
+    // Set the state unless it's locked
+    _setState(stateType, value, callback) {
         this._log.debug(`Change ${stateType} target state of ${this.name} [${this._habItem}] to ${value}`);
         if (!(this._stateLock)) {
             this._newState[stateType] = value;
@@ -242,69 +190,68 @@ class LightAccessory {
         }
     }
 
-    // Only used with "Color" type
-    _commitHSBState(_, callback) {
-        let cleanup = function() {
-            this._log.debug(`Cleaning up and releasing locks`);
-            this._newState = {
-                hue: undefined,
-                saturation: undefined,
-                brightness: undefined
-            };
-            this._commitLock = false;
-            this._stateLock = false;
-        }.bind(this);
-
+    // Wait for all states to be set (500ms should be sufficient) and then actually call them once
+    _commitState(_, callback) {
         if(this._commitLock) {
             this._log.debug(`Not executing commit due to commit lock`);
         } else {
             this._commitLock = true;
             setTimeout(function () {
                 this._stateLock = true;
-                if(this._newState["hue"] !== undefined &&
-                    this._newState["brightness"] !== undefined &&
-                    this._newState["saturation"] !== undefined
-                ) { // All states set
-                    this._log.debug(`All states are set, updating ${this._habItem} to ${JSON.stringify(this._newState)}: command ${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`);
-                    this._openHAB.sendCommand(
-                        this._habItem,
-                        `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`,
-                        function(error) {
-                            callback(error);
-                            cleanup();
-                        }
-                    );
-                } else { // We need to gather current states first
-                    this._getState("hsb", function(error, value) {
-                        if(error) {
-                            this._log.error(`Unable to get state of ${this._habItem}: ${error.message}`)
+                let command;
+                if(this._newState["brightness"] === undefined && this._newState["hue"] === undefined && this._newState["saturation"] === undefined) { // Only binary set
+                    if(this._newState["binary"] === undefined) {
+                        command = new Error("Race condition! Commit was called before set!")
+                    } else {
+                        command = this._newState["binary"] ? "ON" : "OFF";
+                    }
+                } else if(this._newState["hue"] === undefined && this._newState["saturation"] === undefined) { // Only brightness set
+                    if (this._newState["brightness"] === undefined) {
+                        command = new Error("Race condition! Commit was called before set!");
+                    } else {
+                        command = `${this._newState["brightness"]}`;
+                    }
+                } else { // Either hue or saturation set, therefore we need to update the tuple
+                    if(this._newState["hue"] !== undefined && this._newState["brightness"] !== undefined && this._newState["saturation"] !== undefined) { // All states set, no need to get missing information
+                        command = `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`;
+                    } else { // We have to get the current state, in order to get new state
+                        let state = this._openHAB.getStateSync(this._habItem);
+                        if (!(state)) {
+                            command = new Error("Unable to retrieve current state");
+                        } else if (state instanceof Error) {
+                            command = state;
                         } else {
-                            if(this._newState["hue"] === undefined) {
-                                this._log.debug(`Setting undefined hue value to ${value["hue"]}`);
-                                this._newState["hue"] = value["hue"];
-                            }
-                            if(this._newState["brightness"] === undefined) {
-                                this._log.debug(`Setting undefined brightness value to ${value["brightness"]}`);
-                                this._newState["brightness"] = value["brightness"];
-                            }
-                            if(this._newState["saturation"] === undefined) {
-                                this._log.debug(`Setting undefined saturation value to ${value["saturation"]}`);
-                                this._newState["saturation"] = value["saturation"];
-                            }
-                            this._log.debug(`Updating ${this._habItem} to ${JSON.stringify(this._newState)}: command: ${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`);
-                            this._openHAB.sendCommand(
-                                this._habItem,
-                                `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`,
-                                function(error) {
-                                    callback(error);
-                                    cleanup();
-                                }
-                            );
+                            let splitState = state.split(",");
+                            let command = `${this._newState["hue"] === undefined ? splitState[0] : this._newState["hue"]},
+                                     ${this._newState["saturation"] === undefined ? splitState[1] : this._newState["saturation"]},
+                                     ${this._newState["brightness"] === undefined ? splitState[2] : this._newState["brightness"]}`;
                         }
-                    }.bind(this))
+                    }
+                }
+                this._reset();
+                if(command) {
+                    if(command instanceof Error) {
+                        this._log.error(command.message);
+                        callback(command);
+                    } else {
+                        this._log.debug(`Updating state of ${this._habItem} to ${command}`);
+                        this._openHAB.sendCommand(this._habItem, command , callback);
+                    }
                 }
             }.bind(this), 500)
         }
+    }
+
+    _reset() {
+        this._log.debug(`Cleaning up and releasing locks`);
+        this._newState = {
+            binary: undefined,
+            hue: undefined,
+            saturation: undefined,
+            brightness: undefined
+        };
+        this._commitLock = false;
+        this._stateLock = false;
     }
 }
 

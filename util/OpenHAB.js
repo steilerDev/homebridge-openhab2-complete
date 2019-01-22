@@ -34,6 +34,19 @@ class OpenHAB {
         })
     }
 
+    getStateSync(habItem) {
+        let myUrl = clone(this._url);
+        myUrl.pathname = `/rest/items/${habItem}/state`;
+        const response = syncRequest('GET', myUrl.href);
+        if (response.statusCode === 404) {
+            return new Error(`Item does not exist!`);
+        } else if (!(response.body)) {
+            return new Error(`Unable to retrieve state`);
+        } else {
+            return response.body;
+        }
+    }
+
     sendCommand(habItem, command, callback) {
         let myUrl = clone(this._url);
         myUrl.pathname = `/rest/items/${habItem}`;
