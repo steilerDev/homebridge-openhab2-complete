@@ -197,7 +197,7 @@ class LightAccessory {
                             let splitState = state.split(",");
                             command = `${this._newState["hue"] === undefined ? splitState[0] : this._newState["hue"]},\
                                 ${this._newState["saturation"] === undefined ? splitState[1] : this._newState["saturation"]},\
-                                ${this._newState["brightness"] === undefined ? splitState[2] : this._newState["brightness"]}`;
+                                ${this._newState["brightness"] === undefined ? splitState[2] : this._newState["brightness"]}`.replace(/\s*/g, "");
                         }
                     }
                 }
