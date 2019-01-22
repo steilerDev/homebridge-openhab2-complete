@@ -259,7 +259,7 @@ class LightAccessory {
                     this._newState["brightness"] !== undefined &&
                     this._newState["saturation"] !== undefined
                 ) { // All states set
-                    this._log.debug(`All states are set, updating ${this._habItem} to ${this._newState}`);
+                    this._log.debug(`All states are set, updating ${this._habItem} to ${util.inspect(this._newState)}: command ${this._newState["hue"]},${this._newState["saturation"]},${this._newState}`);
                     this._openHAB.sendCommand(
                         this._habItem,
                         `${this._newState["hue"]},${this._newState["saturation"]},${this._newState}`,
@@ -282,7 +282,7 @@ class LightAccessory {
                                 this._log.debug(`Setting undefined saturation value to ${value["saturation"]}`);
                                 this._newState["saturation"] = value["saturation"];
                             }
-                            this._log.debug(`Updating ${this._habItem} to ${this._newState}`);
+                            this._log.debug(`Updating ${this._habItem} to ${util.inspect(this._newState)}: command: ${this._newState["hue"]},${this._newState["saturation"]},${this._newState}`);
                             this._openHAB.sendCommand(
                                 this._habItem,
                                 `${this._newState["hue"]},${this._newState["saturation"]},${this._newState}`,
