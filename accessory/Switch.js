@@ -68,9 +68,7 @@ class SwitchAccessory {
     }
 
     _setState(value, callback) {
-        let name = this.name;
-        let habItem = this._habItem;
-        this._log.debug(`Change target state of ${name} [${habItem}] to ${value}`);
+        this._log(`Change target state of ${this.name} [${this._habItem}] to ${value}`);
 
         let command;
         if(value === true) {
@@ -81,27 +79,25 @@ class SwitchAccessory {
             this._log.error(`Unable to set state for target value ${value}`);
         }
 
-        this._openHAB.sendCommand(habItem, command, function(error) {
+        this._openHAB.sendCommand(this._habItem, command, function(error) {
             if(error) {
                 this._log.error(`Unable to send command: ${error.message}`);
                 callback(error);
             } else {
-                this._log.debug(`Changed target state of ${name}`);
+                this._log.debug(`Changed target state of ${this.name}`);
                 callback();
             }
         }.bind(this));
     }
 
     _getState(callback) {
-        let name = this.name;
-        let habItem = this._habItem;
-        this._log.debug(`Getting state for ${name} [${habItem}]`);
-        this._openHAB.getState(habItem, function(error, state) {
+        this._log(`Getting state for ${this.name} [${this._habItem}]`);
+        this._openHAB.getState(this._habItem, function(error, state) {
             if(error) {
                 this._log.error(`Unable to get state: ${error.message}`);
                 callback(error);
             } else {
-                this._log(`Received state: ${state}`);
+                this._log(`Received state: ${state} for ${this.name} [${this._habItem}`);
                 if(state === "ON") {
                     callback(null, true);
                 } else if (state === "OFF") {

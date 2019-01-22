@@ -109,7 +109,7 @@ class LightAccessory {
                 this._log.error(`Unable to get state: ${error.message}`);
                 callback(error);
             } else {
-                this._log(`Received state: ${state}`);
+                this._log(`Received state: ${state} for ${this.name} [${this._habItem}]`);
 
                 switch(stateType) {
                     case "binary": // expects true or false
@@ -207,7 +207,7 @@ class LightAccessory {
                         this._log.error(command.message);
                         callback(command);
                     } else {
-                        this._log.debug(`Updating state of ${this._habItem} to ${command}`);
+                        this._log(`Updating state of ${this.name} [${this._habItem}] to ${command}`);
                         this._openHAB.sendCommand(this._habItem, command , callback);
                     }
                 } else {
