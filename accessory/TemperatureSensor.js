@@ -50,7 +50,7 @@ class TemperatureSensorAccessory {
 
     _getTempService() {
         this._log.debug(`Creating temp service for ${this.name}/${this._habItem}`);
-        this._tempService = new Service.Switch(this.name);
+        this._tempService = new Service.TemperatureSensor(this.name);
         this._tempService.getCharacteristic(Characteristic.CurrentTemperature)
             .on('get', this._getState.bind(this));
 
