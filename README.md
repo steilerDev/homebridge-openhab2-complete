@@ -6,7 +6,7 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](ht
 
 Since this plugin is not yet published through npm you need to do the following:
 
-Note: Please install [homebridge](https://www.npmjs.com/package/homebridge) first.
+*Note: Please install [homebridge](https://www.npmjs.com/package/homebridge) first.*
 
 ```
 git clone https://github.com/steilerDev/homebridge-openhab2-complete.git
@@ -54,8 +54,6 @@ This is a platform plugin, that will register all accessories within the Bridge 
 ## Supported HAP Services
 The following is a list of all Services that are currently supported and which values are required within the accessory configuration. 
 
-**Note: The `name` key is always required and therefore omitted below.**
-
 ### Switch
 
 This service describes a binary switch.
@@ -89,7 +87,7 @@ Obviously the aim of this project is a full coverage of the HAP specification. D
 
 Due to the very limited documentation on homebridge plugin development I have not implemented a dynamic platform (there is only [this partly complete wiki entry](https://github.com/nfarina/homebridge/wiki/On-Programming-Dynamic-Platforms)). If anyone of you knows how to do it, please contact me directly!
 
-If you have feedback or suggestions how to better represent the services as openHAB Items, feel free to open an [issue](https://github.com/steilerDev/homebridge-openhab2-complete/issues).
+If you have feedback or suggestions how to better represent the Services as openHAB Items, feel free to open an [issue](https://github.com/steilerDev/homebridge-openhab2-complete/issues).
 
 If you would like to contribute just send me a pull request. In order to add a new service you have to modify/add the following parts:
 1. `./index.js`: 
