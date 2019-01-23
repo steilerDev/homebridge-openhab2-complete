@@ -7,6 +7,7 @@ const platformPrettyName = 'openHAB2-Complete';
 const SerialNumberGenerator = require('./util/SerialNumberGenerator');
 const SwitchAccessory = require('./accessory/Switch');
 const LightAccessory = require('./accessory/Light');
+const TemperatureSensorAccessory = require('./accessory/TemperatureSensor');
 const OpenHAB = require('./util/OpenHAB');
 
 
@@ -16,7 +17,8 @@ module.exports = (homebridge) => {
 
 const SerialNumberPrefixes = {
     switch: 'SW',
-    light: 'LI'
+    light: 'LI',
+    temp: 'TE'
 };
 
 const OpenHABComplete = class {
@@ -42,7 +44,8 @@ const OpenHABComplete = class {
 
         this._factories = {
             switch: this._createSwitch.bind(this),
-            light: this._createLight.bind(this)
+            light: this._createLight.bind(this),
+            temp: this._createTemperature.bind(this)
         };
 
         this._log.info(`OpenHAB2 REST Plugin Loaded - Version ${version}`);
@@ -92,5 +95,9 @@ const OpenHABComplete = class {
 
     _createLight(config) {
         return new LightAccessory(this._platform, config);
+    }
+
+    _createTemperature(config) {
+        return new TemperatureSensorAccessory(this._platform, config);
     }
 };

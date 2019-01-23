@@ -19,7 +19,7 @@ class LightAccessory {
         this.uuid_base = config.serialNumber;
 
         if(!(this._config.habItem)) {
-            throw new Error(`Required habItem not defined: ${util.inspect(acc)}`)
+            throw new Error(`Required habItem not defined: ${JSON.stringify(acc)}`)
         } else {
             this._habItem = config.habItem;
         }
