@@ -1,6 +1,8 @@
 'use strict';
 
-let Accessory, Characteristic, Service;
+let Characteristic, Service;
+
+let getAccessoryInformationService = require('util/Util').getAccessoryInformationService;
 
 class LightAccessory {
 
@@ -8,7 +10,6 @@ class LightAccessory {
         this._log = platform["log"];
         this._log.debug(`Creating new light accessory: ${config.name}`);
 
-        Accessory = platform["api"].hap.Accessory;
         Characteristic = platform["api"].hap.Characteristic;
         Service = platform["api"].hap.Service;
 
@@ -44,7 +45,7 @@ class LightAccessory {
         };
 
         this._services = [
-            this._getAccessoryInformationService(),
+            getAccessoryInformationService(platform, config, 'openHAB2 Light'),
             this._getLightbulbService()
         ];
 
@@ -60,16 +61,6 @@ class LightAccessory {
     getServices() {
         this._log.debug("Getting services");
         return this._services;
-    }
-
-    _getAccessoryInformationService() {
-        return new Service.AccessoryInformation()
-            .setCharacteristic(Characteristic.Name, this.name)
-            .setCharacteristic(Characteristic.Manufacturer, 'steilerDev')
-            .setCharacteristic(Characteristic.Model, 'Light')
-            .setCharacteristic(Characteristic.SerialNumber, this._config.serialNumber)
-            .setCharacteristic(Characteristic.FirmwareRevision, this._config.version)
-            .setCharacteristic(Characteristic.HardwareRevision, this._config.version);
     }
 
     _getLightbulbService() {

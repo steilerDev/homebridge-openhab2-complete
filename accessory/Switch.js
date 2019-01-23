@@ -1,13 +1,14 @@
 'use strict';
 
-let Accessory, Characteristic, Service;
+let Characteristic, Service;
+
+let getAccessoryInformationService = require('util/Util').getAccessoryInformationService;
 
 class SwitchAccessory {
     constructor(platform, config) {
         this._log = platform["log"];
         this._log.debug(`Creating new switch accessory: ${config.name}`);
 
-        Accessory = platform["api"].hap.Accessory;
         Characteristic = platform["api"].hap.Characteristic;
         Service = platform["api"].hap.Service;
 
@@ -30,7 +31,7 @@ class SwitchAccessory {
         }
 
         this._services = [
-            this._getAccessoryInformationService(),
+            getAccessoryInformationService(platform, config, 'openHAB 2 Switch'),
             this._getSwitchService()
         ]
     }
@@ -45,16 +46,6 @@ class SwitchAccessory {
     getServices() {
         this._log.debug("Getting services");
         return this._services;
-    }
-
-    _getAccessoryInformationService() {
-        return new Service.AccessoryInformation()
-            .setCharacteristic(Characteristic.Name, this.name)
-            .setCharacteristic(Characteristic.Manufacturer, 'steilerDev')
-            .setCharacteristic(Characteristic.Model, 'Switch')
-            .setCharacteristic(Characteristic.SerialNumber, this._config.serialNumber)
-            .setCharacteristic(Characteristic.FirmwareRevision, this._config.version)
-            .setCharacteristic(Characteristic.HardwareRevision, this._config.version);
     }
 
     _getSwitchService() {
