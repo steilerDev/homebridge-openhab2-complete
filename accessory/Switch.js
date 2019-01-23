@@ -1,6 +1,6 @@
 'use strict';
 
-const Accessory = require('Accessory');
+const Accessory = require('./Accessory');
 
 class SwitchAccessory extends Accessory {
 
