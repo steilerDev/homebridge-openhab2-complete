@@ -1,14 +1,12 @@
 'use strict';
 
-let Characteristic, Service;
-
 class Accessory {
     constructor(platform, config) {
         this._log = platform["log"];
         this._log.debug(`Creating new accessory: ${config.name}`);
 
-        this.Characteristic = platform["api"].hap.Characteristic;
-        this.Service = platform["api"].hap.Service;
+        this.Characteristic = platform["api"]["hap"].Characteristic;
+        this.Service = platform["api"]["hap"].Service;
 
         this._config = config;
         this._openHAB = platform["openHAB"];
@@ -44,15 +42,13 @@ class Accessory {
     }
 
     _getAccessoryInformationService(modelDescription) {
-        let Characteristic = this._Characteristic;
-        let Service = this._Service;
-        return new Service.AccessoryInformation()
-            .setCharacteristic(Characteristic.Name, this.name)
-            .setCharacteristic(Characteristic.Manufacturer, 'steilerDev')
-            .setCharacteristic(Characteristic.Model, `openHAB2 ${modelDescription}`)
-            .setCharacteristic(Characteristic.SerialNumber, this._config.serialNumber)
-            .setCharacteristic(Characteristic.FirmwareRevision, this._config.version)
-            .setCharacteristic(Characteristic.HardwareRevision, this._config.version);
+        return new this.Service.AccessoryInformation()
+            .setCharacteristic(this.Characteristic.Name, this.name)
+            .setCharacteristic(this.Characteristic.Manufacturer, 'steilerDev')
+            .setCharacteristic(this.Characteristic.Model, `openHAB2 ${modelDescription}`)
+            .setCharacteristic(this.Characteristic.SerialNumber, this._config.serialNumber)
+            .setCharacteristic(this.Characteristic.FirmwareRevision, this._config.version)
+            .setCharacteristic(this.Characteristic.HardwareRevision, this._config.version);
     }
 }
 

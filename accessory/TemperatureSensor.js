@@ -6,10 +6,10 @@ class TemperatureSensorAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
 
-        if(!(this._config.habItem)) {
-            throw new Error(`Required habItem not defined: ${JSON.stringify(acc)}`)
+        if(!(this._config["habItem"])) {
+            throw new Error(`Required habItem not defined: ${JSON.stringify(this._config)}`)
         } else {
-            this._habItem = config.habItem;
+            this._habItem = this._config["habItem"];
         }
 
         this._getAndCheckItemType(this._habItem, ['Number']);
