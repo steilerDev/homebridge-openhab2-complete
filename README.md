@@ -4,14 +4,10 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](ht
 
 ## Installation
 
-Since this plugin is not yet published through npm you need to do the following:
-
 *Note: Please install [homebridge](https://www.npmjs.com/package/homebridge) first.*
 
 ```
-git clone https://github.com/steilerDev/homebridge-openhab2-complete.git
-cd homebridge-openhab2-complete
-npm install -g .
+npm install -g homebridge-openhab2-complete
 ```
 
 ## Configuration
