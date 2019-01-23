@@ -3,8 +3,6 @@
 let getAccessoryInformationService = require('../util/Util').getAccessoryInformationService;
 
 class Accessory {
-    _services;
-
     constructor(platform, config) {
         this._log = platform["log"];
         this._log.debug(`Creating new accessory: ${config.name}`);
@@ -16,6 +14,9 @@ class Accessory {
         this._openHAB = platform["openHAB"];
         this.name = config.name;
         this.uuid_base = config.serialNumber;
+
+        this._services = [];
+
     }
 
     // Called by homebridge

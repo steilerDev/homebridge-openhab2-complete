@@ -92,8 +92,8 @@ If you would like to contribute just send me a pull request. In order to add a n
     * Create your factory method at the end of the file, returning your accessory instance. The configuration block dedicated to your accessory will be passed to this function as JSON
 2. Create your own accessory class:
     * Create a new file for your accessory within the `./accessory` folder and include it within `./index.js`
-    * The only *required* functions are `getServices()` (returning an array of `HAP.Service` with attached `HAP.Characteristic`) and `identify()` (which does not need to do anything)
-    * See the `./accessory/Switch.js` accessory for a simple Service and use it as a skelleton
+    * The only *required* functions are `getServices()` (returning an array of `HAP.Service` with attached `HAP.Characteristic`) and `identify()` (which does not need to do anything). Those are implemented in the `Accessory` super class and don't need to be overridden.
+    * See the `./accessory/Switch.js` accessory for a simple Service and use it as a skeleton
 
 
 ## Comparision
