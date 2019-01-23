@@ -2,7 +2,7 @@
 
 let Characteristic, Service;
 
-let getAccessoryInformationService = require('util/Util').getAccessoryInformationService;
+let getAccessoryInformationService = require('../util/Util').getAccessoryInformationService;
 
 class LightAccessory {
 
