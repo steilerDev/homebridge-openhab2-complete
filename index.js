@@ -1,48 +1,25 @@
-/*
-Config file:
-    "platforms" : [
-        {
-            platform: "openHAB2-REST"
-            host: "http://hc.steilergroup.net"
-            port: 80 // optional
-            accessories: [
-                {
-                    type: "switch",
-                    name: "abc",
-                    habItem: "abcde" // This is expected to be a "Switch" item
-                },
-                {
-                    type: "light", // This is expected to be a "Switch", "Dimmer" or "Color"
-                    name: "abc",
-                    habItem: "abcde"
-                }
-
-            ]
-
-    ]
- */
-
-
 const util = require("util");
+
 const version = require('./package.json').version;
+const platformName = require('./package').name;
+const platformPrettyName = 'openHAB2-Complete';
+
 const SerialNumberGenerator = require('./util/SerialNumberGenerator');
 const SwitchAccessory = require('./accessory/Switch');
 const LightAccessory = require('./accessory/Light');
 const OpenHAB = require('./util/OpenHAB');
 
-const platformName = 'homebridge-openhab2-rest';
-const platformPrettyName = 'openHAB2-REST';
 
 module.exports = (homebridge) => {
-    homebridge.registerPlatform(platformName, platformPrettyName, OpenHABREST);
+    homebridge.registerPlatform(platformName, platformPrettyName, OpenHABComplete);
 };
 
 const SerialNumberPrefixes = {
     switch: 'SW',
-    light: "LI"
+    light: 'LI'
 };
 
-const OpenHABREST = class {
+const OpenHABComplete = class {
     constructor(log, config, api) {
         this._log = log;
         this._config = config;

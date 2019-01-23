@@ -1,18 +1,25 @@
 {
-  "name": "homebridge-openhab2-rest",
-  "version": "1.0.0",
-  "description": "A homebridge plugin for OpenHAB2 using its REST interface and explicit accessory declaration",
+  "name": "homebridge-openhab2-complete",
+  "version": "0.1.0",
+  "description": "A homebridge plugin for openHAB, that has the expectation to fully support all Services offered by Apple's Homekit Accessory Protocol (HAP)",
   "license": "GPLV3",
+  "preferGlobal": true,
+  "main": "index.js",
   "author": {
     "email": "frank@steilerdev.de",
     "name": "Frank Steiler"
   },
   "keywords": [
-    "homebridge-plugin"
+    "homebridge-plugin",
+    "openHAB2",
+    "homekit"
   ],
   "repository": {
     "type": "git",
-    "url": "abs"
+    "url": "https://github.com/steilerDev/homebridge-openhab2-complete"
+  },
+  "bugs": {
+    "url": "https://github.com/steilerDev/homebridge-openhab2-complete/issues"
   },
   "engines": {
     "node": ">=10.15.0",

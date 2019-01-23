@@ -8,7 +8,11 @@ const clone = require('clone');
 class OpenHAB {
 
     constructor(hostname, port) {
-        this._url = new URL(hostname);
+        if(hostname.startsWith("http://") || hostname.startsWith("https://")) {
+            this._url = new URL(hostname);
+        } else {
+            this._url = new URL(`http://${hostname}`);
+        }
         if (port !== undefined) {
             this._url.port = port
         }
