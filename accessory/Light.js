@@ -45,7 +45,7 @@ class LightAccessory {
         };
 
         this._services = [
-            getAccessoryInformationService(platform, config, 'openHAB2 Light'),
+            getAccessoryInformationService(platform, config, 'Light'),
             this._getLightbulbService()
         ];
 

@@ -31,7 +31,7 @@ class TemperatureSensorAccessory {
         }
 
         this._services = [
-            getAccessoryInformationService(platform, config, 'openHAB 2 Temperature'),
+            getAccessoryInformationService(platform, config, 'Temperature Sensor'),
             this._getTempService()
         ]
     }
@@ -64,7 +64,7 @@ class TemperatureSensorAccessory {
                 this._log.error(`Unable to get state: ${error.message}`);
                 callback(error);
             } else {
-                this._log(`Received state: ${state} for ${this.name} [${this._habItem}`);
+                this._log(`Received state: ${state} for ${this.name} [${this._habItem}]`);
                 callback(null, state);
             }
         }.bind(this));

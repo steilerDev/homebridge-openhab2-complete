@@ -18,7 +18,8 @@ module.exports = (homebridge) => {
 const SerialNumberPrefixes = {
     switch: 'SW',
     light: 'LI',
-    temp: 'TE'
+    temp: 'TE',
+    humidity: 'HU'
 };
 
 const OpenHABComplete = class {
@@ -45,7 +46,8 @@ const OpenHABComplete = class {
         this._factories = {
             switch: this._createSwitch.bind(this),
             light: this._createLight.bind(this),
-            temp: this._createTemperature.bind(this)
+            temp: this._createTemperatureSensor.bind(this),
+            humidity: this._createHumiditySensor.bind(this)
         };
 
         this._log.info(`OpenHAB2 REST Plugin Loaded - Version ${version}`);
@@ -97,7 +99,11 @@ const OpenHABComplete = class {
         return new LightAccessory(this._platform, config);
     }
 
-    _createTemperature(config) {
+    _createTemperatureSensor(config) {
         return new TemperatureSensorAccessory(this._platform, config);
+    }
+
+    _createHumiditySensor(config) {
+
     }
 };
