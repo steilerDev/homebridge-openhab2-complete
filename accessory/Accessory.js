@@ -1,14 +1,14 @@
 'use strict';
 
-let getAccessoryInformationService = require('../util/Util').getAccessoryInformationService;
+let Characteristic, Service;
 
 class Accessory {
     constructor(platform, config) {
         this._log = platform["log"];
         this._log.debug(`Creating new accessory: ${config.name}`);
 
-        this._Characteristic = platform["api"].hap.Characteristic;
-        this._Service = platform["api"].hap.Service;
+        this.Characteristic = platform["api"].hap.Characteristic;
+        this.Service = platform["api"].hap.Service;
 
         this._config = config;
         this._openHAB = platform["openHAB"];

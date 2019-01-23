@@ -1,22 +1,11 @@
 'use strict';
 
-let Characteristic, Service;
+const Accessory = require('./Accessory');
 
-let getAccessoryInformationService = require('../util/Util').getAccessoryInformationService;
-
-class LightAccessory {
+class LightAccessory extends Accessory {
 
     constructor(platform, config) {
-        this._log = platform["log"];
-        this._log.debug(`Creating new light accessory: ${config.name}`);
-
-        Characteristic = platform["api"].hap.Characteristic;
-        Service = platform["api"].hap.Service;
-
-        this._config = config;
-        this._openHAB = platform["openHAB"];
-        this.name = config.name;
-        this.uuid_base = config.serialNumber;
+        super(platform, config);
 
         if(!(this._config.habItem)) {
             throw new Error(`Required habItem not defined: ${JSON.stringify(acc)}`)
@@ -24,14 +13,7 @@ class LightAccessory {
             this._habItem = config.habItem;
         }
 
-        this._type = this._openHAB.getItemType(this._habItem);
-        if(this._type instanceof Error) {
-            throw this._type;
-        } else if(!(this._type === "Switch" ||
-            this._type === "Dimmer" ||
-            this._type === "Color")) {
-            throw new Error(`${this._habItem}'s type (${this._type}) is not as expected ('Switch', 'Dimmer' or 'Color')`);
-        }
+        this._type = this._getAndCheckItemType(this._habItem, ['Switch', 'Dimmer', 'Color']);
 
         // Synchronisation helper
         this._stateLock = false; // This lock will guard the acceptance of new states
@@ -45,52 +27,40 @@ class LightAccessory {
         };
 
         this._services = [
-            getAccessoryInformationService(platform, config, 'Light'),
-            this._getLightbulbService()
+            this._getAccessoryInformationService('Light'),
+            this._getPrimaryService()
         ];
 
     }
 
-    // Called by homebridge
-    identify(callback) {
-        this._log.debug(`Identify request received!`);
-        callback();
-    }
-
-    // Called by homebridge
-    getServices() {
-        this._log.debug("Getting services");
-        return this._services;
-    }
-
-    _getLightbulbService() {
+    _getPrimaryService() {
         this._log.debug(`Creating lightbulb service for ${this.name}/${this._habItem}`);
-        this._mainService = new Service.Lightbulb(this.name);
+        let primaryService = new this.Service.Lightbulb(this.name);
 
         switch (this._type) {
             case "Color": // Color has Saturation, Hue, Brightness and On Characteristic (fall through intended)
-                this._mainService.getCharacteristic(Characteristic.Saturation)
+                primaryService.getCharacteristic(this.Characteristic.Saturation)
                     .on('set', this._setState.bind(this, "saturation"))
                     .on('set', this._commitState.bind(this))
                     .on('get', this._getState.bind(this, "saturation"));
 
-                this._mainService.getCharacteristic(Characteristic.Hue)
+                primaryService.getCharacteristic(this.Characteristic.Hue)
                     .on('set', this._setState.bind(this, "hue"))
                     .on('set', this._commitState.bind(this))
                     .on('get', this._getState.bind(this, "hue"));
             case "Dimmer": // Dimmer has Brightness and On Characteristic (fall through intended)
-                this._mainService.getCharacteristic(Characteristic.Brightness)
+                primaryService.getCharacteristic(this.Characteristic.Brightness)
                     .on('set', this._setState.bind(this, "brightness"))
                     .on('set', this._commitState.bind(this))
                     .on('get', this._getState.bind(this, "brightness"));
             case "Switch": // Switch only has ON Characteristic
-                this._mainService.getCharacteristic(Characteristic.On)
+                primaryService.getCharacteristic(this.Characteristic.On)
                     .on('set', this._setState.bind(this, "binary"))
                     .on('set', this._commitState.bind(this))
                     .on('get', this._getState.bind(this, "binary"));
                 break;
         }
-        return this._mainService;
+        return primaryService;
     }
 
     _getState(stateType, callback) {

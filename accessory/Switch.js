@@ -13,24 +13,24 @@ class SwitchAccessory extends Accessory {
             this._habItem = config.habItem;
         }
 
-        this._type = this._getAndCheckItemType(this._habItem, ['Switch']);
+        // This will throw an error, if the item does not match the array.
+        this._getAndCheckItemType(this._habItem, ['Switch']);
 
+        // Services will be retrieved by homebridge
         this._services = [
             this._getAccessoryInformationService('Switch'),
-            this._getSwitchService()
+            this._getPrimaryService()
         ]
     }
 
-    _getSwitchService() {
+    _getPrimaryService() {
         this._log.debug(`Creating switch service for ${this.name} [${this._habItem}]`);
-        let Characteristic = this._Characteristic;
-        let Service = this._Service;
-        this._switchService = new Service.Switch(this.name);
-        this._switchService.getCharacteristic(Characteristic.On)
+        let switchService = new this.Service.Switch(this.name);
+        switchService.getCharacteristic(this.Characteristic.On)
             .on('set', this._setState.bind(this))
             .on('get', this._getState.bind(this));
 
-        return this._switchService;
+        return switchService;
     }
 
     _setState(value, callback) {
