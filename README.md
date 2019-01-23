@@ -76,6 +76,22 @@ This service describes a lightbulb.
 ```
 * `habItem` is expected to be of type `Switch`, `Dimmer` or `Color` within openHAB (This changes the functionality withtin HomeKit)
 
+### Temperature Sensor
+
+This service describes a temperature sensor.
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "temp"
+    "habItem": "Itemname-within-OpenHAB"
+    "habBatteryItem": "Itemname-within-OpenHAB"
+    "habBatteryItemStateWarning": "ON"
+}
+```
+* `habItem` is expected to be of type `Number` within openHAB 
+* `habBatteryItem` (optional) defines a openHAB item of type `Switch` that represents a battery warning for the service
+* `habBatteryItemStateWarning` (optional, default: `ON`) state of the `habBatteryItem` that triggers a warning
+
 
 ## Additional Services & Notes from the Developer
 
