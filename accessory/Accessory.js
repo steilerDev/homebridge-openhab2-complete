@@ -34,7 +34,7 @@ class Accessory {
         let type = this._openHAB.getItemType(habItem);
         if(type instanceof Error) {
             throw type;
-        } else if(expectedItems.indexOf(type)) {
+        } else if(expectedItems.indexOf(type) > -1) {
             throw new Error(`${habItem}'s type (${type}) is not as expected (${JSON.stringify(expectedItems)})`)
         } else {
             return type;
