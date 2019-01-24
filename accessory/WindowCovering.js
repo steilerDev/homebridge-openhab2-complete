@@ -67,7 +67,9 @@ class WindowCoveringAccessory extends Accessory.Accessory {
     }
 
     _getPositionState(callback) {
+        this._log.debug(`Getting position state for ${this.name} ['${this._item}]`);
         let currentState = this._openHAB.getStateSync(this._item);
+        this._log.debug(`Comparing currentState (${currentState}) with targetState (${this._targetState}`);
         if(currentState instanceof Error) {
             callback(currentState);
         } else {
