@@ -85,6 +85,7 @@ class WindowCoveringAccessory extends Accessory.Accessory {
     }
 
     _transformation(value) {
+        this._log.debug(`Transforming ${value} with inverted set to ${this._inverted} for ${this.name} [${this._item}]`);
         if(this._inverted) {
             return 100 - value;
         } else {
