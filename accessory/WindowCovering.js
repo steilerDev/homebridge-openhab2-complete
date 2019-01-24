@@ -55,8 +55,10 @@ class WindowCoveringAccessory extends Accessory.Accessory {
                 this._targetState = value;
                 setTimeout(function() {
                     this._log.error("Stopping");
+                    this._log.error(JSON.stringify(this._services[1]));
+                    this._log.error(this.Characteristic.PositionState.STOPPED);
                     this._services[1].setCharacteristic(this.Characteristic.PositionState, this.Characteristic.PositionState.STOPPED);
-                }.bind(this), 1000);
+                }.bind(this), 5000);
             }.bind(this))
             .on('set', Accessory.setState.bind(this, this._item, this._transformation.bind(this)));
 
