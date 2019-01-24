@@ -1,7 +1,7 @@
 'use strict';
 
-const NumericSensorAccessory = require('./NumericSensor');
-const addBatteryWarningCharacteristic = require('./characteristic/Battery');
+const {NumericSensorAccessory} = require('./NumericSensor');
+const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class HumiditySensorAccessory extends NumericSensorAccessory {
     constructor(platform, config) {
@@ -24,3 +24,5 @@ class HumiditySensorAccessory extends NumericSensorAccessory {
         return primaryService;
     }
 }
+
+module.exports = {HumiditySensorAccessory};

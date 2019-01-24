@@ -29,4 +29,4 @@ function addBatteryWarningCharacteristic(accessory, service) {
     }
 }
 
-module.exports = {addBatteryWarningCharacteristic}
+module.exports = {addBatteryWarningCharacteristic};
