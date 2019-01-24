@@ -10,6 +10,7 @@
     "name": "Frank Steiler"
   },
   "keywords": [
+    "homebridge",
     "homebridge-plugin",
     "openHAB2",
     "homekit"
