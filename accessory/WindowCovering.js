@@ -27,13 +27,6 @@ class WindowCoveringAccessory extends Accessory.Accessory {
         // This will throw an error, if the item does not match the array.
         this._getAndCheckItemType(this._item, ['Rollershutter']);
 
-        let currentState = this._openHAB.getStateSync(this._item);
-        if(currentState instanceof Error) {
-            throw currentState;
-        } else {
-            this._targetState = this._transformation(currentState);
-        }
-
         // Services will be retrieved by homebridge
         this._services = [
             this._getAccessoryInformationService('Window Cover'),
@@ -61,10 +54,10 @@ class WindowCoveringAccessory extends Accessory.Accessory {
 
         windowCoveringService.getCharacteristic(this.Characteristic.PositionState) // We will just fake it, since it is not used anyway
             .on('get', function(callback) {
-                callback(this.Characteristic.PositionState).setValue(value);
+                callback(null, this.Characteristic.PositionState.STOPPED);
             }.bind(this));
 
-        windowCoveringService.getCharacteristic(this.Characteristic.HoldPosition)
+        windowCoveringService.getCharacteristic(this.Characteristic.HoldPosition) // Never tested, since I don't know how to invoke it
             .on('set', Accessory.setState.bind(this, this._item, {
                 1: "STOP",
                 "_default": ""
@@ -81,7 +74,6 @@ class WindowCoveringAccessory extends Accessory.Accessory {
             return value;
         }
     }
-
 }
 
 module.exports = {WindowCoveringAccessory};

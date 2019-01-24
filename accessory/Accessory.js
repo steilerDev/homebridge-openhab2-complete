@@ -74,7 +74,6 @@ function transformValue(transformation, value) {
             return new Error(`Unable to transform ${state} using transformation map ${JSON.stringify(transformation)}`);
         }
     }
-
 }
 
 function getState(habItem, transformation, callback) {

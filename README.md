@@ -1,5 +1,7 @@
 # Homebridge Plugin for OpenHAB2 - Complete Edition
 
+> Exceeding features of [homebridge-openhab2](https://www.npmjs.com/package/homebridge-openhab2) and [openHAB's Homekit Plugin](https://www.openhab.org/addons/integrations/homekit/) since `v.0.3.0`
+
 [![NPM](https://nodei.co/npm/homebridge-openhab2-complete.png)](https://nodei.co/npm/homebridge-openhab2-complete/)
 
 This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](https://www.openhab.org) has the expectation to fully support all Services offered by Apple's Homekit Accessory Protocol (HAP), as far as it is feasible based on the Item types offered by OpenHAB. In opposite to the existing [openHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) or the native [openHAB Homekit Plugin](https://www.openhab.org/addons/integrations/homekit/) this plugin requires explicit declaration of accessories in the homebridge configuration and does not use openHAB's tagging system, which leads to a little more effort during configuration, but should prove more reliable and functional in more complex installations. See [Comparisson](#comparison) below.
@@ -60,6 +62,7 @@ The following is a list of all Services that are currently supported and which v
 * [Temperature Sensor](#temperature-sensor)
 * [Humidity Sensor](#humidity-sensor)
 * [Thermostat](#thermostat)
+* [Window Covers]
 
 ### Switch
 
@@ -147,6 +150,19 @@ This service describes a thermostat.
 * `heatingItem` (optional if `mode: "Cooling"` otherwise required) is expected to be of type `Switch`, showing if the thermostat is currently heating the room
 * `coolingItem` (optional if `mode: "Heating"` otherwise required) is expected to be of type `Switch`, showing if the thermostat is currently cooling the room
 * `tempUnit` (optional, default `Celsius`, allowed values `Celsius` & `Fahrenheit`)
+
+### Window Covers
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "windowcovers"
+    "item": "Itemname-within-OpenHAB"
+    "inverted": "false"
+}
+```
+* `item` is expected to be of type `Rollershutter` within openHAB
+* `inverted` (optional, default `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if your Rollershutter have the state `100` for closed and `0` for opened set this flag, because HomeKit expects those values the other way around.
 
 ## Additional Services & Notes from the Developer
 

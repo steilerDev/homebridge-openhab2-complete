@@ -106,7 +106,7 @@ class ThermostatAccessory extends Accessory.Accessory {
             .on('set', Accessory.setState.bind(this, this._targetTempItem, null));
 
         thermostatService.getCharacteristic(this.Characteristic.TemperatureDisplayUnits)
-            .on('get', function(callback) { callback(this._tempUnit) }.bind(this))
+            .on('get', function(callback) { callback(null, this._tempUnit) }.bind(this))
             .on('set', function(_, callback) { callback() }.bind(this));
 
         thermostatService.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState)
