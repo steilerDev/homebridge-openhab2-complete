@@ -51,19 +51,12 @@ class WindowCoveringAccessory extends Accessory.Accessory {
 
         windowCoveringService.getCharacteristic(this.Characteristic.TargetPosition)
             .on('get', function (callback) { callback(null, this._targetState); }.bind(this))
-            .on('set', function (value) {
-                this._targetState = value;
-                setTimeout(function() {
-                    this._log.error("Stopping");
-                    this._log.error(JSON.stringify(this._services[1]));
-                    this._log.error(this.Characteristic.PositionState.STOPPED);
-                    this._services[1].setCharacteristic(this.Characteristic.PositionState, this.Characteristic.PositionState.STOPPED);
-                }.bind(this), 5000);
-            }.bind(this))
+            .on('set', function (value) {this._targetState = this._transformation(value);}.bind(this))
+            .on('set', this._monitorPositionState.bind(this))
             .on('set', Accessory.setState.bind(this, this._item, this._transformation.bind(this)));
 
         windowCoveringService.getCharacteristic(this.Characteristic.PositionState)
-            .on('get', function(callback) { callback(null, 2); }); //this._getPositionState.bind(this));
+            .on('get', this._getPositionState.bind(this));
 
         windowCoveringService.getCharacteristic(this.Characteristic.HoldPosition)
             .on('set', Accessory.setState.bind(this, this._item, {
@@ -100,6 +93,24 @@ class WindowCoveringAccessory extends Accessory.Accessory {
             return value;
         }
     }
+
+    _monitorPositionState() {
+        let timer = setInterval(this._getPositionState.bind(this,
+            function (error, value) {
+                if(error) {
+                    this._log.error(`Unable to get position state: ${error.msg}`);
+                    clearInterval(timer);
+                } else {
+                    this._log.error(`Got position state: ${value}`);
+                    this._services[1].getCharacteristic(this.Characteristic.PositionState).setValue(value);
+                    if(value === this.Characteristic.PositionState.STOPPED) {
+                        this._log.error("Stopping timer");
+                       clearInterval(timer)
+                    }
+                }
+            }.bind(this)
+        ), 500);
+}
 
 }
 
