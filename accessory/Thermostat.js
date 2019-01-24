@@ -107,7 +107,7 @@ class ThermostatAccessory extends Accessory.Accessory {
 
         thermostatService.getCharacteristic(this.Characteristic.TemperatureDisplayUnits)
             .on('get', function(callback) { callback(this._tempUnit) }.bind(this))
-            .on('set', function(_, callback) { callback(this._tempUnit) }.bind(this));
+            .on('set', function(_, callback) { callback() }.bind(this));
 
         thermostatService.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState)
             .on('get', this._getHeatingCoolingState.bind(this));
@@ -132,6 +132,7 @@ class ThermostatAccessory extends Accessory.Accessory {
 
     _getHeatingCoolingState(callback) {
         if(this._mode === "Heating") {
+            this._log.debug(`Getting heating state for ${this._name} [${this._heatingItem}]`);
             Accessory.getState.bind(this, this._heatingItem, {
                 "ON": this.Characteristic.CurrentHeatingCoolingState.HEAT,
                 "OFF": this.Characteristic.CurrentHeatingCoolingState.OFF
@@ -142,6 +143,7 @@ class ThermostatAccessory extends Accessory.Accessory {
                 "OFF": this.Characteristic.CurrentHeatingCoolingState.OFF
             }, callback);
         } else if(this._mode === "HeatingCooling") {
+            this._log.debug(`Getting heating/cooling state for ${this._name} [${this._heatingItem} & ${this._coolingItem}]`);
             let coolingState = this._openHAB.getStateSync(this._coolingItem);
             let heatingState = this._openHAB.getStateSync(this._heatingItem);
             if(coolingState instanceof Error) {
