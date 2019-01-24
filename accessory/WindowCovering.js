@@ -4,7 +4,7 @@ const Accessory = require('./Accessory');
 
 const CONFIG = {
     item: "item",
-    inverted: "false"
+    inverted: "inverted"
 };
 
 class WindowCoveringAccessory extends Accessory.Accessory {
