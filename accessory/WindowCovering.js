@@ -50,7 +50,7 @@ class WindowCoveringAccessory extends Accessory.Accessory {
 
         windowCoveringService.getCharacteristic(this.Characteristic.TargetPosition)
             .on('set', Accessory.setState.bind(this, this._item, this._transformation.bind(this)))
-            .on('set', function(value) { windowCoveringService.setCharacteristic(this.Characteristic.CurrentPosition, value);});
+            .on('set', function(value) { windowCoveringService.setCharacteristic(this.Characteristic.CurrentPosition, value);}.bind(this));
 
         windowCoveringService.getCharacteristic(this.Characteristic.PositionState)
             .on('get', this._getPositionState.bind(this));
