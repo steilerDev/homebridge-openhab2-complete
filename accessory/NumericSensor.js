@@ -3,25 +3,25 @@
 const Accessory = require('./Accessory');
 
 const CONFIG = {
-    habItem: "habItem"
+    item: "item"
 };
 
 class NumericSensorAccessory extends Accessory.Accessory {
     constructor(platform, config) {
         super(platform, config);
 
-        if(!(this._config[CONFIG.habItem])) {
-            throw new Error(`Required habItem not defined: ${JSON.stringify(this._config)}`)
+        if(!(this._config[CONFIG.item])) {
+            throw new Error(`Required item not defined: ${JSON.stringify(this._config)}`)
         } else {
-            this._habItem = this._config[CONFIG.habItem];
-            this._getAndCheckItemType(this._habItem, ['Number']);
+            this._item = this._config[CONFIG.item];
+            this._getAndCheckItemType(this._item, ['Number']);
         }
     }
 
     _configureNumericService(numericSerivce, numericCharacteristic) {
-        this._log.debug(`Creating numeric sensor service for ${this.name} [${this._habItem}]`);
+        this._log.debug(`Creating numeric sensor service for ${this.name} [${this._item}]`);
         numericSerivce.getCharacteristic(numericCharacteristic)
-            .on('get', Accessory.getState.bind(this, this._habItem, null));
+            .on('get', Accessory.getState.bind(this, this._item, null));
 
         return numericSerivce;
     }

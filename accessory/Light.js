@@ -3,7 +3,7 @@
 const {Accessory} = require('./Accessory');
 
 const CONFIG = {
-    habItem: "habItem"
+    item: "item"
 };
 
 class LightAccessory extends Accessory {
@@ -11,13 +11,13 @@ class LightAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
 
-        if(!(this._config[CONFIG.habItem])) {
-            throw new Error(`Required habItem not defined: ${JSON.stringify(this._config)}`)
+        if(!(this._config[CONFIG.item])) {
+            throw new Error(`Required item not defined: ${JSON.stringify(this._config)}`)
         } else {
-            this._habItem = this._config[CONFIG.habItem];
+            this._item = this._config[CONFIG.item];
         }
 
-        this._type = this._getAndCheckItemType(this._habItem, ['Switch', 'Dimmer', 'Color']);
+        this._type = this._getAndCheckItemType(this._item, ['Switch', 'Dimmer', 'Color']);
 
         // Synchronisation helper
         this._stateLock = false; // This lock will guard the acceptance of new states
@@ -38,7 +38,7 @@ class LightAccessory extends Accessory {
     }
 
     _getPrimaryService() {
-        this._log.debug(`Creating lightbulb service for ${this.name}/${this._habItem}`);
+        this._log.debug(`Creating lightbulb service for ${this.name}/${this._item}`);
         let primaryService = new this.Service.Lightbulb(this.name);
 
         switch (this._type) {
@@ -68,13 +68,13 @@ class LightAccessory extends Accessory {
     }
 
     _getState(stateType, callback) {
-        this._log.debug(`Getting state of ${this.name} [${this._habItem}]`);
-        this._openHAB.getState(this._habItem, function(error, state) {
+        this._log.debug(`Getting state of ${this.name} [${this._item}]`);
+        this._openHAB.getState(this._item, function(error, state) {
             if(error) {
                 this._log.error(`Unable to get state: ${error.message}`);
                 callback(error);
             } else {
-                this._log(`Received state: ${state} for ${this.name} [${this._habItem}]`);
+                this._log(`Received state: ${state} for ${this.name} [${this._item}]`);
 
                 switch(stateType) {
                     case "binary": // expects true or false
@@ -121,7 +121,7 @@ class LightAccessory extends Accessory {
 
     // Set the state unless it's locked
     _setState(stateType, value) {
-        this._log.debug(`Change ${stateType} target state of ${this.name} [${this._habItem}] to ${value}`);
+        this._log.debug(`Change ${stateType} target state of ${this.name} [${this._item}] to ${value}`);
         if (!(this._stateLock)) {
             this._newState[stateType] = value;
         }
@@ -153,7 +153,7 @@ class LightAccessory extends Accessory {
                     if(this._newState["hue"] !== undefined && this._newState["brightness"] !== undefined && this._newState["saturation"] !== undefined) {        // All states set, no need to get missing information
                         command = `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`;
                     } else {                                                                                                                                     // Not all states set , therefore we need to get the current state, in order to get the complete tuple
-                        let state = this._openHAB.getStateSync(this._habItem);
+                        let state = this._openHAB.getStateSync(this._item);
                         if (!(state)) {
                             command = new Error("Unable to retrieve current state");
                         } else if (state instanceof Error) {
@@ -172,8 +172,8 @@ class LightAccessory extends Accessory {
                         this._log.error(command.message);
                         callback(command);
                     } else {
-                        this._log(`Updating state of ${this.name} [${this._habItem}] to ${command}`);
-                        this._openHAB.sendCommand(this._habItem, command , callback);
+                        this._log(`Updating state of ${this.name} [${this._item}] to ${command}`);
+                        this._openHAB.sendCommand(this._item, command , callback);
                     }
                 } else {
                     callback(new Error("Command was not set"));
