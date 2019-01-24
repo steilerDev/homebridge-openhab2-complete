@@ -62,7 +62,7 @@ The following is a list of all Services that are currently supported and which v
 * [Temperature Sensor](#temperature-sensor)
 * [Humidity Sensor](#humidity-sensor)
 * [Thermostat](#thermostat)
-* [Window Covers]
+* [Window Covering](#window-covering)
 
 ### Switch
 
@@ -151,12 +151,14 @@ This service describes a thermostat.
 * `coolingItem` (optional if `mode: "Heating"` otherwise required) is expected to be of type `Switch`, showing if the thermostat is currently cooling the room
 * `tempUnit` (optional, default `Celsius`, allowed values `Celsius` & `Fahrenheit`)
 
-### Window Covers
+### Window Covering
+
+This service describes motorized window coverings or shades - examples include shutters, blinds, awnings etc.
 
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "windowcovers"
+    "type": "windowcovering"
     "item": "Itemname-within-OpenHAB"
     "inverted": "false"
 }
@@ -184,12 +186,13 @@ If you would like to contribute just send me a pull request. In order to add a n
 
 ## Comparision
 
-| [OH homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) | openHAB2 - Complete Edition
+| [homebridge-openhab2 plugin](https://www.npmjs.com/package/homebridge-openhab2) | openHAB2 - Complete Edition
 --- | --- 
-Verly little configuration within homebridge/openHAB, only tags within `*.items` files and inclusion within sitemap | Explicit declaration within `config.json` not requiring instable openHAB `Metadata Provider` (removes items if state is `NULL`) and de-couples homebridge configuration from openHAB
+Verly little configuration within homebridge/openHAB, only tags within `*.items` files and inclusion within sitemap, obviously requiring both to be created manually | Explicit declaration within `config.json` not requiring instable openHAB `Metadata Provider` (removes items if state is `NULL`) and de-couples homebridge configuration from openHAB
 Support only 1:1 mappings between Items and HomeKit Services | Supports composite items (e.g. Thermostat)
 No documentation to support extension | Simple concept for extending functionality
 Uses `SSE` to receive push notifications from openHAB about state changes | Polling of states through REST interface
 Battery Warnings not supported | Battery Warnings supported
+Thermostats never really worked | Thermostats working perfectly
 
 Concluding, I personally would use the [OpenHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) in smaller, less diverse installations. However my own installation has a magnitude of different devices, that I want to fully include in HomeKit, therefore this plugin is the only feasible way for me and everyone alike.
