@@ -17,8 +17,8 @@ class WindowCoveringAccessory extends Accessory.Accessory {
         } else {
             this._item = this._config[CONFIG.item];
         }
-
-        if(this._config[CONFIG.inverted] && (this._config[CONFIG.inverted] === "false" ||this._config[CONFIG.inverted] === "true")) {
+        this._log.error(this._config[CONFIG.inverted]);
+        if(this._config[CONFIG.inverted] && (this._config[CONFIG.inverted] === "false" || this._config[CONFIG.inverted] === "true")) {
             this._inverted = this._config[CONFIG.inverted] === "true";
         } else {
             this._inverted = false;
@@ -51,11 +51,11 @@ class WindowCoveringAccessory extends Accessory.Accessory {
 
         windowCoveringService.getCharacteristic(this.Characteristic.TargetPosition)
             .on('get', function (callback) { callback(null, this._targetState); }.bind(this))
-            .on('set', function (value, _) { this._targetState = value; }.bind(this))
+            .on('set', function (value) { this._targetState = value; }.bind(this))
             .on('set', Accessory.setState.bind(this, this._item, this._transformation.bind(this)));
 
         windowCoveringService.getCharacteristic(this.Characteristic.PositionState)
-            .on('get', this._getPositionState.bind(this));
+            .on('get', function(callback) { callback(null, 2); }; //this._getPositionState.bind(this));
 
         windowCoveringService.getCharacteristic(this.Characteristic.HoldPosition)
             .on('set', Accessory.setState.bind(this, this._item, {
