@@ -116,7 +116,10 @@ class ThermostatAccessory extends Accessory.Accessory {
             .on('get', this._getHeatingCoolingState.bind(this))
             .on('set', this._setHeatingCoolingState.bind(this));
 
-        thermostatService.getCharacteristic(this.Characteristic.TargetHeatingCoolingState).props.perms = [this.Characteristic.Perms.READ, this.Characteristic.Perms.NOTIFY];
+        if(!(this._coolingItem && this._heatingItem)) { // We only allow HeatingCooling state to be changed, if heating and cooling device are available
+            this._log(`Removing write permissions from TargetHeatingCoolingState for ${this.name}, because the configured devices do not support it`);
+            thermostatService.getCharacteristic(this.Characteristic.TargetHeatingCoolingState).props.perms = [this.Characteristic.Perms.READ, this.Characteristic.Perms.NOTIFY];
+        }
 
         this._log.error(`${JSON.stringify(thermostatService.getCharacteristic(this.Characteristic.TargetHeatingCoolingState))}`);
 
@@ -176,8 +179,24 @@ class ThermostatAccessory extends Accessory.Accessory {
     }
 
     _setHeatingCoolingState(state, callback) {
-        this._log.error(`Setting heating cooling state to ${state}`);
-        callback();
+        this._log(`Setting heating cooling state for ${this.name} [${this._heatingItem}] to ${state}`);
+        switch(state) {
+            case this.Characteristic.TargetHeatingCoolingState.OFF:
+                if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "OFF", callback);
+                if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "OFF", callback);
+                break;
+            case this.Characteristic.TargetHeatingCoolingState.HEAT:
+                if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "ON", callback);
+                if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "OFF", callback);
+                break;
+            case this.Characteristic.TargetHeatingCoolingState.COOL:
+                if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "OFF", callback);
+                if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "ON", callback);
+                break;
+            default:
+                callback();
+                break;
+        }
     }
 }
 
