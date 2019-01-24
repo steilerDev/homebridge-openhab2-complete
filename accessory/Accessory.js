@@ -103,7 +103,7 @@ function setState(habItem, transformation, state, callback) {
         this._log.error(transformedState.message);
         callback(transformedState);
     } else {
-        this._openHAB.sendCommand(habItem, transformedState, function (error) {
+        this._openHAB.sendCommand(habItem, `${transformedState}`, function (error) {
             if (error) {
                 this._log.error(`Unable to send command: ${error.message}`);
                 callback(error);
