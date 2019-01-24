@@ -8,6 +8,7 @@ const SerialNumberGenerator = require('./util/SerialNumberGenerator');
 const SwitchAccessory = require('./accessory/Switch');
 const LightAccessory = require('./accessory/Light');
 const TemperatureSensorAccessory = require('./accessory/TemperatureSensor');
+const HumiditySensorAccessory = require('./accessory/HumiditySensor');
 const OpenHAB = require('./util/OpenHAB');
 
 
@@ -104,6 +105,6 @@ const OpenHABComplete = class {
     }
 
     _createHumiditySensor(config) {
-
+        return new HumiditySensorAccessory(this._platform, config);
     }
 };
