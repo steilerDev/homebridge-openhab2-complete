@@ -1,9 +1,8 @@
 'use strict';
 
-const url = require('url');
+const {URL} = require('url');
 const request = require('request');
 const syncRequest = require('sync-request');
-const clone = require('clone');
 
 class OpenHAB {
 
@@ -19,10 +18,9 @@ class OpenHAB {
     }
 
     getState(habItem, callback) {
-        let myUrl = clone(this._url);
-        myUrl.pathname = `/rest/items/${habItem}/state`;
+        this._url.pathname = `/rest/items/${habItem}/state`;
         request({
-            url: myUrl.href,
+            url: this._url.href,
             method: 'GET'
         },
         function (error, response, body) {
@@ -39,9 +37,8 @@ class OpenHAB {
     }
 
     getStateSync(habItem) {
-        let myUrl = clone(this._url);
-        myUrl.pathname = `/rest/items/${habItem}/state`;
-        const response = syncRequest('GET', myUrl.href);
+        this._url.pathname = `/rest/items/${habItem}/state`;
+        const response = syncRequest('GET', this._url.href);
         if (response.statusCode === 404) {
             return new Error(`Item does not exist!`);
         } else if (!(response.body)) {
@@ -52,10 +49,9 @@ class OpenHAB {
     }
 
     sendCommand(habItem, command, callback) {
-        let myUrl = clone(this._url);
-        myUrl.pathname = `/rest/items/${habItem}`;
+        this._url.pathname = `/rest/items/${habItem}`;
         request({
-            url: myUrl.href,
+            url: this._url.href,
             method: 'POST',
             body: command
         },
@@ -73,10 +69,9 @@ class OpenHAB {
     }
 
     updateState(habItem, state, callback) {
-        let myUrl = clone(this._url);
-        myUrl.pathname = `/rest/items/${habItem}/state`;
+        this._url.pathname = `/rest/items/${habItem}/state`;
         request({
-                url: myUrl.href,
+                url: this._url.href,
                 method: 'PUT',
                 body: state
         },
@@ -95,9 +90,8 @@ class OpenHAB {
 
     // Will call callback with callback(error, type)
     getItemType(habItem) {
-        let myUrl = clone(this._url);
-        myUrl.pathname = `/rest/items/${habItem}`;
-        const response = syncRequest('GET', myUrl.href);
+        this._url.pathname = `/rest/items/${habItem}`;
+        const response = syncRequest('GET', this._url.href);
         if (response.statusCode === 404) {
             return new Error(`Item does not exist!`);
         } else {

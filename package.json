@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "request": "^2.88.0",
-    "sync-request": "^6.0.0",
-    "clone": "^2.1.2"
+    "sync-request": "^6.0.0"
   }
 }
