@@ -11,21 +11,24 @@ const {SwitchAccessory} = require("./accessory/Switch");
 const {LightAccessory} = require("./accessory/Light");
 const {TemperatureSensorAccessory} = require("./accessory/TemperatureSensor");
 const {HumiditySensorAccessory} = require("./accessory/HumiditySensor");
+const {ThermostatAccessory} = require("./accessory/Thermostat");
 
 
 module.exports = (homebridge) => {
     homebridge.registerPlatform(platformName, platformPrettyName, OpenHABComplete);
 };
 
-const SerialNumberPrefixes = {
-    switch: 'SW',
-    light: 'LI',
-    temp: 'TE',
-    humidity: 'HU'
-};
-
 const OpenHABComplete = class {
     constructor(log, config, api) {
+
+        this._factories = {
+            switch: this._createSwitch.bind(this),
+            light: this._createLight.bind(this),
+            temp: this._createTemperatureSensor.bind(this),
+            humidity: this._createHumiditySensor.bind(this),
+            thermostat: this._createThermostat.bind(this)
+        };
+
         this._log = log;
         this._config = config;
 
@@ -44,14 +47,6 @@ const OpenHABComplete = class {
                 log: log
             };
         }
-
-        this._factories = {
-            switch: this._createSwitch.bind(this),
-            light: this._createLight.bind(this),
-            temp: this._createTemperatureSensor.bind(this),
-            humidity: this._createHumiditySensor.bind(this)
-        };
-
         this._log.info(`OpenHAB2 REST Plugin Loaded - Version ${version}`);
     }
 
@@ -71,7 +66,7 @@ const OpenHABComplete = class {
             }
 
             if(acc.name) {
-                acc.serialNumber = SerialNumberGenerator.generate(SerialNumberPrefixes[acc.type], acc.name);
+                acc.serialNumber = SerialNumberGenerator.generate(acc.name);
             } else {
                 this._log.warn(`Invalid configuration: Accessory name is unknown: ${util.inspect(acc)}, skipping`);
                 return;
@@ -107,5 +102,9 @@ const OpenHABComplete = class {
 
     _createHumiditySensor(config) {
         return new HumiditySensorAccessory(this._platform, config);
+    }
+
+    _createThermostat(config) {
+        return new ThermostatAccessory(this._platform, config);
     }
 };

@@ -2,9 +2,8 @@
 
 const crypto = require('crypto');
 
-function generate(prefix, name) {
+function generate(name) {
     const sha1sum = crypto.createHash('sha1');
-    sha1sum.update(prefix);
     sha1sum.update(name);
 
     const s = sha1sum.digest('hex');

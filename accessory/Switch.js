@@ -2,15 +2,19 @@
 
 const Accessory = require('./Accessory');
 
+const CONFIG = {
+    habItem: "habItem"
+};
+
 class SwitchAccessory extends Accessory.Accessory {
 
     constructor(platform, config) {
         super(platform, config);
 
-        if(!(this._config["habItem"])) {
+        if(!(this._config[CONFIG.habItem])) {
             throw new Error(`Required habItem not defined: ${JSON.stringify(this._config)}`)
         } else {
-            this._habItem = this._config["habItem"];
+            this._habItem = this._config[CONFIG.habItem];
         }
 
         // This will throw an error, if the item does not match the array.
