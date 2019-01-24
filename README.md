@@ -120,3 +120,6 @@ Verly little configuration within homebridge/openHAB, only tags within `*.items`
 Support only 1:1 mappings between Items and HomeKit Services | Supports composite items (e.g. Thermostat)
 No documentation to support extension | Simple concept for extending functionality
 Uses `SSE` to receive push notifications from openHAB about state changes | Polling of states through REST interface
+Battery Warnings not supported | Battery Warnings supported
+
+Concluding, I personally would use the [OpenHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) in smaller, less diverse installations. However my own installation has a magnitude of different devices, that I want to fully include in HomeKit, therefore this plugin is the only feasible way for me and everyone alike.
