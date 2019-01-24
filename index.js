@@ -12,6 +12,7 @@ const {LightAccessory} = require("./accessory/Light");
 const {TemperatureSensorAccessory} = require("./accessory/TemperatureSensor");
 const {HumiditySensorAccessory} = require("./accessory/HumiditySensor");
 const {ThermostatAccessory} = require("./accessory/Thermostat");
+const {WindowCoveringAccessory} = require("./accessory/WindowCovering");
 
 
 module.exports = (homebridge) => {
@@ -26,7 +27,8 @@ const OpenHABComplete = class {
             light: this._createLight.bind(this),
             temp: this._createTemperatureSensor.bind(this),
             humidity: this._createHumiditySensor.bind(this),
-            thermostat: this._createThermostat.bind(this)
+            thermostat: this._createThermostat.bind(this),
+            windowcovering: this._createWindowCovering.bind(this)
         };
 
         this._log = log;
@@ -106,5 +108,9 @@ const OpenHABComplete = class {
 
     _createThermostat(config) {
         return new ThermostatAccessory(this._platform, config);
+    }
+
+    _createWindowCovering(config) {
+        return new WindowCoveringAccessory(this._platform, config);
     }
 };
