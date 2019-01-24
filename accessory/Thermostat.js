@@ -116,6 +116,8 @@ class ThermostatAccessory extends Accessory.Accessory {
             .on('get', this._getHeatingCoolingState.bind(this))
             .on('set', this._setHeatingCoolingState.bind(this));
 
+        this._log.error(`${JSON.stringify(thermostatService.getCharacteristic(this.Characteristic.TargetHeatingCoolingState))}`);
+
         if(this._currentHumidityItem) {
             thermostatService.getCharacteristic(this.Characteristic.CurrentRelativeHumidity)
                 .on('get', Accessory.getState.bind(this, this._currentHumidityItem, null));
