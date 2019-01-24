@@ -95,7 +95,7 @@ class ThermostatAccessory extends Accessory.Accessory {
     }
 
     _getPrimaryService() {
-        this._log.debug(`Creating thermostat service for ${this.name} [${this._habItem}]`);
+        this._log.debug(`Creating thermostat service for ${this.name}`);
         let thermostatService = new this.Service.Thermostat(this.name);
 
         thermostatService.getCharacteristic(this.Characteristic.CurrentTemperature)
@@ -120,8 +120,6 @@ class ThermostatAccessory extends Accessory.Accessory {
             this._log(`Removing write permissions from TargetHeatingCoolingState for ${this.name}, because the configured devices do not support it`);
             thermostatService.getCharacteristic(this.Characteristic.TargetHeatingCoolingState).props.perms = [this.Characteristic.Perms.READ, this.Characteristic.Perms.NOTIFY];
         }
-
-        this._log.error(`${JSON.stringify(thermostatService.getCharacteristic(this.Characteristic.TargetHeatingCoolingState))}`);
 
         if(this._currentHumidityItem) {
             thermostatService.getCharacteristic(this.Characteristic.CurrentRelativeHumidity)
@@ -182,21 +180,19 @@ class ThermostatAccessory extends Accessory.Accessory {
         this._log(`Setting heating cooling state for ${this.name} [${this._heatingItem}] to ${state}`);
         switch(state) {
             case this.Characteristic.TargetHeatingCoolingState.OFF:
-                if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "OFF", callback);
-                if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "OFF", callback);
+                if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "OFF", function(){});
+                if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "OFF", function(){});
                 break;
             case this.Characteristic.TargetHeatingCoolingState.HEAT:
-                if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "ON", callback);
-                if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "OFF", callback);
+                if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "ON", function(){});
+                if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "OFF", function(){});
                 break;
             case this.Characteristic.TargetHeatingCoolingState.COOL:
-                if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "OFF", callback);
-                if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "ON", callback);
-                break;
-            default:
-                callback();
+                if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "OFF", function(){});
+                if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "ON", function(){});
                 break;
         }
+        callback();
     }
 }
 
