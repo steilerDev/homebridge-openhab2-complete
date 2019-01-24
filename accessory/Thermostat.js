@@ -158,7 +158,7 @@ class ThermostatAccessory extends Accessory.Accessory {
             } else if(heatingState === "ON" && coolingState === "OFF") {
                 callback(null, this.Characteristic.CurrentHeatingCoolingState.HEAT);
             } else if(heatingState === "OFF" && coolingState === "ON") {
-                callback(null, Characteristic.CurrentHeatingCoolingState.COOL);
+                callback(null, this.Characteristic.CurrentHeatingCoolingState.COOL);
             } else {
                 let msg = `Combination of heating state (${heatingState}) and cooling state (${coolingState}) not allowed!`;
                 this._log.error(msg);
