@@ -90,7 +90,7 @@ function getState(habItem, transformation, callback) {
             callback(error);
         } else {
             this._log(`Received state: ${state} for ${this.name} [${habItem}]`);
-            let transformedState = transformValue(transformation, value);
+            let transformedState = transformValue(transformation, state);
             if(transformedState instanceof Error) {
                 this._log.error(transformedState.message);
                 callback(transformedState);
@@ -101,9 +101,9 @@ function getState(habItem, transformation, callback) {
     }.bind(this));
 }
 
-function setState(habItem, transformation, value, callback) {
-    this._log(`Change target state of ${this.name} [${this._habItem}] to ${value}`);
-    let transformedState = transformValue(transformation, value);
+function setState(habItem, transformation, state, callback) {
+    this._log(`Change target state of ${this.name} [${this._habItem}] to ${state}`);
+    let transformedState = transformValue(transformation, state);
     if(transformedState instanceof Error) {
         this._log.error(transformedState.message);
         callback(transformedState);
