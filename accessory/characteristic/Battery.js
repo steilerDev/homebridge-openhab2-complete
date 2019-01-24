@@ -1,6 +1,8 @@
 'use strict';
 
-let BATTERY_CONFIG = {
+const {getState} = require('../Accessory');
+
+const BATTERY_CONFIG = {
     habBatteryItem: "habBatteryItem",
     habBatteryItemStateWarning: "habBatteryItemStateWarning"
 };
