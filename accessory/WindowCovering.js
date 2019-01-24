@@ -49,11 +49,19 @@ class WindowCoveringAccessory extends Accessory.Accessory {
             .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this)));
 
         windowCoveringService.getCharacteristic(this.Characteristic.TargetPosition)
+            .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this))) // If homekit is curious about the target state, we will just give him the actual state
             .on('set', Accessory.setState.bind(this, this._item, this._transformation.bind(this)))
-            .on('set', function(value) { windowCoveringService.setCharacteristic(this.Characteristic.CurrentPosition, value);}.bind(this));
+            .on('set', function(value) { // We will use this to set the actual position to the target position, in order to stop showing 'Closing...' or 'Opening...'
+                setTimeout(
+                    windowCoveringService.setCharacteristic(this.Characteristic.CurrentPosition, value).bind(this),
+                    5000
+                );
+            }.bind(this));
 
-        windowCoveringService.getCharacteristic(this.Characteristic.PositionState)
-            .on('get', this._getPositionState.bind(this));
+        windowCoveringService.getCharacteristic(this.Characteristic.PositionState) // We will just fake it, since it is not used anyway
+            .on('get', function(callback) {
+                callback(this.Characteristic.PositionState).setValue(value);
+            }.bind(this));
 
         windowCoveringService.getCharacteristic(this.Characteristic.HoldPosition)
             .on('set', Accessory.setState.bind(this, this._item, {
@@ -62,43 +70,6 @@ class WindowCoveringAccessory extends Accessory.Accessory {
             }));
 
         return windowCoveringService;
-    }
-
-    _getPositionState(callback) {
-        this._log.debug(`Getting position state for ${this.name} ['${this._item}]`);
-        let currentState = this._openHAB.getStateSync(this._item);
-        this._log.debug(`Comparing currentState (${currentState}) with targetState (${this._targetState})`);
-        if(currentState instanceof Error) {
-            callback(currentState);
-        } else {
-            currentState = parseInt(currentState);
-            this._services[1].getCharacteristic(this.Characteristic.CurrentPosition).setValue(currentState);
-            if(this._targetState > currentState && !this._inverted) {
-                callback(null, this.Characteristic.PositionState.INCREASING)
-            } else if(this._targetState < currentState && !this._inverted) {
-                callback(null, this.Characteristic.PositionState.DECREASING)
-            } else {
-                callback(null, this.Characteristic.PositionState.STOPPED)
-            }
-        }
-    }
-
-    _monitorPositionState() {
-        let timer = setInterval(this._getPositionState.bind(this,
-            function (error, value) {
-                if(error) {
-                    this._log.error(`Unable to get position state: ${error.msg}`);
-                    clearInterval(timer);
-                } else {
-                    this._log.error(`Got position state: ${value}`);
-                    this._services[1].getCharacteristic(this.Characteristic.PositionState).setValue(value);
-                    if(value === this.Characteristic.PositionState.STOPPED) {
-                        this._log.error("Stopping timer");
-                       clearInterval(timer)
-                    }
-                }
-            }.bind(this)
-        ), 500);
     }
 
     _transformation(value) {
