@@ -132,15 +132,15 @@ class ThermostatAccessory extends Accessory.Accessory {
 
     _getHeatingCoolingState(callback) {
         if(this._mode === "Heating") {
-            Accessory.getState(this._heatingItem, {
+            Accessory.getState.bind(this, this._heatingItem, {
                 "ON": this.Characteristic.CurrentHeatingCoolingState.HEAT,
                 "OFF": this.Characteristic.CurrentHeatingCoolingState.OFF
-            }, callback).bind(this);
+            }, callback);
         } else if(this._mode === "Cooling") {
-            Accessory.getState(this._coolingItem, {
+            Accessory.getState.bind(this, this._coolingItem, {
                 "ON": this.Characteristic.CurrentHeatingCoolingState.COOL,
                 "OFF": this.Characteristic.CurrentHeatingCoolingState.OFF
-            }, callback).bind(this);
+            }, callback);
         } else if(this._mode === "HeatingCooling") {
             let coolingState = this._openHAB.getStateSync(this._coolingItem);
             let heatingState = this._openHAB.getStateSync(this._heatingItem);
