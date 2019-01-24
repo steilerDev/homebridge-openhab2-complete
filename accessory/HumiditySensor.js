@@ -1,8 +1,8 @@
 'use strict';
 
-const Accessory = require('./NumericSensor');
+const NumericSensorAccessory = require('./NumericSensor');
 
-class HumiditySensorAccessory extends Accessory {
+class HumiditySensorAccessory extends NumericSensorAccessory {
     constructor(platform, config) {
         super(platform, config);
 

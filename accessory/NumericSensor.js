@@ -20,11 +20,6 @@ class NumericSensorAccessory extends Accessory {
 
         let configureBattery = require('./Accessory').configureBattery.bind(this);
         configureBattery();
-
-        this._services = [
-            this._getAccessoryInformationService('Temperature Sensor'),
-            this._getPrimaryService()
-        ]
     }
 
     _configureNumericService(numericSerivce, numericCharacteristic) {

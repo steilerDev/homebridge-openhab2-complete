@@ -84,7 +84,7 @@ function transformValue(transformation, value) {
 
 function getState(habItem, transformation, callback) {
     this._log(`Getting state for ${this.name} [${habItem}]`);
-    this._openHAB.getState(this.habItem, function(error, state) {
+    this._openHAB.getState(habItem, function(error, state) {
         if(error) {
             this._log.error(`Unable to get state for ${this.name} [${habItem}]: ${error.message}`);
             callback(error);
@@ -108,12 +108,12 @@ function setState(habItem, transformation, value, callback) {
         this._log.error(transformedState.message);
         callback(transformedState);
     } else {
-        this._openHAB.sendCommand(this._habItem, transformedState, function (error) {
+        this._openHAB.sendCommand(habItem, transformedState, function (error) {
             if (error) {
                 this._log.error(`Unable to send command: ${error.message}`);
                 callback(error);
             } else {
-                this._log.debug(`Changed target state of ${this.name}`);
+                this._log.debug(`Changed target state of ${this.name} [${habItem}] to ${transformedState}`);
                 callback();
             }
         }.bind(this));
