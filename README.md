@@ -59,6 +59,7 @@ The following is a list of all Services that are currently supported and which v
 * [Lightbulb](#lightbulb)
 * [Temperature Sensor](#temperature-sensor)
 * [Humidity Sensor](#humidity-sensor)
+* [Thermostat](#thermostat)
 
 ### Switch
 
