@@ -9,9 +9,7 @@ function generate(name) {
     const s = sha1sum.digest('hex');
     let i = -1;
 
-    const serialNumber = 'xxxxxxxxxxxx'.replace(/[x]/g, () => s[++i]).toUpperCase();
-
-    return [prefix, serialNumber].join('');
+    return 'xxxxxxxxxxxx'.replace(/[x]/g, () => s[++i]).toUpperCase();
 }
 
 module.exports = {generate};
