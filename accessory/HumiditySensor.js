@@ -3,7 +3,7 @@
 const NumericSensorAccessory = require('./NumericSensor');
 const addBatteryWarningCharacteristic = require('./characteristic/Battery');
 
-export class HumiditySensorAccessory extends NumericSensorAccessory {
+class HumiditySensorAccessory extends NumericSensorAccessory {
     constructor(platform, config) {
         super(platform, config);
 
