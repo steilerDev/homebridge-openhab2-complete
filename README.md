@@ -137,9 +137,9 @@ This service describes a thermostat.
     "currentHumidityItem": "Itemname-within-OpenHAB",
     "targetHumidityItem": "Itemname-within-OpenHAB",
     "mode": "HeatingCooling"
-    "heatingItem", //State mutual Exclusive with coolingItem, 'Switch' type
-    "coolingItem", //State mutual Exclusive with heatingItem, 'Switch' type
-    "tempUnit" // 'Celsius' (default), 'Fahrenheit'
+    "heatingItem": "Itemname-within-OpenHAB",
+    "coolingItem": "Itemname-within-OpenHAB", 
+    "tempUnit": "Celsius"
 }
 ```
 * `currentTempItem` is expected to be of type `Number` within openHAB
