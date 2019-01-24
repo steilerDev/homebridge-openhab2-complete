@@ -1,10 +1,6 @@
 'use strict';
 
-var crypto = require('crypto');
-
-module.exports = {
-    generate: generate
-};
+const crypto = require('crypto');
 
 function generate(prefix, name) {
     const sha1sum = crypto.createHash('sha1');
@@ -18,3 +14,5 @@ function generate(prefix, name) {
 
     return [prefix, serialNumber].join('');
 }
+
+module.exports = {generate};

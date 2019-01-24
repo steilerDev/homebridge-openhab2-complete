@@ -1,8 +1,8 @@
 'use strict';
 
-import * as Accessory from './Accessory';
+const Accessory = require('./Accessory');
 
-export class SwitchAccessory extends Accessory.Accessory {
+class SwitchAccessory extends Accessory.Accessory {
 
     constructor(platform, config) {
         super(platform, config);
@@ -39,3 +39,5 @@ export class SwitchAccessory extends Accessory.Accessory {
         return switchService;
     }
 }
+
+module.exports = {SwitchAccessory};

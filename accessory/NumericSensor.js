@@ -1,12 +1,12 @@
 'use strict';
 
-import * as Accessory from './Accessory';
+const Accessory = require('./Accessory');
 
 const CONFIG = {
     habItem: "habItem"
 };
 
-export class NumericSensorAccessory extends Accessory.Accessory {
+class NumericSensorAccessory extends Accessory.Accessory {
     constructor(platform, config) {
         super(platform, config);
 
@@ -26,3 +26,5 @@ export class NumericSensorAccessory extends Accessory.Accessory {
         return numericSerivce;
     }
 }
+
+module.exports = {NumericSensorAccessory};

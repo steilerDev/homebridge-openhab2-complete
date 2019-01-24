@@ -1,7 +1,7 @@
 'use strict';
 
-import {NumericSensorAccessory} from './NumericSensor';
-import {addBatteryWarningCharacteristic} from "./characteristic/Battery";
+const NumericSensorAccessory = require('./NumericSensor');
+const addBatteryWarningCharacteristic = require('./characteristic/Battery');
 
 export class HumiditySensorAccessory extends NumericSensorAccessory {
     constructor(platform, config) {

@@ -1,9 +1,9 @@
 'use strict';
 
-import {NumericSensorAccessory} from './NumericSensor';
-import {addBatteryWarningCharacteristic} from "./characteristic/Battery";
+const {NumericSensorAccessory} = require('./NumericSensor')
+const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
-export class TemperatureSensorAccessory extends NumericSensorAccessory {
+class TemperatureSensorAccessory extends NumericSensorAccessory {
     constructor(platform, config) {
         super(platform, config);
 
@@ -24,3 +24,5 @@ export class TemperatureSensorAccessory extends NumericSensorAccessory {
         return primaryService;
     }
 }
+
+module.exports = {TemperatureSensorAccessory};

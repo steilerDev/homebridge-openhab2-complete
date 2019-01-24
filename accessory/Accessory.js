@@ -7,7 +7,7 @@ let PLATFORM = {
     openHAB: "openHAB"
 };
 
-export class Accessory {
+class Accessory {
     constructor(platform, config) {
         this._log = platform[PLATFORM.log];
         this._log.debug(`Creating new accessory: ${config.name}`);
@@ -77,7 +77,7 @@ function transformValue(transformation, value) {
 
 }
 
-export function getState(habItem, transformation, callback) {
+function getState(habItem, transformation, callback) {
     this._log(`Getting state for ${this.name} [${habItem}]`);
     this._openHAB.getState(habItem, function(error, state) {
         if(error) {
@@ -96,7 +96,7 @@ export function getState(habItem, transformation, callback) {
     }.bind(this));
 }
 
-export function setState(habItem, transformation, state, callback) {
+function setState(habItem, transformation, state, callback) {
     this._log(`Change target state of ${this.name} [${this._habItem}] to ${state}`);
     let transformedState = transformValue(transformation, state);
     if(transformedState instanceof Error) {
@@ -114,3 +114,5 @@ export function setState(habItem, transformation, state, callback) {
         }.bind(this));
     }
 }
+
+module.exports = {Accessory, getState, setState};

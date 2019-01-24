@@ -1,8 +1,8 @@
 'use strict';
 
-import {Accessory} from "./Accessory";
+const {Accessory} = require('./Accessory');
 
-export class LightAccessory extends Accessory {
+class LightAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
@@ -190,3 +190,5 @@ export class LightAccessory extends Accessory {
         this._stateLock = false;
     }
 }
+
+module.exports = {LightAccessory};

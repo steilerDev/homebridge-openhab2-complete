@@ -6,7 +6,7 @@ let BATTERY_CONFIG = {
 };
 
 // This function will try and add a battery warning characteristic to the provided service
-export function addBatteryWarningCharacteristic(accessory, service) {
+function addBatteryWarningCharacteristic(accessory, service) {
     try {
         if (accessory._config[BATTERY_CONFIG.habBatteryItem]) {
             let habBatteryItem = accessory._config[BATTERY_CONFIG.habBatteryItem];
@@ -28,3 +28,5 @@ export function addBatteryWarningCharacteristic(accessory, service) {
         accessory._log.error(`Not configuring battery for ${accessory.name}: ${e.message}`);
     }
 }
+
+module.exports = {addBatteryWarningCharacteristic}

@@ -111,4 +111,4 @@ class OpenHAB {
     }
 }
 
-module.exports = OpenHAB;
+module.exports = {OpenHAB};
