@@ -74,7 +74,7 @@ class WindowCoveringAccessory extends Accessory.Accessory {
             callback(currentState);
         } else {
             currentState = parseInt(currentState);
-            this._services[1].getCharacteristic(this.Characteristic.CurrentState).setValue(currentState);
+            this._services[1].getCharacteristic(this.Characteristic.CurrentPosition).setValue(currentState);
             if(this._targetState > currentState && !this._inverted) {
                 callback(null, this.Characteristic.PositionState.INCREASING)
             } else if(this._targetState < currentState && !this._inverted) {
