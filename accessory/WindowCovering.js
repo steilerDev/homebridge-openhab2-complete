@@ -49,14 +49,13 @@ class WindowCoveringAccessory extends Accessory.Accessory {
             .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this)));
 
         windowCoveringService.getCharacteristic(this.Characteristic.TargetPosition)
-            .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this))) // If homekit is curious about the target state, we will just give him the actual state
+            .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this))) // If HomeKit is curious about the target state, we will just give him the actual state
             .on('set', Accessory.setState.bind(this, this._item, this._transformation.bind(this)))
             .on('set', function(value) { // We will use this to set the actual position to the target position, in order to stop showing 'Closing...' or 'Opening...'
-                setTimeout(
-                    windowCoveringService.setCharacteristic,
-                    5000,
-                    this.Characteristic.CurrentPosition,
-                    value
+                setTimeout(function(value) {
+                        this._services[1].setCharacteristic(this.Characteristic.CurrentPosition, value);
+                    }.bind(this, value),
+                    5000
                 );
             }.bind(this));
 
