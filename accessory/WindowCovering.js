@@ -53,8 +53,10 @@ class WindowCoveringAccessory extends Accessory.Accessory {
             .on('set', Accessory.setState.bind(this, this._item, this._transformation.bind(this)))
             .on('set', function(value) { // We will use this to set the actual position to the target position, in order to stop showing 'Closing...' or 'Opening...'
                 setTimeout(
-                    windowCoveringService.setCharacteristic(this.Characteristic.CurrentPosition, value),
-                    5000
+                    windowCoveringService.setCharacteristic,
+                    5000,
+                    this.Characteristic.CurrentPosition,
+                    value
                 );
             }.bind(this));
 
