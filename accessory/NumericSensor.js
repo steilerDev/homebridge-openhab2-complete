@@ -1,13 +1,12 @@
 'use strict';
 
-const Accessory = require('./Accessory').Accessory;
-const getState = require('./Accessory').getState;
+import * as Accessory from './Accessory';
 
 const CONFIG = {
     habItem: "habItem"
 };
 
-class NumericSensorAccessory extends Accessory {
+export class NumericSensorAccessory extends Accessory.Accessory {
     constructor(platform, config) {
         super(platform, config);
 
@@ -17,26 +16,13 @@ class NumericSensorAccessory extends Accessory {
             this._habItem = this._config[CONFIG.habItem];
             this._getAndCheckItemType(this._habItem, ['Number']);
         }
-
-        let configureBattery = require('./Accessory').configureBattery.bind(this);
-        configureBattery();
     }
 
     _configureNumericService(numericSerivce, numericCharacteristic) {
         this._log.debug(`Creating numeric sensor service for ${this.name} [${this._habItem}]`);
         numericSerivce.getCharacteristic(numericCharacteristic)
-            .on('get', getState.bind(this, this._habItem, null));
-
-        if(this._habBatteryItem) {
-            numericSerivce.getCharacteristic(this.Characteristic.StatusLowBattery)
-                .on('get', getState.bind(this, this._habBatteryItem, {
-                    [this._habBatteryItemStateWarning] : 1,
-                    "_default": 0
-            }))
-        }
+            .on('get', Accessory.getState.bind(this, this._habItem, null));
 
         return numericSerivce;
     }
 }
-
-module.exports = NumericSensorAccessory;

@@ -1,10 +1,5 @@
 'use strict';
 
-let BATTERY_CONFIG = {
-    habBatteryItem: "habBatteryItem",
-    habBatteryItemStateWarning: "habBatteryItemStateWarning"
-};
-
 let PLATFORM = {
     log: "log",
     api: "api",
@@ -12,7 +7,7 @@ let PLATFORM = {
     openHAB: "openHAB"
 };
 
-class Accessory {
+export class Accessory {
     constructor(platform, config) {
         this._log = platform[PLATFORM.log];
         this._log.debug(`Creating new accessory: ${config.name}`);
@@ -82,7 +77,7 @@ function transformValue(transformation, value) {
 
 }
 
-function getState(habItem, transformation, callback) {
+export function getState(habItem, transformation, callback) {
     this._log(`Getting state for ${this.name} [${habItem}]`);
     this._openHAB.getState(habItem, function(error, state) {
         if(error) {
@@ -101,7 +96,7 @@ function getState(habItem, transformation, callback) {
     }.bind(this));
 }
 
-function setState(habItem, transformation, state, callback) {
+export function setState(habItem, transformation, state, callback) {
     this._log(`Change target state of ${this.name} [${this._habItem}] to ${state}`);
     let transformedState = transformValue(transformation, state);
     if(transformedState instanceof Error) {
@@ -119,28 +114,3 @@ function setState(habItem, transformation, state, callback) {
         }.bind(this));
     }
 }
-
-// Call this function if you want to optionally set the battery characteristic using the configuration keys above
-function configureBattery() {
-    try {
-        if (this._config[BATTERY_CONFIG.habBatteryItem]) {
-            this._habBatteryItem = this._config[BATTERY_CONFIG.habBatteryItem];
-            this._getAndCheckItemType(this._habBatteryItem, ['Switch']);
-            if (this._config[BATTERY_CONFIG.habBatteryItemStateWarning]) {
-                this._habBatteryItemStateWarning = this._config[BATTERY_CONFIG.habBatteryItemStateWarning];
-            } else {
-                this._habBatteryItemStateWarning = "ON";
-            }
-        }
-    } catch (e) {
-        this._log.error(`Not configuring battery for ${this.name}: ${e.message}`);
-        this._habBatteryItem = undefined;
-    }
-}
-
-module.exports = {
-    "Accessory": Accessory,
-    "getState": getState,
-    "setState": setState,
-    "configureBattery": configureBattery
-};

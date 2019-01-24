@@ -5,11 +5,12 @@ const platformName = require('./package').name;
 const platformPrettyName = 'openHAB2-Complete';
 
 const SerialNumberGenerator = require('./util/SerialNumberGenerator');
-const SwitchAccessory = require('./accessory/Switch');
-const LightAccessory = require('./accessory/Light');
-const TemperatureSensorAccessory = require('./accessory/TemperatureSensor');
-const HumiditySensorAccessory = require('./accessory/HumiditySensor');
 const OpenHAB = require('./util/OpenHAB');
+
+import {SwitchAccessory} from "./accessory/Switch";
+import {LightAccessory} from "./accessory/Light";
+import {TemperatureSensorAccessory} from "./accessory/TemperatureSensor";
+import {HumiditySensorAccessory} from "./accessory/HumiditySensor";
 
 
 module.exports = (homebridge) => {

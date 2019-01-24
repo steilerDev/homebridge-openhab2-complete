@@ -1,10 +1,8 @@
 'use strict';
 
-const Accessory = require('./Accessory').Accessory;
-const getState = require('./Accessory').getState;
-const setState = require('./Accessory').setState;
+import * as Accessory from './Accessory';
 
-class SwitchAccessory extends Accessory {
+export class SwitchAccessory extends Accessory.Accessory {
 
     constructor(platform, config) {
         super(platform, config);
@@ -29,11 +27,11 @@ class SwitchAccessory extends Accessory {
         this._log.debug(`Creating switch service for ${this.name} [${this._habItem}]`);
         let switchService = new this.Service.Switch(this.name);
         switchService.getCharacteristic(this.Characteristic.On)
-            .on('set', setState.bind(this, this._habItem, {
+            .on('set', Accessory.setState.bind(this, this._habItem, {
                 true: "ON",
                 false: "OFF"
             }))
-            .on('get', getState.bind(this, this._habItem, {
+            .on('get', Accessory.getState.bind(this, this._habItem, {
                 "ON": true,
                 "OFF": false
             }));
@@ -41,5 +39,3 @@ class SwitchAccessory extends Accessory {
         return switchService;
     }
 }
-
-module.exports = SwitchAccessory;

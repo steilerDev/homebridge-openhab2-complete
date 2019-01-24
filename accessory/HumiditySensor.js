@@ -1,19 +1,26 @@
 'use strict';
 
-const NumericSensorAccessory = require('./NumericSensor');
+import {NumericSensorAccessory} from './NumericSensor';
+import {addBatteryWarningCharacteristic} from "./characteristic/Battery";
 
-class HumiditySensorAccessory extends NumericSensorAccessory {
+export class HumiditySensorAccessory extends NumericSensorAccessory {
     constructor(platform, config) {
         super(platform, config);
 
         this._services = [
             this._getAccessoryInformationService('Humidity Sensor'),
-            this._configureNumericService(
-                new this.Service.HumiditySensor(this.name),
-                this.Characteristic.CurrentRelativeHumidity
-            )
+            this._getPrimaryService()
         ]
     }
-}
 
-module.exports = HumiditySensorAccessory;
+    _getPrimaryService() {
+        let primaryService = this._configureNumericService(
+            new this.Service.HumiditySensor(this.name),
+            this.Characteristic.CurrentRelativeHumidity
+        );
+
+        addBatteryWarningCharacteristic(this, primaryService);
+
+        return primaryService;
+    }
+}
