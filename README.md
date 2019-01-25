@@ -99,13 +99,13 @@ This service describes a temperature sensor.
     "name": "An items name, as shown in Homekit later",
     "type": "temp"
     "item": "Itemname-within-OpenHAB"
-    "habBatteryItem": "Itemname-within-OpenHAB"
-    "habBatteryItemStateWarning": "ON"
+    "batteryItem": "Itemname-within-OpenHAB"
+    "batteryItemInverted": "false"
 }
 ```
 * `item` is expected to be of type `Number` within openHAB 
-* `habBatteryItem` (optional) defines an openHAB item of type `Switch` that represents a battery warning for the service
-* `habBatteryItemStateWarning` (optional, default: `ON`) state of the `habBatteryItem` that triggers a warning
+* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
+* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 
 ### Humidity Sensor
 
@@ -116,13 +116,13 @@ This service describes a humidity sensor.
     "name": "An items name, as shown in Homekit later",
     "type": "humidity"
     "item": "Itemname-within-OpenHAB"
-    "habBatteryItem": "Itemname-within-OpenHAB"
-    "habBatteryItemStateWarning": "ON"
+    "batteryItem": "Itemname-within-OpenHAB"
+    "batteryItemInverted": "false"
 }
 ```
 * `item` is expected to be of type `Number` within openHAB 
-* `habBatteryItem` (optional) defines an openHAB item of type `Switch` that represents a battery warning for the service
-* `habBatteryItemStateWarning` (optional, default: `ON`) state of the `habBatteryItem` that triggers a warning
+* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
+* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 
 ### Thermostat
 
@@ -177,7 +177,7 @@ If you have feedback or suggestions how to better represent the Services as open
 If you would like to contribute just send me a pull request. In order to add a new service you have to modify/add the following parts:
 1. `./index.js`: 
     * `this._factories` at the beginning of the `OpenHABComplete` constructor needs the same key and a reference to a factory method
-    * Create your factory method at the end of the file, returning your accessory instance. The configuration block dedicated to your accessory will be passed to this function as JSON
+    * Create your factory method in your class file, returning your accessory instance. The configuration block dedicated to your accessory will be passed to this function as JSON
 2. Create your own accessory class:
     * Create a new file for your accessory within the `./accessory` folder and include it within `./index.js`
     * The only *required* functions are `getServices()` (returning an array of `HAP.Service` with attached `HAP.Characteristic`) and `identify()` (which does not need to do anything). Those are implemented in the `Accessory` super class and don't need to be overridden.
