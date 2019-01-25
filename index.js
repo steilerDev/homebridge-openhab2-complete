@@ -51,7 +51,7 @@ const OpenHABComplete = class {
                 log: log
             };
         }
-        this._log.info(`OpenHAB2 REST Plugin Loaded - Version ${version}`);
+        this._log.info(`OpenHAB2 - Complete Edition Plugin Loaded - Version ${version}`);
     }
 
     accessories(callback) {
