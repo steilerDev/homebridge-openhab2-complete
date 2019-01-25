@@ -2,9 +2,10 @@
 
 ## V0.4.0 (unreleased)
 * Support for Binary Sensors (Motion Sensor Service , ...) (Supported openHAB items: `Switch` and `Contact`):
-    * Motion Sensor Service
-    * Leak Sensor Service
-    * Carbon Monoxide Sensor
+    * Motion Sensor Service (with optional Battery Warning Characteristic)
+    * Leak Sensor Service (with optional Battery Warning Characteristic)
+    * Carbon Monoxide Sensor (with optional Battery Warning & Level Characteristic)
+    * Carbon Dioxide Sensor (with optional Battery Warning & Level Characteristic)
 * Supporting `Contact` and `Switch` type for Battery Warning Service
 
 Breaking Changes:

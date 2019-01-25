@@ -227,6 +227,27 @@ This service describes a carbon monoxide sensor.
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 * `levelItem` (optional) defines an openHAB item of type `Number` that represents the Carbon Monoxid level of the sensor
 
+### Carbon Dioxide Sensor
+
+This service describes a carbon dioxide sensor.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "co2",
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "true",
+    "batteryItem": "Itemname-within-OpenHAB",
+    "batteryItemInverted": "false",
+    "levelItem": "Itemname-within-OpenHAB"
+}
+```
+* `item` is expected to be of type `Switch` or `Contact` within openHAB 
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show motion was detected) set this value to `"true"` 
+* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
+* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+* `levelItem` (optional) defines an openHAB item of type `Number` that represents the Carbon Monoxid level of the sensor
+
 ## Additional Services & Notes from the Developer
 
 Obviously the aim of this project is a full coverage of the HAP specification. Due to the limitations of smart devices in my home I can only test a subset and would love to have your feedback and input for this project.
