@@ -90,9 +90,9 @@ class LightAccessory extends Accessory {
                         break;
                     case "brightness": // expects number and only called by dimmer or color types
                         if(this._type === "Dimmer") {
-                            callback(null, state == 99 ? 100 : state);
+                            callback(null, state == 99 ? 100 : state);                                              // For some reasons openHAB does not report 100
                         } else if(this._type === "Color") {
-                            callback(null, state.split(",")[2] == 99 ? 100 : state.split(",")[2]);
+                            callback(null, state.split(",")[2] == 99 ? 100 : state.split(",")[2]);                  // For some reasons openHAB does not report 100
                         } else {
                             callback (new Error(`Unable to parse brightness state: ${state}`));
                         }
