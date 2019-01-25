@@ -6,11 +6,13 @@
     * Leak Sensor Service (with optional Battery Warning Characteristic)
     * Carbon Monoxide Sensor (with optional Battery Warning & Level Characteristic)
     * Carbon Dioxide Sensor (with optional Battery Warning & Level Characteristic)
+    * Contact Sensor Service (with optional Battery Warning Characteristic)
+    * Occupancy Sensor Service (with optional Battery Warning Characteristic)
 * Supporting `Contact` and `Switch` type for Battery Warning Service
 
 Breaking Changes:
-* Renamed `habItem` key in configuration for `battery` type to `item`
-* Renamed `habBatteryItemStateWarning` key in configuration for `battery` type to `inverted: "false" | "true"`
+* Renamed `habBatteryItem` key in configurations with Battery Warning Characteristic to `batteryItem`
+* Renamed `habBatteryItemStateWarning` key in configurations with Battery Warning Characteristics `batteryItemInverted: "false" | "true"`
 
 ## V0.3.0
 * Support for Window Covering Service (Supported openHAB item: `Rollershutter`)
