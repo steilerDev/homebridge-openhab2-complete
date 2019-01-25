@@ -16,7 +16,7 @@ class ContactSensorAccessory extends BinarySensorAccessory {
     _getPrimaryService() {
         let primaryService = this._configureBinaryService(
             new this.Service.ContactSensor(this.name),
-            this.Characteristic.Characteristic.ContactSensorState
+            this.Characteristic.ContactSensorState
         );
 
         addBatteryWarningCharacteristic.bind(this)(primaryService);
