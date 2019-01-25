@@ -23,7 +23,7 @@ module.exports = (homebridge) => {
 const OpenHABComplete = class {
     constructor(log, config, api) {
 
-        this._log.error(JSON.stringify(api.hap.Service));
+        log.error(JSON.stringify(api.hap.Service));
         this._factories = {
             switch: SwitchAccessory,
             light: LightAccessory,
