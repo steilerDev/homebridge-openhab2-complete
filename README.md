@@ -64,6 +64,7 @@ The following is a list of all Services that are currently supported and which v
 * [Thermostat](#thermostat)
 * [Window Covering](#window-covering)
 * [Motion Sensor](#motion-sensor)
+* [Leak Sensor](#leak-sensor)
 
 ### Switch
 
@@ -170,6 +171,25 @@ This service describes motorized window coverings or shades - examples include s
 ### Motion Sensor
 
 This service describes a motion sensor.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "motion",
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "true",
+    "batteryItem": "Itemname-within-OpenHAB",
+    "batteryItemInverted": "false"
+}
+```
+* `item` is expected to be of type `Switch` or `Contact` within openHAB 
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show motion was detected) set this value to `"true"` 
+* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
+* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+
+### Leak Sensor
+
+This service describes a leak sensor.
 
 ```
 {

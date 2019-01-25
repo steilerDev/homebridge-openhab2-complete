@@ -3,20 +3,20 @@
 const {BinarySensorAccessory} = require('./BinarySensor');
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
-class MotionSensorAccessory extends BinarySensorAccessory {
+class LeakSensorAccessory extends BinarySensorAccessory {
     constructor(platform, config) {
         super(platform, config);
 
         this._services = [
-            this._getAccessoryInformationService('Motion Sensor'),
+            this._getAccessoryInformationService('Leak Sensor'),
             this._getPrimaryService()
         ]
     }
 
     _getPrimaryService() {
         let primaryService = this._configureBinaryService(
-            new this.Service.MotionSensor(this.name),
-            this.Characteristic.MotionDetected
+            new this.Service.LeakSensor(this.name),
+            this.Characteristic.LeakDetected
         );
 
         addBatteryWarningCharacteristic.bind(this)(primaryService);
@@ -25,8 +25,8 @@ class MotionSensorAccessory extends BinarySensorAccessory {
     }
 }
 
-function createMotionSensorAccessory(platform, config) {
-    return new MotionSensorAccessory(platform, config);
+function createLeakSensorAccessory(platform, config) {
+    return new LeakSensorAccessory(platform, config);
 }
 
-module.exports = {createMotionSensorAccessory};
+module.exports = {createLeakSensorAccessory};
