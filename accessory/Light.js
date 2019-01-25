@@ -195,4 +195,8 @@ class LightAccessory extends Accessory {
     }
 }
 
-module.exports = {LightAccessory};
+function createLightAccessory(platform, config) {
+    return new LightAccessory(platform, config);
+}
+
+module.exports = {createLightAccessory};

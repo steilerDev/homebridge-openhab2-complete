@@ -197,7 +197,7 @@ If you have feedback or suggestions how to better represent the Services as open
 If you would like to contribute just send me a pull request. In order to add a new service you have to modify/add the following parts:
 1. `./index.js`: 
     * `this._factories` at the beginning of the `OpenHABComplete` constructor needs the same key and a reference to a factory method
-    * Create your factory method in your class file, returning your accessory instance. The configuration block dedicated to your accessory will be passed to this function as JSON
+    * Create your factory method in your class file, returning your accessory instance. The platform (for requests and the HAP class) and the configuration block dedicated to your accessory will be passed to this function as JSON
 2. Create your own accessory class:
     * Create a new file for your accessory within the `./accessory` folder and include it within `./index.js`
     * The only *required* functions are `getServices()` (returning an array of `HAP.Service` with attached `HAP.Characteristic`) and `identify()` (which does not need to do anything). Those are implemented in the `Accessory` super class and don't need to be overridden.

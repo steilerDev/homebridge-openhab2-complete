@@ -7,13 +7,13 @@ const platformPrettyName = 'openHAB2-Complete';
 const SerialNumberGenerator = require('./util/SerialNumberGenerator');
 const {OpenHAB} = require('./util/OpenHAB');
 
-const {SwitchAccessory} = require("./accessory/Switch");
-const {LightAccessory} = require("./accessory/Light");
-const {TemperatureSensorAccessory} = require("./accessory/TemperatureSensor");
-const {HumiditySensorAccessory} = require("./accessory/HumiditySensor");
-const {ThermostatAccessory} = require("./accessory/Thermostat");
-const {WindowCoveringAccessory} = require("./accessory/WindowCovering");
-const {MotionSensorAccessory} = require("./accessory/MotionSensor");
+const SwitchAccessory = require("./accessory/Switch").createSwitchAccessory;
+const LightAccessory = require("./accessory/Light").createLightAccessory;
+const TemperatureSensorAccessory = require("./accessory/TemperatureSensor").createTemperaturSensorAccessory;
+const HumiditySensorAccessory = require("./accessory/HumiditySensor").createHumiditySensorAccessory;
+const ThermostatAccessory = require("./accessory/Thermostat").createThermostatAccessory;
+const WindowCoveringAccessory = require("./accessory/WindowCovering").createWindowCoveringAccessory;
+const MotionSensorAccessory = require("./accessory/MotionSensor").createMotionSensorAccessory;
 
 
 module.exports = (homebridge) => {
@@ -24,13 +24,13 @@ const OpenHABComplete = class {
     constructor(log, config, api) {
 
         this._factories = {
-            switch: this._createSwitch.bind(this),
-            light: this._createLight.bind(this),
-            temp: this._createTemperatureSensor.bind(this),
-            humidity: this._createHumiditySensor.bind(this),
-            thermostat: this._createThermostat.bind(this),
-            windowcovering: this._createWindowCovering.bind(this),
-            motion: this._createMotionSensor.bind(this)
+            switch: SwitchAccessory,
+            light: LightAccessory,
+            temp: TemperatureSensorAccessory,
+            humidity: HumiditySensorAccessory,
+            thermostat: ThermostatAccessory,
+            windowcovering: WindowCoveringAccessory,
+            motion: MotionSensorAccessory
         };
 
         this._log = log;
@@ -82,7 +82,7 @@ const OpenHABComplete = class {
 
             try {
                 // Checked that: 'serialNumber' 'version' 'name' exists and 'type' is valid
-                const accessory = factory(acc);
+                const accessory = factory(this._platform, acc);
                 _accessories.push(accessory);
                 this._log.info(`Added accessory ${acc.name}`);
             } catch (e) {
@@ -90,33 +90,5 @@ const OpenHABComplete = class {
             }
         });
         callback(_accessories);
-    }
-
-    _createSwitch(config) {
-        return new SwitchAccessory(this._platform, config);
-    }
-
-    _createLight(config) {
-        return new LightAccessory(this._platform, config);
-    }
-
-    _createTemperatureSensor(config) {
-        return new TemperatureSensorAccessory(this._platform, config);
-    }
-
-    _createHumiditySensor(config) {
-        return new HumiditySensorAccessory(this._platform, config);
-    }
-
-    _createThermostat(config) {
-        return new ThermostatAccessory(this._platform, config);
-    }
-
-    _createWindowCovering(config) {
-        return new WindowCoveringAccessory(this._platform, config);
-    }
-
-    _createMotionSensor(config) {
-        return new MotionSensorAccessory(this._platform, config);
     }
 };

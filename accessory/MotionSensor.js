@@ -26,4 +26,8 @@ class MotionSensorAccessory extends BinarySensorAccessory {
     }
 }
 
-module.exports = {MotionSensorAccessory};
+function createMotionSensorAccessory(platform, config) {
+    return new MotionSensorAccessory(platform, config);
+}
+
+module.exports = {createMotionSensorAccessory};

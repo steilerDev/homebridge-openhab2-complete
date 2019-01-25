@@ -44,4 +44,8 @@ class SwitchAccessory extends Accessory.Accessory {
     }
 }
 
-module.exports = {SwitchAccessory};
+function createSwitchAccessory(platform, config) {
+    return new SwitchAccessory(platform, config);
+}
+
+module.exports = {createSwitchAccessory};
