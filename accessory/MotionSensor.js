@@ -17,7 +17,7 @@ class MotionSensorAccessory extends BinarySensorAccessory {
         this._log.error(`Getting primary service for ${this.name}: ${JSON.stringify(this)}`);
         let primaryService = this._configureBinaryService(
             new this.Service.MotionSensor(this.name),
-            this.Characteristic.Characteristic.MotionDetected
+            this.Characteristic.MotionDetected
         );
 
         addBatteryWarningCharacteristic.bind(this)(primaryService);

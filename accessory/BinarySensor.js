@@ -36,12 +36,12 @@ class BinarySensorAccessory extends Accessory.Accessory {
         };
     }
 
-    _configureBinaryService(binarySerivce, binaryCharacteristic, transformation) {
+    _configureBinaryService(binaryService, binaryCharacteristic, transformation) {
         this._log.debug(`Creating binary sensor service for ${this.name} [${this._habItem}]`);
-        binarySerivce.getCharacteristic(binaryCharacteristic)
+        binaryService.getCharacteristic(binaryCharacteristic)
             .on('get', Accessory.getState.bind(this, this._item, transformation || this._transformation));
 
-        return binarySerivce;
+        return binaryService;
     }
 }
 
