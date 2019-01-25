@@ -57,7 +57,7 @@ const OpenHABComplete = class {
                     }
                 }
             }
-        });
+        }.bind(this));
 
         this._log.info(`'OpenHAB2 - Complete Edition' Plugin Loaded - Version ${version}`);
     }
