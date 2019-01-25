@@ -45,6 +45,11 @@ const OpenHABComplete = class {
            this._log.error(msg);
            throw new Error(msg);
        } else {
+            this._log.error(JSON.stringify(api));
+            this._log.error("###############################");
+
+            this._log.error(JSON.stringify(api.Service));
+
             this._platform = {
                 openHAB: new OpenHAB(config.host, config.port),
                 api:  api,

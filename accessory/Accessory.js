@@ -14,7 +14,6 @@ class Accessory {
 
         this.Characteristic = platform[PLATFORM.api][PLATFORM.hap].Characteristic;
         this.Service = platform[PLATFORM.api][PLATFORM.hap].Service;
-        this._log.error(JSON.stringify(this.Characteristic));
 
         this._config = config;
         this._openHAB = platform[PLATFORM.openHAB];
