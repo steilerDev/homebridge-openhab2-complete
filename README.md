@@ -257,13 +257,12 @@ Due to the very limited documentation on homebridge plugin development I have no
 If you have feedback or suggestions how to better represent the Services as openHAB Items, feel free to open an [issue](https://github.com/steilerDev/homebridge-openhab2-complete/issues).
 
 If you would like to contribute just send me a pull request. In order to add a new service you have to modify/add the following parts:
-1. `./index.js`: 
-    * `this._factories` at the beginning of the `OpenHABComplete` constructor needs the same key and a reference to a factory method
-    * Create your factory method in your class file, returning your accessory instance. The platform (for requests and the HAP class) and the configuration block dedicated to your accessory will be passed to this function as JSON
-2. Create your own accessory class:
-    * Create a new file for your accessory within the `./accessory` folder and include it within `./index.js`
-    * The only *required* functions are `getServices()` (returning an array of `HAP.Service` with attached `HAP.Characteristic`) and `identify()` (which does not need to do anything). Those are implemented in the `Accessory` super class and don't need to be overridden.
-    * See the `./accessory/Switch.js` accessory for a simple Service and use it as a skeleton
+1. Create your own accessory class within `./accessory`
+2. The only *required* functions are `getServices()` (returning an array of `HAP.Service` with attached `HAP.Characteristic`) and `identify()` (which does not need to do anything). Those are implemented in the `Accessory` super class and don't need to be overridden. Make sure that `this._services` is populated and reflects your service
+3. Define `const type = "YourTypeName"` (this will be used inside `config.json` to identify an accessory of your type) and `function createAccessory(platform, config)` returning an instance of your Accessory.
+4. Finally expose `type` and `createAccessory` through `module.exports = {type, createAccessory}`
+    
+See the `./accessory/Switch.js` accessory for a simple Service and use it as a skeleton
 
 
 ## Comparision

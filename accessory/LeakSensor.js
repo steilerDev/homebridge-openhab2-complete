@@ -25,8 +25,10 @@ class LeakSensorAccessory extends BinarySensorAccessory {
     }
 }
 
-function createLeakSensorAccessory(platform, config) {
+const type = "leak";
+
+function createAccessory(platform, config) {
     return new LeakSensorAccessory(platform, config);
 }
 
-module.exports = {createLeakSensorAccessory};
+module.exports = {createAccessory, type};

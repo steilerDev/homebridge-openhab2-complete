@@ -26,8 +26,11 @@ class COSensorAccessory extends BinarySensorAccessory {
     }
 }
 
-function createCOSensorAccessory(platform, config) {
+const type = "co";
+
+function createAccessory(platform, config) {
     return new COSensorAccessory(platform, config);
 }
 
-module.exports = {createCOSensorAccessory};
+module.exports = {createAccessory, type};
+

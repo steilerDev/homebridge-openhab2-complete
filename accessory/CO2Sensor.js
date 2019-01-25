@@ -26,8 +26,10 @@ class CO2SensorAccessory extends BinarySensorAccessory {
     }
 }
 
-function createCO2SensorAccessory(platform, config) {
+const type = "co2";
+
+function createAccessory(platform, config) {
     return new CO2SensorAccessory(platform, config);
 }
 
-module.exports = {createCO2SensorAccessory};
+module.exports = {createAccessory, type};
