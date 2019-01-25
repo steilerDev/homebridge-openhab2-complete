@@ -3,7 +3,7 @@
 const {getState} = require('../Accessory');
 
 const LEVEL_CONFIG = {
-    levelItem: "batteryItem"
+    levelItem: "levelItem"
 };
 
 // This function will try and add a level characteristic for numeric levels on binary sensors (e.g. CO level) to the provided service
