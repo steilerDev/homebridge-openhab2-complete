@@ -206,9 +206,9 @@ This service describes a leak sensor.
 * `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 
-### Carbon Monoxid Sensor
+### Carbon Monoxide Sensor
 
-This service describes a leak sensor.
+This service describes a carbon monoxide sensor.
 
 ```
 {

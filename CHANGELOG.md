@@ -4,8 +4,8 @@
 * Support for Binary Sensors (Motion Sensor Service , ...) (Supported openHAB items: `Switch` and `Contact`):
     * Motion Sensor Service
     * Leak Sensor Service
-    * Carbon Monoxid Sensor
-* Supporting `Contact` type for Battery Warning Service
+    * Carbon Monoxide Sensor
+* Supporting `Contact` and `Switch` type for Battery Warning Service
 
 Breaking Changes:
 * Renamed `habItem` key in configuration for `battery` type to `item`
