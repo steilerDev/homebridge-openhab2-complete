@@ -11,7 +11,7 @@ class LightAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
 
-        if(!(this._config[CONFIG.item])) {
+        if (!(this._config[CONFIG.item])) {
             throw new Error(`Required item not defined: ${JSON.stringify(this._config)}`)
         } else {
             this._item = this._config[CONFIG.item];
@@ -69,46 +69,46 @@ class LightAccessory extends Accessory {
 
     _getState(stateType, callback) {
         this._log.debug(`Getting state of ${this.name} [${this._item}]`);
-        this._openHAB.getState(this._item, function(error, state) {
-            if(error) {
+        this._openHAB.getState(this._item, function (error, state) {
+            if (error) {
                 this._log.error(`Unable to get state: ${error.message}`);
                 callback(error);
             } else {
                 this._log(`Received state: ${state} for ${this.name} [${this._item}]`);
 
-                switch(stateType) {
+                switch (stateType) {
                     case "binary": // expects true or false
-                        if(this._type === "Switch") {
+                        if (this._type === "Switch") {
                             callback(null, state === "ON");
                         } else if (this._type === "Dimmer") {
                             callback(null, state > 0);
                         } else if (this._type === "Color") {
                             callback(null, state.split(",")[2] > 0);
                         } else {
-                            callback (new Error(`Unable to parse binary state: ${state}`));
+                            callback(new Error(`Unable to parse binary state: ${state}`));
                         }
                         break;
                     case "brightness": // expects number and only called by dimmer or color types
-                        if(this._type === "Dimmer") {
+                        if (this._type === "Dimmer") {
                             callback(null, state);
-                        } else if(this._type === "Color") {
+                        } else if (this._type === "Color") {
                             callback(null, state.split(",")[2]);
                         } else {
-                            callback (new Error(`Unable to parse brightness state: ${state}`));
+                            callback(new Error(`Unable to parse brightness state: ${state}`));
                         }
                         break;
                     case "hue": // expects number and only called by color types
-                        if(this._type ===  "Color") {
+                        if (this._type === "Color") {
                             callback(null, state.split(",")[0]);
                         } else {
-                            callback (new Error(`Unable to parse hue state: ${state}`));
+                            callback(new Error(`Unable to parse hue state: ${state}`));
                         }
                         break;
                     case "saturation": // expects number and only called by color types
-                        if(this._type ===  "Color") {
+                        if (this._type === "Color") {
                             callback(null, state.split(",")[1]);
                         } else {
-                            callback (new Error(`Unable to parse saturation state: ${state}`));
+                            callback(new Error(`Unable to parse saturation state: ${state}`));
                         }
                         break;
                     default:
@@ -129,7 +129,7 @@ class LightAccessory extends Accessory {
 
     // Wait for all states to be set (250ms should be sufficient) and then commit once
     _commitState(_, callback) {
-        if(this._commitLock) {
+        if (this._commitLock) {
             this._log.debug(`Not executing commit due to commit lock`);
             callback();
         } else {
@@ -137,20 +137,20 @@ class LightAccessory extends Accessory {
             setTimeout(function () {
                 this._stateLock = true;
                 let command;
-                if(this._newState["brightness"] === undefined && this._newState["hue"] === undefined && this._newState["saturation"] === undefined) {           // Only binary set
-                    if(this._newState["binary"] === undefined) {
+                if (this._newState["brightness"] === undefined && this._newState["hue"] === undefined && this._newState["saturation"] === undefined) {           // Only binary set
+                    if (this._newState["binary"] === undefined) {
                         command = new Error("Race condition! Commit was called before set!")
                     } else {
                         command = this._newState["binary"] ? "ON" : "OFF";
                     }
-                } else if(this._newState["hue"] === undefined && this._newState["saturation"] === undefined) {                                                  // Only brightness set
+                } else if (this._newState["hue"] === undefined && this._newState["saturation"] === undefined) {                                                  // Only brightness set
                     if (this._newState["brightness"] === undefined) {
                         command = new Error("Race condition! Commit was called before set!");
                     } else {
                         command = `${this._newState["brightness"] === 100 ? 99 : this._newState["brightness"]}`;
                     }
                 } else {                                                                                                                                         // Either hue, brightness and/or saturation set, therefore we need to send a tuple
-                    if(this._newState["hue"] !== undefined && this._newState["brightness"] !== undefined && this._newState["saturation"] !== undefined) {        // All states set, no need to get missing information
+                    if (this._newState["hue"] !== undefined && this._newState["brightness"] !== undefined && this._newState["saturation"] !== undefined) {        // All states set, no need to get missing information
                         command = `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`;
                     } else {                                                                                                                                     // Not all states set , therefore we need to get the current state, in order to get the complete tuple
                         let state = this._openHAB.getStateSync(this._item);
@@ -167,13 +167,13 @@ class LightAccessory extends Accessory {
                     }
                 }
                 this._releaseLocks();
-                if(command) {
-                    if(command instanceof Error) {
+                if (command) {
+                    if (command instanceof Error) {
                         this._log.error(command.message);
                         callback(command);
                     } else {
                         this._log(`Updating state of ${this.name} [${this._item}] to ${command}`);
-                        this._openHAB.sendCommand(this._item, command , callback);
+                        this._openHAB.sendCommand(this._item, command, callback);
                     }
                 } else {
                     callback(new Error("Command was not set"));
@@ -195,4 +195,8 @@ class LightAccessory extends Accessory {
     }
 }
 
-module.exports = {LightAccessory};
+function createLightAccessory(platform, config) {
+    return new LightAccessory(platform, config);
+}
+
+module.exports = {createLightAccessory};
