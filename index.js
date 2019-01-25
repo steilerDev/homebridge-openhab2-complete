@@ -52,8 +52,8 @@ const OpenHABComplete = class {
                     if(accessoryFactory === undefined || !(typeof accessoryFactory === "function")) {
                         this._log.warn(`Ignoring ${accessoryFilePath}, due to missing 'createAccessory' definition`);
                     } else {
-                        this._log(`Loading and activating accessory ${type}`);
-                        this._factories[type] = require(accessoryFilePath).createAccessory;
+                        this._log(`Loading and activating accessory ${accessoryType}`);
+                        this._factories[accessoryType] = require(accessoryFilePath).createAccessory;
                     }
                 }
             }
