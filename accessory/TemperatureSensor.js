@@ -19,7 +19,7 @@ class TemperatureSensorAccessory extends NumericSensorAccessory {
             this.Characteristic.CurrentTemperature
         );
 
-        addBatteryWarningCharacteristic(this, primaryService);
+        addBatteryWarningCharacteristic.bind(this)(primaryService);
 
         return primaryService;
     }

@@ -20,7 +20,7 @@ class MotionSensorAccessory extends BinarySensorAccessory {
             this.Characteristic.Characteristic.MotionDetected
         );
 
-        addBatteryWarningCharacteristic(this, primaryService);
+        addBatteryWarningCharacteristic.bind(this)(primaryService);
 
         return primaryService;
     }

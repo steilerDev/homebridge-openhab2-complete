@@ -19,7 +19,7 @@ class HumiditySensorAccessory extends NumericSensorAccessory {
             this.Characteristic.CurrentRelativeHumidity
         );
 
-        addBatteryWarningCharacteristic(this, primaryService);
+        addBatteryWarningCharacteristic.bind(this)(primaryService);
 
         return primaryService;
     }
