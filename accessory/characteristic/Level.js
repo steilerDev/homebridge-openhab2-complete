@@ -21,4 +21,4 @@ function addLevelCharacteristic(service, characteristic) {
     }
 }
 
-module.exports = {addBatteryWarningCharacteristic};
+module.exports = {addLevelCharacteristic};
