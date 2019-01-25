@@ -196,4 +196,8 @@ class ThermostatAccessory extends Accessory.Accessory {
     }
 }
 
-module.exports = {ThermostatAccessory};
+function createThermostatAccessory(platform, config) {
+    return new ThermostatAccessory(platform, config);
+}
+
+module.exports = {createThermostatAccessory};
