@@ -23,6 +23,7 @@ module.exports = (homebridge) => {
 const OpenHABComplete = class {
     constructor(log, config, api) {
 
+        this._log.error(JSON.stringify(api.hap.Service));
         this._factories = {
             switch: SwitchAccessory,
             light: LightAccessory,
@@ -48,7 +49,6 @@ const OpenHABComplete = class {
             this._log.error(JSON.stringify(api));
             this._log.error("###############################");
 
-            this._log.error(JSON.stringify(api.hap.Service));
 
             this._platform = {
                 openHAB: new OpenHAB(config.host, config.port),
@@ -56,7 +56,7 @@ const OpenHABComplete = class {
                 log: log
             };
         }
-        this._log.info(`OpenHAB2 - Complete Edition Plugin Loaded - Version ${version}`);
+        this._log.info(`OpenHAB2 - Complete Edition - Plugin Loaded - Version ${version}`);
     }
 
     accessories(callback) {
