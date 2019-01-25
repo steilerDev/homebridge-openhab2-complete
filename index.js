@@ -13,6 +13,7 @@ const {TemperatureSensorAccessory} = require("./accessory/TemperatureSensor");
 const {HumiditySensorAccessory} = require("./accessory/HumiditySensor");
 const {ThermostatAccessory} = require("./accessory/Thermostat");
 const {WindowCoveringAccessory} = require("./accessory/WindowCovering");
+const {MotionSensorAccessory} = require("./accessory/MotionSensor");
 
 
 module.exports = (homebridge) => {
@@ -28,7 +29,8 @@ const OpenHABComplete = class {
             temp: this._createTemperatureSensor.bind(this),
             humidity: this._createHumiditySensor.bind(this),
             thermostat: this._createThermostat.bind(this),
-            windowcovering: this._createWindowCovering.bind(this)
+            windowcovering: this._createWindowCovering.bind(this),
+            motion: this._createMotionSensor.bind(this)
         };
 
         this._log = log;
@@ -49,7 +51,7 @@ const OpenHABComplete = class {
                 log: log
             };
         }
-        this._log.info(`OpenHAB2 REST Plugin Loaded - Version ${version}`);
+        this._log.info(`'OpenHAB2 - Complete Edition' Plugin Loaded - Version ${version}`);
     }
 
     accessories(callback) {
@@ -112,5 +114,9 @@ const OpenHABComplete = class {
 
     _createWindowCovering(config) {
         return new WindowCoveringAccessory(this._platform, config);
+    }
+
+    _createMotionSensor(config) {
+        return new MotionSensorAccessory(this._platform, config);
     }
 };

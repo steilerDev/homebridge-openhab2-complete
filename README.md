@@ -63,6 +63,7 @@ The following is a list of all Services that are currently supported and which v
 * [Humidity Sensor](#humidity-sensor)
 * [Thermostat](#thermostat)
 * [Window Covering](#window-covering)
+* [Motion Sensor](#motion-sensor)
 
 ### Switch
 
@@ -71,7 +72,7 @@ This service describes a binary switch.
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "switch"
+    "type": "switch",
     "item": "Itemname-within-OpenHAB"
 }
 ```
@@ -84,7 +85,7 @@ This service describes a lightbulb.
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "light"
+    "type": "light",
     "item": "Itemname-within-OpenHAB"
 }
 ```
@@ -97,9 +98,9 @@ This service describes a temperature sensor.
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "temp"
-    "item": "Itemname-within-OpenHAB"
-    "batteryItem": "Itemname-within-OpenHAB"
+    "type": "temp",
+    "item": "Itemname-within-OpenHAB",
+    "batteryItem": "Itemname-within-OpenHAB",
     "batteryItemInverted": "false"
 }
 ```
@@ -114,9 +115,9 @@ This service describes a humidity sensor.
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "humidity"
-    "item": "Itemname-within-OpenHAB"
-    "batteryItem": "Itemname-within-OpenHAB"
+    "type": "humidity",
+    "item": "Itemname-within-OpenHAB",
+    "batteryItem": "Itemname-within-OpenHAB",
     "batteryItemInverted": "false"
 }
 ```
@@ -131,15 +132,15 @@ This service describes a thermostat.
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "thermostat"
+    "type": "thermostat",
     "currentTempItem": "Itemname-within-OpenHAB",
     "targetTempItem": "Itemname-within-OpenHAB",
     "currentHumidityItem": "Itemname-within-OpenHAB",
     "targetHumidityItem": "Itemname-within-OpenHAB",
-    "mode": "HeatingCooling"
-    "heatingItem", //State mutual Exclusive with coolingItem, 'Switch' type
-    "coolingItem", //State mutual Exclusive with heatingItem, 'Switch' type
-    "tempUnit" // 'Celsius' (default), 'Fahrenheit'
+    "mode": "HeatingCooling",
+    "heatingItem": "Itemname-within-OpenHAB",
+    "coolingItem": "Itemname-within-OpenHAB",
+    "tempUnit": "Celsius"
 }
 ```
 * `currentTempItem` is expected to be of type `Number` within openHAB
@@ -158,13 +159,32 @@ This service describes motorized window coverings or shades - examples include s
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "windowcovering"
-    "item": "Itemname-within-OpenHAB"
+    "type": "windowcovering", 
+    "item": "Itemname-within-OpenHAB",
     "inverted": "false"
 }
 ```
 * `item` is expected to be of type `Rollershutter` within openHAB
 * `inverted` (optional, default `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if your Rollershutter have the state `100` for closed and `0` for opened set this flag, because HomeKit expects those values the other way around.
+
+### Motion Sensor
+
+This service describes a motion sensor.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "motion",
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "true",
+    "batteryItem": "Itemname-within-OpenHAB",
+    "batteryItemInverted": "false"
+}
+```
+* `item` is expected to be of type `Switch` or `Contact` within openHAB 
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show motion was detected) set this value to `"true"` 
+* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
+* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 
 ## Additional Services & Notes from the Developer
 
