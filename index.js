@@ -14,7 +14,7 @@ const HumiditySensorAccessory = require("./accessory/HumiditySensor").createHumi
 const ThermostatAccessory = require("./accessory/Thermostat").createThermostatAccessory;
 const WindowCoveringAccessory = require("./accessory/WindowCovering").createWindowCoveringAccessory;
 const MotionSensorAccessory = require("./accessory/MotionSensor").createMotionSensorAccessory;
-
+const LeakSensorAccessorty = require("./accessory/LeakSensor").createLeakSensorAccessory;
 
 module.exports = (homebridge) => {
     homebridge.registerPlatform(platformName, platformPrettyName, OpenHABComplete);
@@ -30,7 +30,8 @@ const OpenHABComplete = class {
             humidity: HumiditySensorAccessory,
             thermostat: ThermostatAccessory,
             windowcovering: WindowCoveringAccessory,
-            motion: MotionSensorAccessory
+            motion: MotionSensorAccessory,
+            leak: LeakSensorAccessorty
         };
 
         this._log = log;
