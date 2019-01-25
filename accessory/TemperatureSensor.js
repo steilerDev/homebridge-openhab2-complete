@@ -25,8 +25,4 @@ class TemperatureSensorAccessory extends NumericSensorAccessory {
     }
 }
 
-function createTemperatureSensorAccessory(platform, config) {
-    return new TemperatureSensorAccessory(platform, config);
-}
-
-module.exports = {createTemperatureSensorAccessory};
+module.exports = {TemperatureSensorAccessory};

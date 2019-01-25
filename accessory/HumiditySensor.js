@@ -25,8 +25,4 @@ class HumiditySensorAccessory extends NumericSensorAccessory {
     }
 }
 
-function createHumiditySensorAccessory(platform, config) {
-    return new HumiditySensorAccessory(platform, config);
-}
-
-module.exports = {createHumiditySensorAccessory};
+module.exports = {HumiditySensorAccessory};

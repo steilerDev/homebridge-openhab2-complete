@@ -76,8 +76,4 @@ class WindowCoveringAccessory extends Accessory.Accessory {
     }
 }
 
-function createWindowCoveringAccessory(platform, config) {
-    return new WindowCoveringAccessory(platform, config);
-}
-
-module.exports = {createWindowCoveringAccessory};
+module.exports = {WindowCoveringAccessory};

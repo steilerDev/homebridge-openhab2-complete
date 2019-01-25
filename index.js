@@ -7,13 +7,12 @@ const platformPrettyName = 'openHAB2-Complete';
 const SerialNumberGenerator = require('./util/SerialNumberGenerator');
 const {OpenHAB} = require('./util/OpenHAB');
 
-const SwitchAccessory = require("./accessory/Switch").createSwitchAccessory;
-const LightAccessory = require("./accessory/Light").createLightAccessory;
-const TemperatureSensorAccessory = require("./accessory/TemperatureSensor").createTemperatureSensorAccessory;
-const HumiditySensorAccessory = require("./accessory/HumiditySensor").createHumiditySensorAccessory;
-const ThermostatAccessory = require("./accessory/Thermostat").createThermostatAccessory;
-const WindowCoveringAccessory = require("./accessory/WindowCovering").createWindowCoveringAccessory;
-const MotionSensorAccessory = require("./accessory/MotionSensor").createMotionSensorAccessory;
+const {SwitchAccessory} = require("./accessory/Switch");
+const {LightAccessory} = require("./accessory/Light");
+const {TemperatureSensorAccessory} = require("./accessory/TemperatureSensor");
+const {HumiditySensorAccessory} = require("./accessory/HumiditySensor");
+const {ThermostatAccessory} = require("./accessory/Thermostat");
+const {WindowCoveringAccessory} = require("./accessory/WindowCovering");
 
 
 module.exports = (homebridge) => {
@@ -23,15 +22,13 @@ module.exports = (homebridge) => {
 const OpenHABComplete = class {
     constructor(log, config, api) {
 
-        log.error(JSON.stringify(api.hap.Service));
         this._factories = {
-            switch: SwitchAccessory,
-            light: LightAccessory,
-            temp: TemperatureSensorAccessory,
-            humidity: HumiditySensorAccessory,
-            thermostat: ThermostatAccessory,
-            windowcovering: WindowCoveringAccessory,
-            motionsensor: MotionSensorAccessory
+            switch: this._createSwitch.bind(this),
+            light: this._createLight.bind(this),
+            temp: this._createTemperatureSensor.bind(this),
+            humidity: this._createHumiditySensor.bind(this),
+            thermostat: this._createThermostat.bind(this),
+            windowcovering: this._createWindowCovering.bind(this)
         };
 
         this._log = log;
@@ -46,17 +43,13 @@ const OpenHABComplete = class {
            this._log.error(msg);
            throw new Error(msg);
        } else {
-            this._log.error(JSON.stringify(api));
-            this._log.error("###############################");
-
-
             this._platform = {
                 openHAB: new OpenHAB(config.host, config.port),
                 api:  api,
                 log: log
             };
         }
-        this._log.info(`OpenHAB2 - Complete Edition - Plugin Loaded - Version ${version}`);
+        this._log.info(`OpenHAB2 REST Plugin Loaded - Version ${version}`);
     }
 
     accessories(callback) {
@@ -87,8 +80,7 @@ const OpenHABComplete = class {
 
             try {
                 // Checked that: 'serialNumber' 'version' 'name' exists and 'type' is valid
-                this._log(JSON.stringify(this._platform));
-                let accessory = factory(this._platform, acc);
+                const accessory = factory(acc);
                 _accessories.push(accessory);
                 this._log.info(`Added accessory ${acc.name}`);
             } catch (e) {
@@ -96,5 +88,29 @@ const OpenHABComplete = class {
             }
         });
         callback(_accessories);
+    }
+
+    _createSwitch(config) {
+        return new SwitchAccessory(this._platform, config);
+    }
+
+    _createLight(config) {
+        return new LightAccessory(this._platform, config);
+    }
+
+    _createTemperatureSensor(config) {
+        return new TemperatureSensorAccessory(this._platform, config);
+    }
+
+    _createHumiditySensor(config) {
+        return new HumiditySensorAccessory(this._platform, config);
+    }
+
+    _createThermostat(config) {
+        return new ThermostatAccessory(this._platform, config);
+    }
+
+    _createWindowCovering(config) {
+        return new WindowCoveringAccessory(this._platform, config);
     }
 };
