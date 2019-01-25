@@ -37,7 +37,7 @@ const OpenHABComplete = class {
 
         // Loading accessories from file system
         this._log(`Loading accessories...`);
-        let accessoryDirectory = "./accessory";
+        let accessoryDirectory = `${__dirname}/accessory`;
         let accessoryFiles = fs.readdirSync(accessoryDirectory, {"withFileTypes": true});
         accessoryFiles.forEach(function (accessoryFile) {
             if(accessoryFile.isFile()) {
