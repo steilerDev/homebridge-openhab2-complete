@@ -65,6 +65,9 @@ The following is a list of all Services that are currently supported and which v
 * [Window Covering](#window-covering)
 * [Motion Sensor](#motion-sensor)
 * [Leak Sensor](#leak-sensor)
+* [Carbon Monoxide Sensor](#carbon-monoxide-sensor)
+* [Carbon Dioxide Sensor](#carbon-dioxide-sensor)
+* [Contact Sensor]
 
 ### Switch
 
@@ -247,6 +250,25 @@ This service describes a carbon dioxide sensor.
 * `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 * `levelItem` (optional) defines an openHAB item of type `Number` that represents the Carbon Monoxid level of the sensor
+
+### Contact Sensor
+
+This service describes a contact sensor.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "co2",
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "true",
+    "batteryItem": "Itemname-within-OpenHAB",
+    "batteryItemInverted": "false",
+}
+```
+* `item` is expected to be of type `Switch` or `Contact` within openHAB 
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show motion was detected) set this value to `"true"` 
+* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
+* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 
 ## Additional Services & Notes from the Developer
 
