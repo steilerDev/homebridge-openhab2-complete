@@ -8,11 +8,11 @@ const BATTERY_CONFIG = {
 };
 
 // This function will try and add a battery warning characteristic to the provided service
-function addBatteryWarningCharacteristic(accessory, service) {
+function addBatteryWarningCharacteristic(service) {
     try {
-        if (accessory._config[BATTERY_CONFIG.batteryItem]) {
-            let batteryItem = accessory._config[BATTERY_CONFIG.batteryItem];
-            accessory._getAndCheckItemType(batteryItem, ['Switch', 'Contact']);
+        if (this._config[BATTERY_CONFIG.batteryItem]) {
+            let batteryItem = this._config[BATTERY_CONFIG.batteryItem];
+            this._getAndCheckItemType(batteryItem, ['Switch', 'Contact']);
 
             let inverted = false;
             if(this._config[BATTERY_CONFIG.batteryItemInverted] && (this._config[BATTERY_CONFIG.batteryItemInverted] === "false" || this._config[BATTERY_CONFIG.batteryItemInverted] === "true")) {
@@ -31,11 +31,11 @@ function addBatteryWarningCharacteristic(accessory, service) {
                 "OPEN": 1
             };
 
-            service.getCharacteristic(accessory.Characteristic.StatusLowBattery)
-                .on('get', getState.bind(accessory, batteryItem, batteryTransformation));
+            service.getCharacteristic(this.Characteristic.StatusLowBattery)
+                .on('get', getState.bind(this, batteryItem, batteryTransformation));
         }
     } catch (e) {
-        accessory._log.error(`Not configuring battery for ${accessory.name}: ${e.message}`);
+        this._log.error(`Not configuring battery for ${this.name}: ${e.message}`);
     }
 }
 
