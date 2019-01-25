@@ -8,6 +8,7 @@
     * Carbon Dioxide Sensor (with optional Battery Warning & Level Characteristic)
     * Contact Sensor Service (with optional Battery Warning Characteristic)
     * Occupancy Sensor Service (with optional Battery Warning Characteristic)
+    * Smoke Sensor Service (with optional Battery Warning Characteristic)
 * Supporting `Contact` and `Switch` type for Battery Warning Service
 
 Breaking Changes:
