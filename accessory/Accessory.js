@@ -12,6 +12,7 @@ class Accessory {
         this._log = platform[PLATFORM.log];
         this._log.debug(`Creating new accessory: ${config.name}`);
 
+        this._log.error(JSON.stringify(platform));
         this.Characteristic = platform[PLATFORM.api][PLATFORM.hap].Characteristic;
         this.Service = platform[PLATFORM.api][PLATFORM.hap].Service;
 

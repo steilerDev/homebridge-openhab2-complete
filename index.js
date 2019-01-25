@@ -82,7 +82,8 @@ const OpenHABComplete = class {
 
             try {
                 // Checked that: 'serialNumber' 'version' 'name' exists and 'type' is valid
-                const accessory = factory(this._platform, acc);
+                this._log(JSON.stringify(this._platform));
+                let accessory = factory(this._platform, acc);
                 _accessories.push(accessory);
                 this._log.info(`Added accessory ${acc.name}`);
             } catch (e) {
