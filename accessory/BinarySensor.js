@@ -45,4 +45,7 @@ class BinarySensorAccessory extends Accessory.Accessory {
     }
 }
 
-module.exports = {BinarySensorAccessory};
+// Shows the loader, that this accessory should be ignored
+const ignore = true;
+
+module.exports = {BinarySensorAccessory, ignore};

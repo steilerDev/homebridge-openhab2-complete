@@ -27,4 +27,7 @@ class NumericSensorAccessory extends Accessory.Accessory {
     }
 }
 
-module.exports = {NumericSensorAccessory};
+// Shows the loader, that this accessory should be ignored
+const ignore = true;
+
+module.exports = {NumericSensorAccessory, ignore};

@@ -114,4 +114,7 @@ function setState(habItem, transformation, state, callback) {
     }
 }
 
-module.exports = {Accessory, getState, setState};
+// Shows the loader, that this accessory should be ignored
+const ignore = true;
+
+module.exports = {Accessory, getState, setState, ignore};
