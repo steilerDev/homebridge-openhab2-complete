@@ -9,7 +9,7 @@ const CONFIG = {
 };
 
 // This is intended to be an abstract class to support Accessories that implement `targetPosition` and `currentPosition`
-class CurrentTargetActorPositionAccessory extends Accessory.Accessory {
+class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
 
     constructor(platform, config) {
         super(platform, config);
@@ -122,5 +122,5 @@ class CurrentTargetActorPositionAccessory extends Accessory.Accessory {
 
 const ignore = true;
 
-module.exports = {CurrentTargetActorPositionAccessory, ignore};
+module.exports = {CurrentTargetPositionActorAccessory, ignore};
 

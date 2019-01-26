@@ -1,8 +1,8 @@
 'use strict';
 
-const {CurrentTargetPositionActor} = require('./CurrentTargetPositionActor');
+const {CurrentTargetPositionActorAccessory} = require('./CurrentTargetPositionActor');
 
-class WindowCoveringAccessory extends CurrentTargetPositionActor {
+class WindowCoveringAccessory extends CurrentTargetPositionActorAccessory {
 
     constructor(platform, config) {
         super(platform, config);
