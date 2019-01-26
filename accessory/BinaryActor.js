@@ -1,12 +1,12 @@
 'use strict';
 
-const {Accessory} = require('./Accessory');
+const Accessory = require('./Accessory');
 
 const CONFIG = {
     item: "item"
 };
 
-class BinaryActorAccessory extends Accessory {
+class BinaryActorAccessory extends Accessory.Accessory {
 
     constructor(platform, config) {
         super(platform, config);
@@ -23,11 +23,11 @@ class BinaryActorAccessory extends Accessory {
 
     _configureOnCharacteristic(binaryService) {
         binaryService.getCharacteristic(this.Characteristic.On)
-            .on('set', setState.bind(this, item, {
+            .on('set', Accessory.setState.bind(this, this._item, {
                 true: "ON",
                 false: "OFF"
             }))
-            .on('get', getState.bind(this, item, {
+            .on('get', Accessory.getState.bind(this, this._item, {
                 "ON": true,
                 "OFF": false
             }));
