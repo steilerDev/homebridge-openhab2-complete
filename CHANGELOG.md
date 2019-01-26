@@ -1,5 +1,10 @@
 # Changelog of homebridge-openhab2-complete
 
+## V0.6.0 (unreleased)
+* Addition of Binary Actors (supported openHAB item: `Switch`):
+    * Switch
+    * Fan
+
 ## V0.5.0
 * Addition of CurrentPosition/TargetPosition Actors (Supported openHAB items: `Rollershutter`, `Number` and `Switch`) with optional item representing the service's state (Supported openHAB items: `Rollershutter`, `Number`, `Switch`, `Contact`)
     * Rework of Window Covering Service to use shared functionalities

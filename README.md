@@ -58,6 +58,7 @@ The following is a list of all Services that are currently supported and which v
 **Note: Due to the fact, that this is an early stage of development the configuration layout is not yet fixed and will change in the near future!**
  
 * [Switch](#switch)
+* [Fan](#fan)
 * [Lightbulb](#lightbulb)
 * [Thermostat](#thermostat)
 * [Window Covering](#window-covering)
@@ -83,6 +84,19 @@ This service describes a binary switch.
 {
     "name": "An items name, as shown in Homekit later",
     "type": "switch",
+    "item": "Itemname-within-OpenHAB"
+}
+```
+* `item` is expected to be of type `Switch` within openHAB
+
+### Fan
+
+This service describes a fan.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "fan",
     "item": "Itemname-within-OpenHAB"
 }
 ```
