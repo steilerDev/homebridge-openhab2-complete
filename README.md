@@ -69,6 +69,7 @@ The following is a list of all Services that are currently supported and which v
 * [Carbon Dioxide Sensor](#carbon-dioxide-sensor)
 * [Contact Sensor](#contact-sensor)
 * [Smoke Sensor](#smoke-sensor)
+* [Light Sensor](#light-sensor)
 
 ### Switch
 
