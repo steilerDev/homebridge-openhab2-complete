@@ -50,7 +50,7 @@ class LockMechanismAccessory extends Accessory.Accessory {
             .on('set', Accessory.setState.bind(this, this._item, this._transformation))
             .on('set', function(value) { // We will use this to set the actual position to the target position, in order to stop showing 'Closing...' or 'Opening...'
                 setTimeout(function(value) {
-                        service.setCharacteristic(this.Characteristic.LockCurrentState, value);
+                        lockMechanismService.setCharacteristic(this.Characteristic.LockCurrentState, value);
                     }.bind(this, value),
                     5000
                 );
