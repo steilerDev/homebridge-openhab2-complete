@@ -9,13 +9,13 @@ class WindowCoveringAccessory extends CurrentTargetPositionActorAccessory {
 
         // Services will be retrieved by homebridge
         this._services = [
-            this._getAccessoryInformationService('Window Cover'),
+            this._getAccessoryInformationService('Window Covering'),
             this._getPrimaryService()
         ]
     }
 
     _getPrimaryService() {
-        this._log.debug(`Creating window cover service for ${this.name} [${this._item}]`);
+        this._log.debug(`Creating window covering service for ${this.name} [${this._item}]`);
         let windowCoveringService = new this.Service.WindowCovering(this.name);
         this._configureCurrentPositionCharacteristic(windowCoveringService);
         this._configureTargetPositionCharacteristic(windowCoveringService);

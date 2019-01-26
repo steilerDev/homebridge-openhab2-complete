@@ -10,7 +10,7 @@ class DoorAccessory extends CurrentTargetPositionActorAccessory {
 
         // Services will be retrieved by homebridge
         this._services = [
-            this._getAccessoryInformationService('Window Cover'),
+            this._getAccessoryInformationService('Door'),
             this._getPrimaryService()
         ]
     }
@@ -18,10 +18,10 @@ class DoorAccessory extends CurrentTargetPositionActorAccessory {
     _getPrimaryService() {
         this._log.debug(`Creating door service for ${this.name} [${this._item}]`);
         let doorService = new this.Service.Door(this.name);
-        this._configureCurrentPositionCharacteristic(doorService, this._transformation);
-        this._configureTargetPositionCharacteristic(doorService, this._transformation);
-        this._configurePostitionStateCharacteristic(doorService, this._transformation);
-        this._configureHoldPosition(doorService, this._transformation);
+        this._configureCurrentPositionCharacteristic(doorService);
+        this._configureTargetPositionCharacteristic(doorService);
+        this._configurePostitionStateCharacteristic(doorService);
+        this._configureHoldPosition(doorService);
 
         return doorService;
     }

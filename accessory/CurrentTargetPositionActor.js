@@ -86,7 +86,7 @@ class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
                     "_default": ""
                 }));
         } else {
-            this._log.warn(`Hold position can only be configured for Rollershutter items not for ${this._itemType} items`);
+            this._log.debug(`Hold position can only be configured for Rollershutter items not for ${this._itemType} items`);
         }
     }
 
