@@ -62,7 +62,7 @@ class Accessory {
                 return [item, type];
             }
         }
-        return null;
+        return [null, null];
     }
 
     _getAccessoryInformationService(modelDescription) {

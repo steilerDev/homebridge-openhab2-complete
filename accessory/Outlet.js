@@ -32,7 +32,7 @@ class OutletAccessory extends BinaryActorAccessory {
     _configureInUseCharacteristic(outletService) {
        if(this._config[IN_USE_CONF.inUseItem]) {
            this._inUseItem = this._config[IN_USE_CONF.inUseItem];
-           this._inUseType = this._getAndCheckItemType(this._inUseItem, ['Switch', 'Contact', 'Number']);
+           this._inUseType = this._getAndCheckItemType(this._inUseItem, ['Switch', 'Contact', 'Number'], true);
 
            if(this._inUseType === "Switch") {
                outletService.getCharacteristic(this.Characteristic.OutletInUse)
