@@ -94,12 +94,8 @@ class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
         let transformedValue;
 
 
-        let onCommand = "ON";
-        let offCommand = "OFF";
-        if(type === 'Contact') {
-            onCommand = "OPEN";
-            offCommand = "CLOSED";
-        }
+        let onCommand = type === 'Contact' ? "OPEN": "ON";
+        let offCommand = type === 'Contact' ? "CLOSED": "OFF";
 
         switch(type) {
             case 'Switch':
