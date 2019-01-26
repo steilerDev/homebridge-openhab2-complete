@@ -4,8 +4,9 @@ const Accessory = require('./Accessory');
 
 const CONFIG = {
     item: "item",
+    inverted: "inverted",
     stateItem: "stateItem",
-    inverted: "inverted"
+    stateItemInverted: "stateItemInverted"
 };
 
 // This is intended to be an abstract class to support Accessories that implement `targetPosition` and `currentPosition`
@@ -29,7 +30,12 @@ class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
 
         if(this._config[CONFIG.stateItem]) {
             this._stateItem = this._config[CONFIG.stateItem];
-            this._stateItemType = this._getAndCheckItemType(this._stateItem, ['Rollershutter', 'Number', 'Switch']);
+            this._stateItemType = this._getAndCheckItemType(this._stateItem, ['Rollershutter', 'Number', 'Switch', 'Contact']);
+            if(this._config[CONFIG.stateItemInverted] && (this._config[CONFIG.stateItemInverted] === "false" || this._config[CONFIG.stateItemInverted] === "true")) {
+                this._stateItemInverted = this._config[CONFIG.stateItemInverted] === "true";
+            } else {
+                this._stateItemInverted = false;
+            }
         }
 
     }
@@ -37,10 +43,10 @@ class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
     _configureCurrentPositionCharacteristic(service) {
         if(this._stateItem) {
             service.getCharacteristic(this.Characteristic.CurrentPosition)
-                .on('get', Accessory.getState.bind(this, this._stateItem, this._transformation.bind(this, this._stateItemType)));
+                .on('get', Accessory.getState.bind(this, this._stateItem, this._transformation.bind(this, this._stateItemType, this._stateItemInverted)));
         } else {
             service.getCharacteristic(this.Characteristic.CurrentPosition)
-                .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this, this._itemType)));
+                .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this, this._itemType, this._inverted)));
         }
     }
 
@@ -48,14 +54,14 @@ class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
         // If HomeKit is curious about the target state, we will just give him the actual state
         if(this._stateItem) {
             service.getCharacteristic(this.Characteristic.TargetPosition)
-                .on('get', Accessory.getState.bind(this, this._stateItem, this._transformation.bind(this, this._stateItemType)));
+                .on('get', Accessory.getState.bind(this, this._stateItem, this._transformation.bind(this, this._stateItemType, this._stateItemInverted)));
         } else {
             service.getCharacteristic(this.Characteristic.TargetPosition)
-                .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this, this._itemType)));
+                .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this, this._itemType, this._inverted)));
         }
 
         service.getCharacteristic(this.Characteristic.TargetPosition)
-            .on('set', Accessory.setState.bind(this, this._item, this._transformation.bind(this, this._itemType)))
+            .on('set', Accessory.setState.bind(this, this._item, this._transformation.bind(this, this._itemType, this._inverted)))
             .on('set', function(value) { // We will use this to set the actual position to the target position, in order to stop showing 'Closing...' or 'Opening...'
                 setTimeout(function(value) {
                         service.setCharacteristic(this.Characteristic.CurrentPosition, value);
@@ -84,30 +90,38 @@ class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
         }
     }
 
-    _transformation(type, value) {
+    _transformation(type, inverted, value) {
         let transformedValue;
+
+
+        let onCommand = "ON";
+        let offCommand = "OFF";
+        if(type === 'Contact') {
+            onCommand = "OPEN";
+            offCommand = "CLOSED";
+        }
 
         switch(type) {
             case 'Switch':
-                if(value === "ON") {
-                    transformedValue = this._inverted ?
+                if(value === onCommand) {
+                    transformedValue = inverted ?
                         0 :
                         100
-                } else if (value === "OFF") {
-                    transformedValue = this._inverted ?
+                } else if (value === offCommand) {
+                    transformedValue = inverted ?
                         100 :
                         0
                 } else {
-                    if(value >= 50 && !(this._inverted)) {
-                       transformedValue = "ON"
+                    if(value >= 50 && !(inverted)) {
+                       transformedValue = onCommand
                     } else {
-                        transformedValue = "OFF"
+                        transformedValue = offCommand
                     }
                 }
                 break;
             case 'Rollershutter':
             case 'Number':
-                if(this._inverted) {
+                if(inverted) {
                     transformedValue = 100 - value;
                 } else {
                     transformedValue = value;

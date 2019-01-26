@@ -1,6 +1,9 @@
 # Changelog of homebridge-openhab2-complete
 
 ## V0.5.0 (unreleased)
+* Addition of CurrentPosition/TargetPosition Actors (Supported openHAB items: `Rollershutter`, `Number` and `Switch`) with optional items representing the state (Supported openHAB items: `Rollershutter`, `Number`, `Switch`, `Contact`)
+    * Rework of Window Covering Service (with Hold Characteristic for `Rollershutter` items)
+    * Door Service
 
 ## V0.4.0
 * Support for Binary Sensors (Supported openHAB items: `Switch` and `Contact`):

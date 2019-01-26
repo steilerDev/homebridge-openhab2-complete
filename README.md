@@ -167,13 +167,34 @@ This service describes motorized window coverings or shades - examples include s
     "name": "An items name, as shown in Homekit later",
     "type": "windowcovering", 
     "item": "Itemname-within-OpenHAB",
-    "stateItem": "Itemname-within-OpenHAB",
     "inverted": "false"
+    "stateItem": "Itemname-within-OpenHAB",
+    "stateItemInverted": "false"
 }
 ```
-* `item` is expected to be of type `Rollershutter` within openHAB
-* `stateItem` (optional) is expected to be of type `Rollershutter` or `Number` and will be used to determine the state of the Window Covering if this should not be done through the `item`
-* `inverted` (optional, default `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if your Rollershutter have the state `100` for closed and `0` for opened set this flag, because HomeKit expects those values the other way around.
+* `item` is expected to be of type `Rollershutter`, `Number` or `Switch` within openHAB
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `stateItem` (optional) is expected to be of type `Rollershutter`, `Number`, `Switch` or `Contact` and will be used to determine the state of the Window Covering instead of `item`'s state
+* `stateItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+
+### Door 
+
+This service describes a motorized door
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "door", 
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "false"
+    "stateItem": "Itemname-within-OpenHAB",
+    "stateItemInverted": "false"
+}
+```
+* `item` is expected to be of type `Rollershutter`, `Number` or `Switch` within openHAB
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `stateItem` (optional) is expected to be of type `Rollershutter`, `Number`, `Switch` or `Contact` and will be used to determine the state of the Door instead of `item`'s state
+* `stateItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
 
 ### Motion Sensor
 
@@ -209,7 +230,7 @@ This service describes a leak sensor.
 }
 ```
 * `item` is expected to be of type `Switch` or `Contact` within openHAB 
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show motion was detected) set this value to `"true"` 
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show leakage was detected) set this value to `"true"` 
 * `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 
@@ -229,7 +250,7 @@ This service describes a carbon monoxide sensor.
 }
 ```
 * `item` is expected to be of type `Switch` or `Contact` within openHAB 
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show motion was detected) set this value to `"true"` 
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show Carbon Monoxide was detected) set this value to `"true"` 
 * `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 * `levelItem` (optional) defines an openHAB item of type `Number` that represents the Carbon Monoxid level of the sensor
@@ -250,7 +271,7 @@ This service describes a carbon dioxide sensor.
 }
 ```
 * `item` is expected to be of type `Switch` or `Contact` within openHAB 
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show motion was detected) set this value to `"true"` 
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show Carbon Dioxide was detected) set this value to `"true"` 
 * `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 * `levelItem` (optional) defines an openHAB item of type `Number` that represents the Carbon Monoxid level of the sensor
@@ -270,7 +291,7 @@ This service describes a contact sensor.
 }
 ```
 * `item` is expected to be of type `Switch` or `Contact` within openHAB 
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show motion was detected) set this value to `"true"` 
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show contact was detected) set this value to `"true"` 
 * `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 
@@ -289,7 +310,7 @@ This service describes a smoke sensor.
 }
 ```
 * `item` is expected to be of type `Switch` or `Contact` within openHAB 
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show motion was detected) set this value to `"true"` 
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show smoke was detected) set this value to `"true"` 
 * `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 
