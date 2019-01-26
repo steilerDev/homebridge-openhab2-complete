@@ -42,15 +42,16 @@ const OpenHABComplete = class {
         accessoryFiles.forEach(function (accessoryFile) {
             if(accessoryFile.isFile()) {
                 let accessoryFilePath = `${accessoryDirectory}/${accessoryFile.name}`;
+                let accessoryFileName = accessoryFilePath.split(/[\\/]/).pop();
 
                 let accessoryType = require(accessoryFilePath).type;
                 if(accessoryType === undefined || !(typeof accessoryType === "string")) {
-                    this._log.warn(`Ignoring ${accessoryFilePath} due to missing 'type' definition`);
+                    this._log.warn(`Ignoring ${accessoryFileName} due to missing 'type' definition`);
                 } else {
                     this._log.debug(`Found accessory of type ${accessoryType}`);
                     let accessoryFactory = require(accessoryFilePath).createAccessory;
                     if(accessoryFactory === undefined || !(typeof accessoryFactory === "function")) {
-                        this._log.warn(`Ignoring ${accessoryFilePath}, due to missing 'createAccessory' definition`);
+                        this._log.warn(`Ignoring ${accessoryFileName}, due to missing 'createAccessory' definition`);
                     } else if (this._factories[accessoryType]) {
                         this._log.warn(`There is already an accessory of type ${accessoryType} loaded, skipping this`);
                     } else {

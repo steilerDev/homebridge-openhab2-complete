@@ -21,7 +21,7 @@ class NumericSensorAccessory extends Accessory.Accessory {
     _configureNumericService(numericSerivce, numericCharacteristic) {
         this._log.debug(`Creating numeric sensor service for ${this.name} [${this._item}]`);
         numericSerivce.getCharacteristic(numericCharacteristic)
-            .on('get', Accessory.getState.bind(this, this._item, null));
+            .on('get', Accessory.getState.bind(this, this._item, parseFloat));
 
         return numericSerivce;
     }
