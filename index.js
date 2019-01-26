@@ -51,6 +51,8 @@ const OpenHABComplete = class {
                     let accessoryFactory = require(accessoryFilePath).createAccessory;
                     if(accessoryFactory === undefined || !(typeof accessoryFactory === "function")) {
                         this._log.warn(`Ignoring ${accessoryFilePath}, due to missing 'createAccessory' definition`);
+                    } else if (this._factories[accessoryType]) {
+                        this._log.warn(`There is already an accessory of type ${accessoryType} loaded, skipping this`);
                     } else {
                         this._log(`Loading and activating accessory ${accessoryType}`);
                         this._factories[accessoryType] = require(accessoryFilePath).createAccessory;
@@ -59,7 +61,7 @@ const OpenHABComplete = class {
             }
         }.bind(this));
 
-        this._log.info(`'OpenHAB2 - Complete Edition' Plugin Loaded - Version ${version}`);
+        this._log.info(`'OpenHAB2 - Complete Edition' plugin loaded - Version ${version}`);
     }
 
     accessories(callback) {

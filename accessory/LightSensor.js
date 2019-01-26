@@ -25,7 +25,7 @@ class LightSensorAccessory extends NumericSensorAccessory {
     }
 }
 
-const type = "light";
+const type = "lightSensor";
 
 function createAccessory(platform, config) {
     return new LightSensorAccessory(platform, config);

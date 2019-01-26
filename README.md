@@ -292,12 +292,12 @@ This service describes a smoke sensor.
 
 ### Light Sensor
 
-This service describes a humidity sensor.
+This service describes a light sensor.
 
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "light",
+    "type": "lightSensor",
     "item": "Itemname-within-OpenHAB",
     "batteryItem": "Itemname-within-OpenHAB",
     "batteryItemInverted": "false"
