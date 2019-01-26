@@ -1,5 +1,7 @@
 # Changelog of homebridge-openhab2-complete
 
+## V0.5.0 (unreleased)
+
 ## V0.4.0
 * Support for Binary Sensors (Supported openHAB items: `Switch` and `Contact`):
     * Motion Sensor Service (with optional Battery Warning Characteristic)

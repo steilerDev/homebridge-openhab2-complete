@@ -1,37 +1,17 @@
 'use strict';
 
-const Accessory = require('./Accessory');
+const {CurrentTargetPositionActor} = require('./CurrentTargetPositionActor');
 
-const CONFIG = {
-    item: "item",
-    stateItem: "stateItem",
-    inverted: "inverted"
-};
-
-class WindowCoveringAccessory extends Accessory.Accessory {
+class WindowCoveringAccessory extends CurrentTargetPositionActor {
 
     constructor(platform, config) {
         super(platform, config);
 
-        if(!(this._config[CONFIG.item])) {
-            throw new Error(`Required item not defined: ${JSON.stringify(this._config)}`)
-        } else {
-            this._item = this._config[CONFIG.item];
-        }
-
-        if(this._config[CONFIG.inverted] && (this._config[CONFIG.inverted] === "false" || this._config[CONFIG.inverted] === "true")) {
-            this._inverted = this._config[CONFIG.inverted] === "true";
-        } else {
-            this._inverted = false;
-        }
-
-        if(this._config[CONFIG.stateItem]) {
-            this._stateItem = this._config[CONFIG.stateItem];
-            this._getAndCheckItemType(this._stateItem, ['Rollershutter', 'Number']);
-        }
-
-        // This will throw an error, if the item does not match the array.
-        this._getAndCheckItemType(this._item, ['Rollershutter']);
+        let windowCoveringService = new this.Service.WindowCovering(this.name);
+        this._configureCurrentPositionCharacteristic(windowCoveringService, this._transformation);
+        this._configureTargetPositionCharacteristic(windowCoveringService, this._transformation);
+        this._configurePostitionStateCharacteristic(windowCoveringService, this._transformation);
+        this._configureHoldPosition(windowCoveringService, this._transformation);
 
         // Services will be retrieved by homebridge
         this._services = [
@@ -43,47 +23,12 @@ class WindowCoveringAccessory extends Accessory.Accessory {
     _getPrimaryService() {
         this._log.debug(`Creating window cover service for ${this.name} [${this._item}]`);
         let windowCoveringService = new this.Service.WindowCovering(this.name);
-
-        if(this._stateItem) {
-            windowCoveringService.getCharacteristic(this.Characteristic.CurrentPosition)
-                .on('get', Accessory.getState.bind(this, this._stateItem, this._transformation.bind(this)));
-        } else {
-            windowCoveringService.getCharacteristic(this.Characteristic.CurrentPosition)
-                .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this)));
-        }
-
-        windowCoveringService.getCharacteristic(this.Characteristic.TargetPosition)
-            .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this))) // If HomeKit is curious about the target state, we will just give him the actual state
-            .on('set', Accessory.setState.bind(this, this._item, this._transformation.bind(this)))
-            .on('set', function(value) { // We will use this to set the actual position to the target position, in order to stop showing 'Closing...' or 'Opening...'
-                setTimeout(function(value) {
-                        this._services[1].setCharacteristic(this.Characteristic.CurrentPosition, value);
-                    }.bind(this, value),
-                    5000
-                );
-            }.bind(this));
-
-        windowCoveringService.getCharacteristic(this.Characteristic.PositionState) // We will just fake it, since it is not used anyway
-            .on('get', function(callback) {
-                callback(null, this.Characteristic.PositionState.STOPPED);
-            }.bind(this));
-
-        windowCoveringService.getCharacteristic(this.Characteristic.HoldPosition) // Never tested, since I don't know how to invoke it
-            .on('set', Accessory.setState.bind(this, this._item, {
-                1: "STOP",
-                "_default": ""
-            }));
+        this._configureCurrentPositionCharacteristic(windowCoveringService);
+        this._configureTargetPositionCharacteristic(windowCoveringService);
+        this._configurePostitionStateCharacteristic(windowCoveringService);
+        this._configureHoldPosition(windowCoveringService);
 
         return windowCoveringService;
-    }
-
-    _transformation(value) {
-        this._log.debug(`Transforming ${value} with inverted set to ${this._inverted} for ${this.name} [${this._item}]`);
-        if(this._inverted) {
-            return 100 - value;
-        } else {
-            return value;
-        }
     }
 }
 
