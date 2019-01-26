@@ -91,11 +91,6 @@ class ThermostatAccessory extends Accessory.Accessory {
             .on('get', this._getHeatingCoolingState.bind(this))
             .on('set', this._setHeatingCoolingState.bind(this));
 
-        if(!(this._coolingItem && this._heatingItem)) { // We only allow HeatingCooling state to be changed, if heating and cooling device are available
-            this._log(`Removing write permissions from TargetHeatingCoolingState for ${this.name}, because the configured devices do not support it`);
-            thermostatService.getCharacteristic(this.Characteristic.TargetHeatingCoolingState).props.perms = [this.Characteristic.Perms.READ, this.Characteristic.Perms.NOTIFY];
-        }
-
         if(this._currentHumidityItem) {
             thermostatService.getCharacteristic(this.Characteristic.CurrentRelativeHumidity)
                 .on('get', Accessory.getState.bind(this, this._currentHumidityItem, null));
@@ -161,10 +156,16 @@ class ThermostatAccessory extends Accessory.Accessory {
             case this.Characteristic.TargetHeatingCoolingState.HEAT:
                 if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "ON", function(){});
                 if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "OFF", function(){});
+                if(this._mode === "Cooling") {
+                    this._services[1].setCharacteristic(this.Characteristic.CurrentHeatingCoolingState, Characteristic.CurrentHeatingCoolingState.OFF);
+                }
                 break;
             case this.Characteristic.TargetHeatingCoolingState.COOL:
                 if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "OFF", function(){});
                 if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "ON", function(){});
+                if(this._mode === "Heating") {
+                    this._services[1].setCharacteristic(this.Characteristic.CurrentHeatingCoolingState, Characteristic.CurrentHeatingCoolingState.OFF);
+                }
                 break;
         }
         callback();
