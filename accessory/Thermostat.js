@@ -21,37 +21,25 @@ class ThermostatAccessory extends Accessory.Accessory {
             throw new Error(`Required habItem not defined: ${JSON.stringify(this._config)}`)
         }
 
-        this._currentTempItem = this._config[CONFIG.currentTempItem];
-        this._getAndCheckItemType(this._currentTempItem, ['Number']);
+        [this._currentTempItem] = this._getAndCheckItemType(CONFIG.currentTempItem, ['Number']);
+        [this._targetTempItem] = this._getAndCheckItemType(CONFIG.targetTempItem, ['Number']);
 
-        this._targetTempItem = this._config[CONFIG.targetTempItem];
-        this._getAndCheckItemType(this._targetTempItem, ['Number']);
+        [this._currentHumidityItem] = this._getAndCheckItemType(CONFIG.currentHumidityItem, ['Number'], true);
+        [this._targetHumidityItem] = this._getAndCheckItemType(CONFIG.targetHumidityItem, ['Number'], true);
 
-        if(this._config[CONFIG.currentHumidityItem]) {
-            this._currentHumidityItem = this._config[CONFIG.currentHumidityItem];
-            this._getAndCheckItemType(this._currentHumidityItem, ['Number']);
-        }
+        [this._heatingItem] = this._getAndCheckItemType(CONFIG.heatingItem, ['Switch', 'Contact'], true);
+        [this._coolingItem] = this._getAndCheckItemType(CONFIG.coolingItem, ['Switch', 'Contact'], true);
 
-        if(this._config[CONFIG.targetHumidityItem]) {
-            this._targetHumidityItem = this._config[CONFIG.targetHumidityItem];
-            this._getAndCheckItemType(this._targetHumidityItem, ['Number']);
-        }
-
-        if(!(this._config[CONFIG.heatingItem] || this._config[CONFIG.coolingItem])) {
+        if(!(this._heatingItem || this._coolingItem)) {
             throw new Error(`heatingItem and/or coolingItem need to be set: ${JSON.stringify(this._config)}`);
         } else {
-            if(this._config[CONFIG.heatingItem]) {
+            if(this._heatingItem) {
                 this._mode = 'Heating';
-                this._heatingItem = this._config[CONFIG.heatingItem];
-                this._getAndCheckItemType(this._heatingItem, ['Switch', 'Contact']);
             }
-            if(this._config[CONFIG.coolingItem]) {
+            if(this._coolingItem) {
                 this._mode = this._mode === 'Heating' ? 'HeatingCooling' : 'Cooling'; // If heating device was present this means we have Heating Cooling
-                this._coolingItem = this._config[CONFIG.coolingItem];
-                this._getAndCheckItemType(this._coolingItem, ['Switch', 'Contact']);
             }
         }
-
         switch(this._config[CONFIG.tempUnit]) {
             default:
             case 'Celsius':

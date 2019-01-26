@@ -10,12 +10,7 @@ class NumericSensorAccessory extends Accessory.Accessory {
     constructor(platform, config) {
         super(platform, config);
 
-        if(!(this._config[CONFIG.item])) {
-            throw new Error(`Required item not defined: ${JSON.stringify(this._config)}`)
-        } else {
-            this._item = this._config[CONFIG.item];
-            this._getAndCheckItemType(this._item, ['Number']);
-        }
+        [this._item] = this._getAndCheckItemType(CONFIG.item, ['Number']);
     }
 
     _configureNumericService(numericSerivce, numericCharacteristic) {

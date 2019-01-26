@@ -11,13 +11,7 @@ class LightAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
 
-        if(!(this._config[CONFIG.item])) {
-            throw new Error(`Required item not defined: ${JSON.stringify(this._config)}`)
-        } else {
-            this._item = this._config[CONFIG.item];
-        }
-
-        this._type = this._getAndCheckItemType(this._item, ['Switch', 'Dimmer', 'Color']);
+        [this._item, this._type] = this._getAndCheckItemType(CONFIG.item, ['Switch', 'Dimmer', 'Color']);
 
         // Synchronisation helper
         this._stateLock = false; // This lock will guard the acceptance of new states

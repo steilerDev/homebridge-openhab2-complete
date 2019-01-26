@@ -10,8 +10,7 @@ const LEVEL_CONFIG = {
 function addLevelCharacteristic(service, characteristic) {
     try {
         if (this._config[LEVEL_CONFIG.levelItem]) {
-            let levelItem = this._config[LEVEL_CONFIG.levelItem];
-            this._getAndCheckItemType(levelItem, ['Number']);
+            let [levelItem] = this._getAndCheckItemType(LEVEL_CONFIG.levelItem, ['Number']);
 
             service.getCharacteristic(characteristic)
                 .on('get', getState.bind(this, levelItem, parseInt));

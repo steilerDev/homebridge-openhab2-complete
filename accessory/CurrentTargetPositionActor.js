@@ -15,18 +15,12 @@ class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
     constructor(platform, config) {
         super(platform, config);
 
-        if(!(this._config[CONFIG.item])) {
-            throw new Error(`Required item not defined: ${JSON.stringify(this._config)}`)
-        } else {
-            this._item = this._config[CONFIG.item];
-            this._itemType = this._getAndCheckItemType(this._item, ['Rollershutter', 'Number', 'Switch']);
-        }
+        [this._item, this._itemType] = this._getAndCheckItemType(CONFIG.item, ['Rollershutter', 'Number', 'Switch']);
 
         this._inverted = Accessory.checkInvertedConf(this._config, CONFIG.inverted);
 
         if(this._config[CONFIG.stateItem]) {
-            this._stateItem = this._config[CONFIG.stateItem];
-            this._stateItemType = this._getAndCheckItemType(this._stateItem, ['Rollershutter', 'Number', 'Switch', 'Contact']);
+            [this._stateItem, this._stateItemType] = this._getAndCheckItemType(CONFIG.stateItem, ['Rollershutter', 'Number', 'Switch', 'Contact']);
             this._stateItemInverted = Accessory.checkInvertedConf(this._config, CONFIG.stateItemInverted);
         }
 

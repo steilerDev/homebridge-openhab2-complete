@@ -11,13 +11,7 @@ class BinarySensorAccessory extends Accessory.Accessory {
     constructor(platform, config) {
         super(platform, config);
 
-        if(!(this._config[CONFIG.item])) {
-            throw new Error(`Required item not defined: ${JSON.stringify(this._config)}`)
-        } else {
-            this._item = this._config[CONFIG.item];
-            this._type = this._getAndCheckItemType(this._item, ['Contact', 'Switch']);
-        }
-
+        [this._item, this._type] = this._getAndCheckItemType(CONFIG.item, ['Contact', 'Switch']);
         let inverted = Accessory.checkInvertedConf(this._config, CONFIG.inverted);
 
         this._transformation = inverted ? {

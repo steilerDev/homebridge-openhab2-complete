@@ -7,7 +7,6 @@ class WindowAccessory extends CurrentTargetPositionActorAccessory {
     constructor(platform, config) {
         super(platform, config);
 
-
         // Services will be retrieved by homebridge
         this._services = [
             this._getAccessoryInformationService('Window'),

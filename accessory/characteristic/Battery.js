@@ -1,6 +1,6 @@
 'use strict';
 
-const {getState} = require('../Accessory');
+const {getState, checkInvertedConf} = require('../Accessory');
 
 const BATTERY_CONFIG = {
     batteryItem: "batteryItem",
@@ -11,13 +11,8 @@ const BATTERY_CONFIG = {
 function addBatteryWarningCharacteristic(service) {
     try {
         if (this._config[BATTERY_CONFIG.batteryItem]) {
-            let batteryItem = this._config[BATTERY_CONFIG.batteryItem];
-            this._getAndCheckItemType(batteryItem, ['Switch', 'Contact']);
-
-            let inverted = false;
-            if(this._config[BATTERY_CONFIG.batteryItemInverted] && (this._config[BATTERY_CONFIG.batteryItemInverted] === "false" || this._config[BATTERY_CONFIG.batteryItemInverted] === "true")) {
-                inverted = this._config[BATTERY_CONFIG.batteryItemInverted] === "true";
-            }
+            let [batteryItem] = this._getAndCheckItemType(BATTERY_CONFIG.batteryItem, ['Switch', 'Contact']);
+            let inverted = checkInvertedConf(this._config, BATTERY_CONFIG.batteryItemInverted);
 
             let batteryTransformation = inverted ? {
                 "OFF": 1,

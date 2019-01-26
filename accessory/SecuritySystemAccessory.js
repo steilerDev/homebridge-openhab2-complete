@@ -3,7 +3,7 @@
 const Accessory = require('./Accessory');
 
 const CONFIG = {
-    item: "item",
+    stateItem: "item",
     inverted: "true"
 };
 
@@ -12,7 +12,14 @@ class LockMechanismAccessory extends Accessory.Accessory {
     constructor(platform, config) {
         super(platform, config);
 
-        [this._item] = this._getAndCheckItemType(CONFIG.item, ['Switch']);
+        if(!(this._config[CONFIG.item])) {
+            throw new Error(`Required item not defined: ${JSON.stringify(this._config)}`)
+        } else {
+            this._item = this._config[CONFIG.item];
+        }
+
+        // This will throw an error, if the item does not match the array.
+        this._getAndCheckItemType(this._item, ['Switch']);
 
         this._inverted = Accessory.checkInvertedConf(this._config, CONFIG.inverted);
 

@@ -36,16 +36,33 @@ class Accessory {
         return this._services;
     }
 
-    // Put the response of openHAB.getItemType in here, handles errors of the function
-    _getAndCheckItemType(habItem, expectedItems) {
-        let type = this._openHAB.getItemType(habItem);
-        if (type instanceof Error) {
-            throw type;
-        } else if (expectedItems.indexOf(type) === -1) {
-            throw new Error(`${habItem}'s type (${type}) is not as expected (${JSON.stringify(expectedItems)})`)
+    _getAndCheckItemType(key, expectedItems, optional) {
+        if(!(this._config[key])) {
+            if(optional) {
+                this._log.debug(`${key} for ${this.name} not defined in config: ${JSON.stringify(this._config)})`)
+            } else {
+                throw new Error(`Required item not defined: ${JSON.stringify(this._config)}`)
+            }
         } else {
-            return type;
+            let item = this._config[key];
+            let type = this._openHAB.getItemType(item);
+            if (type instanceof Error) {
+                if(optional) {
+                    this._log.debug(`Not adding ${key} to ${this.name}: ${type.message}`);
+                } else {
+                    throw type;
+                }
+            } else if (expectedItems.indexOf(type) === -1) {
+                if(optional) {
+                    this._log.debug(`Not adding ${key} to ${this.name}: ${item}'s type (${type}) is not as expected (${JSON.stringify(expectedItems)})`)
+                } else {
+                    throw new Error(`${item}'s type (${type}) is not as expected (${JSON.stringify(expectedItems)})`)
+                }
+            } else {
+                return [item, type];
+            }
         }
+        return null;
     }
 
     _getAccessoryInformationService(modelDescription) {
