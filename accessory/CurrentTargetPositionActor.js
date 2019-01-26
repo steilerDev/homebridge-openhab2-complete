@@ -22,20 +22,12 @@ class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
             this._itemType = this._getAndCheckItemType(this._item, ['Rollershutter', 'Number', 'Switch']);
         }
 
-        if(this._config[CONFIG.inverted] && (this._config[CONFIG.inverted] === "false" || this._config[CONFIG.inverted] === "true")) {
-            this._inverted = this._config[CONFIG.inverted] === "true";
-        } else {
-            this._inverted = false;
-        }
+        this._inverted = Accessory.checkInvertedConf(this._config, CONFIG.inverted);
 
         if(this._config[CONFIG.stateItem]) {
             this._stateItem = this._config[CONFIG.stateItem];
             this._stateItemType = this._getAndCheckItemType(this._stateItem, ['Rollershutter', 'Number', 'Switch', 'Contact']);
-            if(this._config[CONFIG.stateItemInverted] && (this._config[CONFIG.stateItemInverted] === "false" || this._config[CONFIG.stateItemInverted] === "true")) {
-                this._stateItemInverted = this._config[CONFIG.stateItemInverted] === "true";
-            } else {
-                this._stateItemInverted = false;
-            }
+            this._stateItemInverted = Accessory.checkInvertedConf(this._config, CONFIG.stateItemInverted);
         }
 
     }

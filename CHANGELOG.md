@@ -2,26 +2,27 @@
 
 ## V0.6.0 (unreleased)
 * Addition of Binary Actors (supported openHAB item: `Switch`):
-    * Switch
-    * Fan
-    * Outlet (with optional Outlet In Use Characteristic)
+  * Switch
+  * Fan
+  * Outlet (with optional Outlet In Use Characteristic)
+* Addition of Lock Mechanism Service
 
 ## V0.5.0
 * Addition of CurrentPosition/TargetPosition Actors (Supported openHAB items: `Rollershutter`, `Number` and `Switch`) with optional item representing the service's state (Supported openHAB items: `Rollershutter`, `Number`, `Switch`, `Contact`)
-    * Rework of Window Covering Service to use shared functionalities
-    * Door Service
-    * Window Service
+  * Rework of Window Covering Service to use shared functionalities
+  * Door Service
+  * Window Service
 * Removed `mode` from Thermostat Service, now derived from the present of `heatingItem` and/or `coolingItem`
 
 ## V0.4.0
 * Support for Binary Sensors (Supported openHAB items: `Switch` and `Contact`):
-    * Motion Sensor Service (with optional Battery Warning Characteristic)
-    * Leak Sensor Service (with optional Battery Warning Characteristic)
-    * Carbon Monoxide Sensor (with optional Battery Warning & Level Characteristic)
-    * Carbon Dioxide Sensor (with optional Battery Warning & Level Characteristic)
-    * Contact Sensor Service (with optional Battery Warning Characteristic)
-    * Occupancy Sensor Service (with optional Battery Warning Characteristic)
-    * Smoke Sensor Service (with optional Battery Warning Characteristic)
+  * Motion Sensor Service (with optional Battery Warning Characteristic)
+  * Leak Sensor Service (with optional Battery Warning Characteristic)
+  * Carbon Monoxide Sensor (with optional Battery Warning & Level Characteristic)
+  * Carbon Dioxide Sensor (with optional Battery Warning & Level Characteristic)
+  * Contact Sensor Service (with optional Battery Warning Characteristic)
+  * Occupancy Sensor Service (with optional Battery Warning Characteristic)
+  * Smoke Sensor Service (with optional Battery Warning Characteristic)
 * Support for Light Sensor (Supported openHAB item: `Number`)
 * Supporting `Contact` and `Switch` type for Battery Warning Service
 * Added optional `stateItem` to Window Covering Service

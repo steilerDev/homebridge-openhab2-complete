@@ -65,16 +65,16 @@ The following is a list of all Services that are currently supported and which v
 * [Door](#door)
 * [Window](#window)
 * Numeric Sensors:
-    * [Temperature Sensor](#temperature-sensor)
-    * [Humidity Sensor](#humidity-sensor)
-    * [Light Sensor](#light-sensor)
+  * [Temperature Sensor](#temperature-sensor)
+  * [Humidity Sensor](#humidity-sensor)
+  * [Light Sensor](#light-sensor)
 * Binary Sensors:
-    * [Motion Sensor](#motion-sensor)
-    * [Leak Sensor](#leak-sensor)
-    * [Carbon Monoxide Sensor](#carbon-monoxide-sensor)
-    * [Carbon Dioxide Sensor](#carbon-dioxide-sensor)
-    * [Contact Sensor](#contact-sensor)
-    * [Smoke Sensor](#smoke-sensor)
+  * [Motion Sensor](#motion-sensor)
+  * [Leak Sensor](#leak-sensor)
+  * [Carbon Monoxide Sensor](#carbon-monoxide-sensor)
+  * [Carbon Dioxide Sensor](#carbon-dioxide-sensor)
+  * [Contact Sensor](#contact-sensor)
+  * [Smoke Sensor](#smoke-sensor)
 
 ### Switch
 
@@ -198,7 +198,7 @@ This service describes motorized window coverings or shades - examples include s
     "name": "An items name, as shown in Homekit later",
     "type": "windowcovering", 
     "item": "Itemname-within-OpenHAB",
-    "inverted": "false"
+    "inverted": "false",
     "stateItem": "Itemname-within-OpenHAB",
     "stateItemInverted": "false"
 }
@@ -217,7 +217,7 @@ This service describes a motorized door
     "name": "An items name, as shown in Homekit later",
     "type": "door", 
     "item": "Itemname-within-OpenHAB",
-    "inverted": "false"
+    "inverted": "false",
     "stateItem": "Itemname-within-OpenHAB",
     "stateItemInverted": "false"
 }
@@ -236,7 +236,7 @@ This service describes a motorized window
     "name": "An items name, as shown in Homekit later",
     "type": "door", 
     "item": "Itemname-within-OpenHAB",
-    "inverted": "false"
+    "inverted": "false",
     "stateItem": "Itemname-within-OpenHAB",
     "stateItemInverted": "false"
 }
@@ -245,6 +245,21 @@ This service describes a motorized window
 * `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted, set this value to `"true"` 
 * `stateItem` (optional) is expected to be of type `Rollershutter`, `Number`, `Switch` or `Contact` and will be used to determine the state of the Window instead of `item`'s state
 * `stateItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+
+### Lock Mechanism
+
+The HomeKit Lock Mechanism Service is designed to expose and control the physical lock mechanism on a device.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "lock", 
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "false"
+}
+```
+* `item` is expected to be of type `Switch` within openHAB
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted, set this value to `"true"` 
 
 ### Motion Sensor
 

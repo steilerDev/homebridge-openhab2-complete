@@ -114,7 +114,15 @@ function setState(habItem, transformation, state, callback) {
     }
 }
 
+function checkInvertedConf(config, key) {
+    if(config[key] && (config[key] === "false" || config[key] === "true")) {
+        return config[key] === "true";
+    } else {
+        return false;
+    }
+}
+
 // Shows the loader, that this accessory should be ignored
 const ignore = true;
 
-module.exports = {Accessory, getState, setState, ignore};
+module.exports = {Accessory, getState, setState, checkInvertedConf, ignore};

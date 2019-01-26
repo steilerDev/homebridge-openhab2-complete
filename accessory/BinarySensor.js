@@ -18,10 +18,7 @@ class BinarySensorAccessory extends Accessory.Accessory {
             this._type = this._getAndCheckItemType(this._item, ['Contact', 'Switch']);
         }
 
-        let inverted = false;
-        if(this._config[CONFIG.inverted] && (this._config[CONFIG.inverted] === "false" || this._config[CONFIG.inverted] === "true")) {
-            inverted = this._config[CONFIG.inverted] === "true";
-        }
+        let inverted = Accessory.checkInvertedConf(this._config, CONFIG.inverted);
 
         this._transformation = inverted ? {
             "OFF": true,
