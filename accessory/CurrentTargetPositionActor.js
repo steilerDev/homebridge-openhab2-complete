@@ -93,11 +93,11 @@ class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
     _transformation(type, inverted, value) {
         let transformedValue;
 
-
         let onCommand = type === 'Contact' ? "OPEN": "ON";
         let offCommand = type === 'Contact' ? "CLOSED": "OFF";
 
         switch(type) {
+            case 'Contact':
             case 'Switch':
                 if(value === onCommand) {
                     transformedValue = inverted ?
