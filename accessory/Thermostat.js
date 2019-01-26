@@ -157,14 +157,14 @@ class ThermostatAccessory extends Accessory.Accessory {
                 if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "ON", function(){});
                 if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "OFF", function(){});
                 if(this._mode === "Cooling") {
-                    this._services[1].setCharacteristic(this.Characteristic.CurrentHeatingCoolingState, Characteristic.CurrentHeatingCoolingState.OFF);
+                    this._services[1].setCharacteristic(this.Characteristic.CurrentHeatingCoolingState, this.Characteristic.CurrentHeatingCoolingState.OFF);
                 }
                 break;
             case this.Characteristic.TargetHeatingCoolingState.COOL:
                 if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "OFF", function(){});
                 if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "ON", function(){});
                 if(this._mode === "Heating") {
-                    this._services[1].setCharacteristic(this.Characteristic.CurrentHeatingCoolingState, Characteristic.CurrentHeatingCoolingState.OFF);
+                    this._services[1].setCharacteristic(this.Characteristic.CurrentHeatingCoolingState, this.Characteristic.CurrentHeatingCoolingState.OFF);
                 }
                 break;
         }
