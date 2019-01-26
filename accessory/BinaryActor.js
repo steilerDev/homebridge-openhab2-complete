@@ -1,13 +1,12 @@
 'use strict';
 
 const {Accessory} = require('./Accessory');
-const {addOnCharacteristic} = require('./characteristic/On');
 
 const CONFIG = {
     item: "item"
 };
 
-class BinaryAccessory extends Accessory {
+class BinaryActorAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
@@ -38,4 +37,4 @@ class BinaryAccessory extends Accessory {
 
 const ignore = true;
 
-module.exports = {BinaryAccessory, ignore};
+module.exports = {BinaryActorAccessory, ignore};

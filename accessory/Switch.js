@@ -1,8 +1,8 @@
 'use strict';
 
-const {BinaryActor} = require('./BinaryActor');
+const {BinaryActorAccessory} = require('./BinaryActor');
 
-class SwitchAccessory extends BinaryActor {
+class SwitchAccessory extends BinaryActorAccessory {
 
     constructor(platform, config) {
         super(platform, config);
