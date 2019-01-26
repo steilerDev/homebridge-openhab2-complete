@@ -102,6 +102,21 @@ This service describes a fan.
 ```
 * `item` is expected to be of type `Switch` within openHAB
 
+### Outlet
+
+This service describes an outlet.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "outlet",
+    "item": "Itemname-within-OpenHAB",
+    "inUseItem": "Itemname-within-OpenHAB"
+}
+```
+* `item` is expected to be of type `Switch` within openHAB
+* `inUseItem` (optional) is expected to be of type `Switch`, `Contact` or `Number` within openHAB, representing if the outlet is currently used by an appliance
+
 ### Lightbulb
 
 This service describes a lightbulb.
