@@ -62,6 +62,7 @@ The following is a list of all Services that are currently supported and which v
 * [Thermostat](#thermostat)
 * [Window Covering](#window-covering)
 * [Door](#door)
+* [Window](#window)
 * Numeric Sensors:
     * [Temperature Sensor](#temperature-sensor)
     * [Humidity Sensor](#humidity-sensor)
