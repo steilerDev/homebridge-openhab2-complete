@@ -5,6 +5,7 @@
     * Rework of Window Covering Service to use share functionalities
     * Door Service
     * Window Service
+* Removed `mode` from Thermostat Service, now derived from the present of `heatingItem` and/or `coolingItem`
 
 ## V0.4.0
 * Support for Binary Sensors (Supported openHAB items: `Switch` and `Contact`):

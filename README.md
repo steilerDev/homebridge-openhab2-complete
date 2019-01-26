@@ -146,7 +146,6 @@ This service describes a thermostat.
     "targetTempItem": "Itemname-within-OpenHAB",
     "currentHumidityItem": "Itemname-within-OpenHAB",
     "targetHumidityItem": "Itemname-within-OpenHAB",
-    "mode": "HeatingCooling",
     "heatingItem": "Itemname-within-OpenHAB",
     "coolingItem": "Itemname-within-OpenHAB",
     "tempUnit": "Celsius"
@@ -156,9 +155,8 @@ This service describes a thermostat.
 * `targetTempItem` is expected to be of type `Number` within openHAB and writable
 * `currentHumidityItem` (optional) is expected to be of type `Number` within openHAB
 * `targetHumidityItem` (optional) is expected to be of type `Number` within openHAB and writable
-* `mode` (optional, default `HeatingCooling`, allowed values: `HeatingCooling`, `Heating` & `Cooling`) represents the available mode for this thermostat
-* `heatingItem` (optional if `mode: "Cooling"` otherwise required) is expected to be of type `Switch`, showing if the thermostat is currently heating the room
-* `coolingItem` (optional if `mode: "Heating"` otherwise required) is expected to be of type `Switch`, showing if the thermostat is currently cooling the room
+* `heatingItem` (optional, if `coolingItem` is present, otherwise required) is expected to be of type `Switch`, showing if the thermostat is currently heating the room
+* `coolingItem` (optional, if `heatingItem` is present, otherwise required) is expected to be of type `Switch`, showing if the thermostat is currently cooling the room
 * `tempUnit` (optional, default `Celsius`, allowed values `Celsius` & `Fahrenheit`)
 
 ### Window Covering
