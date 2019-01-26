@@ -68,6 +68,7 @@ const OpenHABComplete = class {
         }.bind(this));
 
         this._log.info(`'OpenHAB2 - Complete Edition' plugin loaded - Version ${version}`);
+        this._log.info(`---`);
     }
 
     accessories(callback) {
