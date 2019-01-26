@@ -122,5 +122,5 @@ class CurrentTargetActorPositionAccessory extends Accessory.Accessory {
 
 const ignore = true;
 
-module.exports = {CurrentTargetActorPositionAccessory, true};
+module.exports = {CurrentTargetActorPositionAccessory, ignore};
 
