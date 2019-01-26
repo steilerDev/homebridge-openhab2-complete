@@ -278,7 +278,7 @@ This service describes a smoke sensor.
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "co2",
+    "type": "smoke",
     "item": "Itemname-within-OpenHAB",
     "inverted": "true",
     "batteryItem": "Itemname-within-OpenHAB",
@@ -287,6 +287,23 @@ This service describes a smoke sensor.
 ```
 * `item` is expected to be of type `Switch` or `Contact` within openHAB 
 * `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show motion was detected) set this value to `"true"` 
+* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
+* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+
+### Light Sensor
+
+This service describes a humidity sensor.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "light",
+    "item": "Itemname-within-OpenHAB",
+    "batteryItem": "Itemname-within-OpenHAB",
+    "batteryItemInverted": "false"
+}
+```
+* `item` is expected to be of type `Number` within openHAB 
 * `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 
@@ -317,5 +334,6 @@ No documentation to support extension | Simple concept for extending functionali
 Uses `SSE` to receive push notifications from openHAB about state changes | Polling of states through REST interface
 Battery Warnings not supported | Battery Warnings supported
 Thermostats never really worked | Thermostats working perfectly
+Two binary sensors supported without sub-characteristics | Seven distinct binary sensor types with sub-characteristics supported
 
 Concluding, I personally would use the [OpenHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) in smaller, less diverse installations. However my own installation has a magnitude of different devices, that I want to fully include in HomeKit, therefore this plugin is the only feasible way for me and everyone alike.
