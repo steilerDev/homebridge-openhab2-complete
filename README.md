@@ -166,10 +166,12 @@ This service describes motorized window coverings or shades - examples include s
     "name": "An items name, as shown in Homekit later",
     "type": "windowcovering", 
     "item": "Itemname-within-OpenHAB",
+    "stateItem": "Itemname-within-OpenHAB",
     "inverted": "false"
 }
 ```
 * `item` is expected to be of type `Rollershutter` within openHAB
+* `stateItem` (optional) is expected to be of type `Rollershutter` or `Number` and will be used to determine the state of the Window Covering if this should not be done through the `item`
 * `inverted` (optional, default `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if your Rollershutter have the state `100` for closed and `0` for opened set this flag, because HomeKit expects those values the other way around.
 
 ### Motion Sensor

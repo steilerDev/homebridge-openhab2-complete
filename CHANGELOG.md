@@ -11,6 +11,7 @@
     * Smoke Sensor Service (with optional Battery Warning Characteristic)
 * Support for Light Sensor (Supported openHAB item: `Number`)
 * Supporting `Contact` and `Switch` type for Battery Warning Service
+* Added optional `stateItem` to Window Covering Service
 
 Breaking Changes:
 * Renamed `habBatteryItem` key in configurations with Battery Warning Characteristic to `batteryItem`

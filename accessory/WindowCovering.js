@@ -4,6 +4,7 @@ const Accessory = require('./Accessory');
 
 const CONFIG = {
     item: "item",
+    stateItem: "stateItem",
     inverted: "inverted"
 };
 
@@ -24,6 +25,11 @@ class WindowCoveringAccessory extends Accessory.Accessory {
             this._inverted = false;
         }
 
+        if(this._config[CONFIG.stateItem]) {
+            this._stateItem = this._config[CONFIG.stateItem];
+            this._getAndCheckItemType(this._stateItem, ['Rollershutter', 'Number']);
+        }
+
         // This will throw an error, if the item does not match the array.
         this._getAndCheckItemType(this._item, ['Rollershutter']);
 
@@ -38,8 +44,13 @@ class WindowCoveringAccessory extends Accessory.Accessory {
         this._log.debug(`Creating window cover service for ${this.name} [${this._item}]`);
         let windowCoveringService = new this.Service.WindowCovering(this.name);
 
-        windowCoveringService.getCharacteristic(this.Characteristic.CurrentPosition)
-            .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this)));
+        if(this._stateItem) {
+            windowCoveringService.getCharacteristic(this.Characteristic.CurrentPosition)
+                .on('get', Accessory.getState.bind(this, this._stateItem, this._transformation.bind(this)));
+        } else {
+            windowCoveringService.getCharacteristic(this.Characteristic.CurrentPosition)
+                .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this)));
+        }
 
         windowCoveringService.getCharacteristic(this.Characteristic.TargetPosition)
             .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this))) // If HomeKit is curious about the target state, we will just give him the actual state
@@ -76,8 +87,11 @@ class WindowCoveringAccessory extends Accessory.Accessory {
     }
 }
 
-function createWindowCoveringAccessory(platform, config) {
+const type = "windowcovering";
+
+function createAccessory(platform, config) {
     return new WindowCoveringAccessory(platform, config);
 }
 
-module.exports = {createWindowCoveringAccessory};
+module.exports = {createAccessory, type};
+
