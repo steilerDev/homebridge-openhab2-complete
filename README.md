@@ -1,5 +1,4 @@
 # Homebridge Plugin for OpenHAB2 - Complete Edition
-
 > Exceeding features of [homebridge-openhab2](https://www.npmjs.com/package/homebridge-openhab2) and [openHAB's Homekit Plugin](https://www.openhab.org/addons/integrations/homekit/) since `v.0.3.0`
 
 [![NPM](https://nodei.co/npm/homebridge-openhab2-complete.png)](https://nodei.co/npm/homebridge-openhab2-complete/)
@@ -8,7 +7,6 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](ht
 
 
 ## Installation
-
 *Note: Please install [homebridge](https://www.npmjs.com/package/homebridge) first.*
 
 ```
@@ -16,7 +14,6 @@ npm install -g homebridge-openhab2-complete
 ```
 
 ## Configuration
-
 This is a platform plugin, that will register all accessories within the Bridge provided by homebridge. The following shows the general homebridge configuration (`config.json`), see the [Supported HAP Services below](#supported-hap-services), in order to get the detailed configuration for each Service.
 
 ```
@@ -59,6 +56,7 @@ The following is a list of all Services that are currently supported and which v
  
 * [Switch](#switch)
 * [Fan](#fan)
+* [Outlet](#outlet)
 * [Lightbulb](#lightbulb)
 * [Thermostat](#thermostat)
 * [Window Covering](#window-covering)
@@ -72,6 +70,7 @@ The following is a list of all Services that are currently supported and which v
   * [Light Sensor](#light-sensor)
 * Binary Sensors:
   * [Motion Sensor](#motion-sensor)
+  * [Occupancy Sensor](#occupancy-sensor)
   * [Leak Sensor](#leak-sensor)
   * [Carbon Monoxide Sensor](#carbon-monoxide-sensor)
   * [Carbon Dioxide Sensor](#carbon-dioxide-sensor)
@@ -80,7 +79,6 @@ The following is a list of all Services that are currently supported and which v
   * [Filter Maintenance Sensor](#filter-maintenance-sensor)
 
 ### Switch
-
 This service describes a binary switch.
 
 ```
@@ -93,7 +91,6 @@ This service describes a binary switch.
 * `item` is expected to be of type `Switch` within openHAB
 
 ### Fan
-
 This service describes a fan.
 
 ```
@@ -106,7 +103,6 @@ This service describes a fan.
 * `item` is expected to be of type `Switch` within openHAB
 
 ### Outlet
-
 This service describes an outlet.
 
 ```
@@ -121,7 +117,6 @@ This service describes an outlet.
 * `inUseItem` (optional) is expected to be of type `Switch`, `Contact` or `Number` within openHAB, representing if the outlet is currently used by an appliance
 
 ### Lightbulb
-
 This service describes a lightbulb.
 
 ```
@@ -133,42 +128,7 @@ This service describes a lightbulb.
 ```
 * `item` is expected to be of type `Switch`, `Dimmer` or `Color` within openHAB (This changes the functionality within HomeKit)
 
-### Temperature Sensor
-
-This service describes a temperature sensor.
-
-```
-{
-    "name": "An items name, as shown in Homekit later",
-    "type": "temp",
-    "item": "Itemname-within-OpenHAB",
-    "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false"
-}
-```
-* `item` is expected to be of type `Number` within openHAB 
-* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
-* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
-
-### Humidity Sensor
-
-This service describes a humidity sensor.
-
-```
-{
-    "name": "An items name, as shown in Homekit later",
-    "type": "humidity",
-    "item": "Itemname-within-OpenHAB",
-    "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false"
-}
-```
-* `item` is expected to be of type `Number` within openHAB 
-* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
-* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
-
 ### Thermostat
-
 This service describes a thermostat.
 
 ```
@@ -193,7 +153,6 @@ This service describes a thermostat.
 * `tempUnit` (optional, default `Celsius`, allowed values `Celsius` & `Fahrenheit`)
 
 ### Window Covering
-
 This service describes motorized window coverings or shades - examples include shutters, blinds, awnings etc.
 
 ```
@@ -212,7 +171,6 @@ This service describes motorized window coverings or shades - examples include s
 * `stateItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
 
 ### Door 
-
 This service describes a motorized door
 
 ```
@@ -231,7 +189,6 @@ This service describes a motorized door
 * `stateItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
 
 ### Window
-
 This service describes a motorized window
 
 ```
@@ -250,7 +207,6 @@ This service describes a motorized window
 * `stateItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
 
 ### Lock Mechanism
-
 The HomeKit Lock Mechanism Service is designed to expose and control the physical lock mechanism on a device.
 
 ```
@@ -265,7 +221,6 @@ The HomeKit Lock Mechanism Service is designed to expose and control the physica
 * `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted, set this value to `"true"` 
 
 ### Security System
-
 ```
 {
     "name": "An items name, as shown in Homekit later",
@@ -291,8 +246,55 @@ The HomeKit Lock Mechanism Service is designed to expose and control the physica
 
 Each item (`homeItem`, `awayItem`, `sleepItem`, `alarmItem`) is optional, only one of them needs to be defined. When switching between the states (`Home Armed`, `Away Armed`, `Sleep Armed` & `Off`) the respective item gets triggered and all other will be turned off. The state of the system is determined which item in the order `alarmItem` -> `homeItem` -> `awayItem` -> `sleepItem` is turned on, if all items are off the state is `OFF`
 
-### Motion Sensor
+### Temperature Sensor
+This service describes a temperature sensor.
 
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "temp",
+    "item": "Itemname-within-OpenHAB",
+    "batteryItem": "Itemname-within-OpenHAB",
+    "batteryItemInverted": "false"
+}
+```
+* `item` is expected to be of type `Number` within openHAB 
+* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
+* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+
+### Humidity Sensor
+This service describes a humidity sensor.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "humidity",
+    "item": "Itemname-within-OpenHAB",
+    "batteryItem": "Itemname-within-OpenHAB",
+    "batteryItemInverted": "false"
+}
+```
+* `item` is expected to be of type `Number` within openHAB 
+* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
+* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+
+### Light Sensor
+This service describes a light sensor.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "lightSensor",
+    "item": "Itemname-within-OpenHAB",
+    "batteryItem": "Itemname-within-OpenHAB",
+    "batteryItemInverted": "false"
+}
+```
+* `item` is expected to be of type `Number` within openHAB 
+* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
+* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+
+### Motion Sensor
 This service describes a motion sensor.
 
 ```
@@ -310,8 +312,25 @@ This service describes a motion sensor.
 * `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 
-### Leak Sensor
+### Occupancy Sensor
+This service describes an occupancy sensor.
 
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "occupancy",
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "true",
+    "batteryItem": "Itemname-within-OpenHAB",
+    "batteryItemInverted": "false"
+}
+```
+* `item` is expected to be of type `Switch` or `Contact` within openHAB 
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show occupancy was detected) set this value to `"true"` 
+* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
+* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+
+### Leak Sensor
 This service describes a leak sensor.
 
 ```
@@ -330,7 +349,6 @@ This service describes a leak sensor.
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 
 ### Carbon Monoxide Sensor
-
 This service describes a carbon monoxide sensor.
 
 ```
@@ -351,7 +369,6 @@ This service describes a carbon monoxide sensor.
 * `levelItem` (optional) defines an openHAB item of type `Number` that represents the Carbon Monoxide level of the sensor
 
 ### Carbon Dioxide Sensor
-
 This service describes a carbon dioxide sensor.
 
 ```
@@ -372,7 +389,6 @@ This service describes a carbon dioxide sensor.
 * `levelItem` (optional) defines an openHAB item of type `Number` that represents the Carbon Dioxide level of the sensor
 
 ### Contact Sensor
-
 This service describes a contact sensor.
 
 ```
@@ -391,7 +407,6 @@ This service describes a contact sensor.
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 
 ### Smoke Sensor
-
 This service describes a smoke sensor.
 
 ```
@@ -409,26 +424,8 @@ This service describes a smoke sensor.
 * `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
 
-### Light Sensor
-
-This service describes a light sensor.
-
-```
-{
-    "name": "An items name, as shown in Homekit later",
-    "type": "lightSensor",
-    "item": "Itemname-within-OpenHAB",
-    "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false"
-}
-```
-* `item` is expected to be of type `Number` within openHAB 
-* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
-* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
-
 ### Filter Maintenance Sensor
-
-This service describes a carbon dioxide sensor.
+This service describes a filter maintenance sensor.
 
 ```
 {
@@ -440,11 +437,10 @@ This service describes a carbon dioxide sensor.
 }
 ```
 * `item` is expected to be of type `Switch` or `Contact` within openHAB 
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show Carbon Dioxide was detected) set this value to `"true"` 
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show filter maintenance is required) set this value to `"true"` 
 * `levelItem` (optional) defines an openHAB item of type `Number` that represents the Filter Life level of the sensor
 
 ## Additional Services & Notes from the Developer
-
 Obviously the aim of this project is a full coverage of the HAP specification. Due to the limitations of smart devices in my home I can only test a subset and would love to have your feedback and input for this project.
 
 Due to the very limited documentation on homebridge plugin development I have not implemented a dynamic platform (there is only [this partly complete wiki entry](https://github.com/nfarina/homebridge/wiki/On-Programming-Dynamic-Platforms)). If anyone of you knows how to do it, please contact me directly!
@@ -461,7 +457,6 @@ See the `./accessory/Switch.js` accessory for a simple Service and use it as a s
 
 
 ## Comparision
-
 | [homebridge-openhab2 plugin](https://www.npmjs.com/package/homebridge-openhab2) | openHAB2 - Complete Edition
 --- | --- 
 Verly little configuration within homebridge/openHAB, only tags within `*.items` files and inclusion within sitemap, obviously requiring both to be created manually | Explicit declaration within `config.json` not requiring instable openHAB `Metadata Provider` (removes items if state is `NULL`) and de-couples homebridge configuration from openHAB
@@ -470,6 +465,6 @@ No documentation to support extension | Simple concept for extending functionali
 Uses `SSE` to receive push notifications from openHAB about state changes | Polling of states through REST interface
 Battery Warnings not supported | Battery Warnings supported
 Thermostats never really worked | Thermostats working perfectly
-Two binary sensors supported without sub-characteristics | Seven distinct binary sensor types with sub-characteristics supported
+Two binary sensors supported without sub-characteristics | Eight distinct binary sensor types with sub-characteristics supported
 
 Concluding, I personally would use the [OpenHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) in smaller, less diverse installations. However my own installation has a magnitude of different devices, that I want to fully include in HomeKit, therefore this plugin is the only feasible way for me and everyone alike.
