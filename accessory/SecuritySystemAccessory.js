@@ -63,32 +63,40 @@ class SecuritySystemAccessory extends Accessory.Accessory {
     _getSystemState(callback) {
         try {
             if(this._alarmItem) {
+                this._log.debug(`Checking ${this.name} for alarm triggered`);
                 let alarmItemState = this._transform(this._alarmItemInverted, this._openHAB.getStateSync(this._alarmItem));
                 if(alarmItemState) {
+                    this._log.debug(`Setting ${this.name} to alarm triggered`);
                     callback(null, this.Characteristic.SecuritySystemCurrentState.ALARM_TRIGGERED);
                     return;
                 }
             }
 
             if(this._homeItem) {
+                this._log.debug(`Checking ${this.name} for home armed`);
                 let homeItemState = this._transform(this._homeItemInverted, this._openHAB.getStateSync(this._homeItem));
                 if(homeItemState) {
+                    this._log.debug(`Setting ${this.name} to home armed`);
                     callback(null, this.Characteristic.SecuritySystemCurrentState.STAY_ARM);
                     return;
                 }
             }
 
             if(this._awayItem) {
+                this._log.debug(`Checking ${this.name} for away armed`);
                 let awayItemState = this._transform(this._awayItemInverted, this._openHAB.getStateSync(this._awayItem));
                 if(awayItemState) {
+                    this._log.debug(`Setting ${this.name} to away armed`);
                     callback(null, this.Characteristic.SecuritySystemCurrentState.AWAY_ARM);
                     return;
                 }
             }
 
             if(this._sleepItem) {
+                this._log.debug(`Checking ${this.name} for sleep armed`);
                 let sleepItemState = this._transform(this._sleepItemInverted, this._openHAB.getStateSync(this._sleepItem));
                 if(sleepItemState) {
+                    this._log.debug(`Setting ${this.name} to sleep armed`);
                     callback(null, this.Characteristic.SecuritySystemCurrentState.SLEEP_ARM);
                     return;
                 }
@@ -132,7 +140,7 @@ class SecuritySystemAccessory extends Accessory.Accessory {
     _setCharacteristicState(item, inverted, value, callback) {
         if(item) {
             this._log(`Set Characteristic called for ${item}, with inverted ${inverted} and value ${value}`);
-            Accessory.setState.bind(this)(item, this._transform.bind(inverted), value, callback);
+            Accessory.setState.bind(this)(item, this._transform.bind(null, inverted), value, callback);
         }
     }
 
