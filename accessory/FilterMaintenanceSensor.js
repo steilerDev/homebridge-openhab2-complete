@@ -2,6 +2,7 @@
 
 const {BinarySensorAccessory} = require('./BinarySensor');
 const {addLevelCharacteristic} = require('./characteristic/Level');
+const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class FilterMaintenanceSensorAccessory extends BinarySensorAccessory {
     constructor(platform, config) {
