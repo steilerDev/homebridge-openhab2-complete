@@ -77,6 +77,7 @@ The following is a list of all Services that are currently supported and which v
   * [Carbon Dioxide Sensor](#carbon-dioxide-sensor)
   * [Contact Sensor](#contact-sensor)
   * [Smoke Sensor](#smoke-sensor)
+  * [Filter Maintenance Sensor](#filter-maintenance-sensor)
 
 ### Switch
 
@@ -347,7 +348,7 @@ This service describes a carbon monoxide sensor.
 * `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show Carbon Monoxide was detected) set this value to `"true"` 
 * `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
-* `levelItem` (optional) defines an openHAB item of type `Number` that represents the Carbon Monoxid level of the sensor
+* `levelItem` (optional) defines an openHAB item of type `Number` that represents the Carbon Monoxide level of the sensor
 
 ### Carbon Dioxide Sensor
 
@@ -368,7 +369,7 @@ This service describes a carbon dioxide sensor.
 * `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show Carbon Dioxide was detected) set this value to `"true"` 
 * `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
-* `levelItem` (optional) defines an openHAB item of type `Number` that represents the Carbon Monoxid level of the sensor
+* `levelItem` (optional) defines an openHAB item of type `Number` that represents the Carbon Dioxide level of the sensor
 
 ### Contact Sensor
 
@@ -424,6 +425,23 @@ This service describes a light sensor.
 * `item` is expected to be of type `Number` within openHAB 
 * `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
 * `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+
+### Filter Maintenance Sensor
+
+This service describes a carbon dioxide sensor.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "filter",
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "true",
+    "levelItem": "Itemname-within-OpenHAB"
+}
+```
+* `item` is expected to be of type `Switch` or `Contact` within openHAB 
+* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show Carbon Dioxide was detected) set this value to `"true"` 
+* `levelItem` (optional) defines an openHAB item of type `Number` that represents the Filter Life level of the sensor
 
 ## Additional Services & Notes from the Developer
 
