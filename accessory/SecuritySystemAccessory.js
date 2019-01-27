@@ -50,15 +50,23 @@ class SecuritySystemAccessory extends Accessory.Accessory {
 
     _getSystemState(callback) {
         this._log.debug(`Getting state of security system ${this.name}`);
-        let armItemState = this._openHAB.getStateSync(this._armItem) === "ON" && !this._armItemInverted;
-        let alarmItemState = this._openHAB.getStateSync(this._alarmItem) === "ON" && !this._alarmItemInverted;
+        let armItemState = this._openHAB.getStateSync(this._armItem);
+        let alarmItemState = this._openHAB.getStateSync(this._alarmItem);
+
+        if(armItemState instanceof Error) {
+            callback(armItemState);
+        }
+        if(alarmItemState instanceof Error) {
+            callback(alarmItemState)
+        }
+
         this._log.debug(`Received arm state ${armItemState} and alarm state ${alarmItemState}`);
-        if(alarmItemState) {
-            callback(this.Characteristic.SecuritySystemCurrentState.ALARM_TRIGGERED);
-        } else if(armItemState) {
-            callback(this.Characteristic.SecuritySystemCurrentState.STAY_ARM);
+        if(alarmItemState === "ON" && !this._alarmItemInverted) {
+            callback(null, this.Characteristic.SecuritySystemCurrentState.ALARM_TRIGGERED);
+        } else if(armItemState === "ON" && !this._armItemInverted) {
+            callback(null, this.Characteristic.SecuritySystemCurrentState.STAY_ARM);
         } else {
-            callback(this.Characteristic.SecuritySystemCurrentState.DISARMED);
+            callback(null, this.Characteristic.SecuritySystemCurrentState.DISARMED);
         }
     }
 
