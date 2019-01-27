@@ -4,6 +4,7 @@ const {URL} = require('url');
 const request = require('request');
 const syncRequest = require('sync-request');
 const EventSource = require('eventsource');
+const clone = require('clone');
 
 class OpenHAB {
 
@@ -19,9 +20,10 @@ class OpenHAB {
     }
 
     getState(habItem, callback) {
-        this._url.pathname = `/rest/items/${habItem}/state`;
+        let myURL = clone(this._url);
+        myURL.pathname = `/rest/items/${habItem}/state`;
         request({
-            url: this._url.href,
+            url: myURL.href,
             method: 'GET'
         },
         function (error, response, body) {
@@ -38,8 +40,9 @@ class OpenHAB {
     }
 
     getStateSync(habItem) {
-        this._url.pathname = `/rest/items/${habItem}/state`;
-        const response = syncRequest('GET', this._url.href);
+        let myURL = clone(this._url);
+        myURL.pathname = `/rest/items/${habItem}/state`;
+        const response = syncRequest('GET', myURL.href);
         if (response.statusCode === 404) {
             return new Error(`Item does not exist!`);
         } else if (!(response.body)) {
@@ -50,9 +53,10 @@ class OpenHAB {
     }
 
     sendCommand(habItem, command, callback) {
-        this._url.pathname = `/rest/items/${habItem}`;
+        let myURL = clone(this._url);
+        myURL.pathname = `/rest/items/${habItem}`;
         request({
-            url: this._url.href,
+            url: myURL.href,
             method: 'POST',
             body: command
         },
@@ -70,9 +74,10 @@ class OpenHAB {
     }
 
     updateState(habItem, state, callback) {
-        this._url.pathname = `/rest/items/${habItem}/state`;
+        let myURL = clone(this._url);
+        myURL.pathname = `/rest/items/${habItem}/state`;
         request({
-                url: this._url.href,
+                url: myURL.href,
                 method: 'PUT',
                 body: state
         },
@@ -91,8 +96,9 @@ class OpenHAB {
 
     // Will call callback with callback(error, type)
     getItemType(habItem) {
-        this._url.pathname = `/rest/items/${habItem}`;
-        const response = syncRequest('GET', this._url.href);
+        let myURL = clone(this._url);
+        myURL.pathname = `/rest/items/${habItem}`;
+        const response = syncRequest('GET', myURL.href);
         if (response.statusCode === 404) {
             return new Error(`Item does not exist!`);
         } else {
@@ -106,9 +112,10 @@ class OpenHAB {
     }
 
     subscribe(habItem, callback) {
-        this._url.path = `/rest/events?topics=smarthome/items/${habItem}/statechanged`;
-        console.log(this._url.href);
-        let source = new EventSource(this._url.href);
+        let myURL = clone(this._url);
+        myURL.path = `/rest/events?topics=smarthome/items/${habItem}/statechanged`;
+        console.log(myURL.href);
+        let source = new EventSource(myURL.href);
         source.onmessage = function(eventPayload) {
             let eventData = JSON.parse(eventPayload.data);
             if(eventData.type === "ItemStateChangedEvent") {
@@ -120,7 +127,6 @@ class OpenHAB {
         source.onerror = function (err) {
             callback(new Error(err.message));
         };
-        this._url.path = "";
         return source;
     }
 }
