@@ -119,6 +119,7 @@ function getState(habItem, transformation, callback) {
 }
 
 function setState(habItem, transformation, state, callback) {
+    this._log.error(`Transforming state with ${transformation} and ${state}`);
     let transformedState = transformValue(transformation, state);
     this._log(`Change target state of ${this.name} [${habItem}] to ${state} (transformed to ${transformedState})`);
     if(transformedState instanceof Error) {
