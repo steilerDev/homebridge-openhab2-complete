@@ -137,6 +137,7 @@ class SecuritySystemAccessory extends Accessory.Accessory {
     }
 
     _transform(inverted, value) {
+        console.error(`Security transform called with inverted ${inverted} and value ${value}`);
         if(value === "ON") {
             return !inverted;
         } else if(value === "OFF") {
