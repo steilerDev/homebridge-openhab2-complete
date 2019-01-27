@@ -3,13 +3,16 @@
 ## Roadmap
 ### V0.8.0 (unreleased)
 * Implement remaining Services:
-  * Valve
-  * Faucet
-  * Irrigation
-  * HeaterCooler
-  * Humidifier/Dehumidifier
-  * Air Purifier
-* Probably never implemented (unless I find a good way to map the devices)
+  * Water Service Class with
+    * Valve
+    * Faucet
+    * Irrigation
+  * Climate Service Class with [Active, Current, Target]
+    * Thermostat rework
+    * HeaterCooler
+    * Humidifier/Dehumidifier
+    * Air Purifier
+* Probably never implemented (unless I find a good way to map the devices):
   * Garage Door Opener
   * Air Quality Sensor
   * Slat
@@ -17,11 +20,13 @@
   * Speaker
   * Camera RTP Stream Management
   * Doorbell
+  * Stateless Programmable Switch
 
 ### V0.7.0 (unreleased)
 * Implement optional Server Side Events in order to push updated states
 * Better configuration layout?
 
+## Current working Release
 ### V0.6.0 (unreleased)
 * Addition of Binary Actors (supported openHAB item: `Switch`):
   * Switch
