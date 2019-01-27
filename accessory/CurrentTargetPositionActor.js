@@ -28,13 +28,14 @@ class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
 
     _configureCurrentPositionCharacteristic(service) {
         let thisItem = this._stateItem ? this._stateItem : this._item;
+        let thisItemType = this._stateItem ? this._stateItemType : this._itemType;
         let thisInverted = this._stateItem ? this._stateItemInverted : this._inverted;
 
         service.getCharacteristic(this.Characteristic.CurrentPosition)
             .on('get', Accessory.getState.bind(this,
                 thisItem,
                 this._transformation.bind(this,
-                    thisItem,
+                    thisItemType,
                     thisInverted
                 )
             ));
@@ -42,7 +43,7 @@ class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
             this.Characteristic.CurrentPosition,
             thisItem,
             this._transformation.bind(this,
-                thisItem,
+                thisItemType,
                 thisInverted
             )
         );
@@ -50,13 +51,14 @@ class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
 
     _configureTargetPositionCharacteristic(service) {
         let thisItem = this._stateItem ? this._stateItem : this._item;
+        let thisItemType = this._stateItem ? this._stateItemType : this._itemType;
         let thisInverted = this._stateItem ? this._stateItemInverted : this._inverted;
         // If HomeKit is curious about the target position we will give the actual position
         service.getCharacteristic(this.Characteristic.TargetPosition)
             .on('get', Accessory.getState.bind(this,
                 thisItem,
                 this._transformation.bind(this,
-                    thisItem,
+                    thisItemType,
                     thisInverted
                 )
             ));
