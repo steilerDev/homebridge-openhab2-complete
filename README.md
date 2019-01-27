@@ -77,6 +77,18 @@ The following is a list of all Services that are currently supported and which v
   * [Contact Sensor](#contact-sensor)
   * [Smoke Sensor](#smoke-sensor)
   * [Filter Maintenance Sensor](#filter-maintenance-sensor)
+  
+**See the roadmap section in the Changelog file to see which Services will be implemented next!**
+
+The following Services are also defined by the HomeKit protocol, but since I don't know a good way to map them to openHAB items I currently don't plan to implement them. Let me know if you have any ideas!
+* Garage Door Opener
+* Air Quality Sensor
+* Slat
+* Microphone
+* Speaker
+* Camera RTP Stream Management
+* Doorbell
+* Stateless Programmable Switch
 
 ### Switch
 This service describes a binary switch.

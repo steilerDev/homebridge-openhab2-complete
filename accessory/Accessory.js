@@ -36,6 +36,18 @@ class Accessory {
         return this._services;
     }
 
+    _subscribeCharacteristic(service, characteristic, item, transformation) {
+        this._openHAB.subscribe(item, function(value, item) {
+            if(value instanceof Error) {
+                this._log.error(value.message);
+            } else {
+                this._log.debug(`Received push with new state for item ${item}: ${value}`);
+                let transformedValue = transformValue(transformation, value);
+                service.setCharacteristic(characteristic, transformedValue);
+            }
+        }.bind(this));
+    }
+
     _getAndCheckItemType(key, expectedItems, optional) {
         if(!(this._config[key])) {
             if(optional) {

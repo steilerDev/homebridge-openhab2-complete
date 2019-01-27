@@ -20,6 +20,7 @@ class ContactSensorAccessory extends BinarySensorAccessory {
         );
 
         addBatteryWarningCharacteristic.bind(this)(primaryService);
+        this._subscribeBinaryService(primaryService, this.Characteristic.ContactSensorState);
         return primaryService;
     }
 }

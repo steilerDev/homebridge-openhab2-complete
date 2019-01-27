@@ -3,6 +3,7 @@
 const {URL} = require('url');
 const request = require('request');
 const syncRequest = require('sync-request');
+const EventSource = require('eventsource');j
 
 class OpenHAB {
 
@@ -102,6 +103,23 @@ class OpenHAB {
                 return type;
             }
         }
+    }
+
+    subscribe(habItem, callback) {
+        this._url.path = `/events?topics=smarthome/items/${habItem}/statechanged`;
+        let source = new EventSource(this._url.href);
+        source.onmessage = function(eventPayload) {
+            let eventData = JSON.parse(eventPayload.data);
+            if(eventData.type === "ItemStateChangedEvent") {
+                let item = eventData.topic.replace("smarthome/items/", "").replace("/statechanged", "");
+                let value = JSON.parse(eventData.payload).value;
+                callback(value, item);
+            }
+        };
+        source.onerror = function (err) {
+            callback(new Error(err.message));
+        };
+        this._url.path = "";
     }
 }
 

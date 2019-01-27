@@ -11,16 +11,7 @@
     * HeaterCooler
     * Humidifier/Dehumidifier
     * Air Purifier
-* Probably never implemented (unless I find a good way to map the devices):
-  * Garage Door Opener
-  * Air Quality Sensor
-  * Slat
-  * Microphone
-  * Speaker
-  * Camera RTP Stream Management
-  * Doorbell
-  * Stateless Programmable Switch
-
+    
 ### V0.7.0 (planned)
 * Implement optional Server Side Events in order to push updated states
 * Better configuration layout?
