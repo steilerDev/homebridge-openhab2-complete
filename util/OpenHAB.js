@@ -3,7 +3,7 @@
 const {URL} = require('url');
 const request = require('request');
 const syncRequest = require('sync-request');
-const EventSource = require('eventsource');j
+const EventSource = require('eventsource');
 
 class OpenHAB {
 
