@@ -120,6 +120,7 @@ class OpenHAB {
             callback(new Error(err.message));
         };
         this._url.path = "";
+        return source;
     }
 }
 
