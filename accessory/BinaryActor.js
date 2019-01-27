@@ -26,6 +26,16 @@ class BinaryActorAccessory extends Accessory.Accessory {
             }));
         return binaryService;
     }
+
+    _subscribeOnCharacteristic(binaryService) {
+        this._subscribeCharacteristic(binaryService,
+            this.Characteristic.On,
+            this._item,
+            {
+                "ON": true,
+                "OFF": false
+            });
+    }
 }
 
 const ignore = true;

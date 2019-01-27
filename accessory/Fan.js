@@ -16,8 +16,10 @@ class FanAccessory extends BinaryActorAccessory {
 
     _getPrimaryService() {
         this._log.debug(`Creating fan service for ${this.name} [${this._item}]`);
-
-        return this._configureOnCharacteristic(new this.Service.Fan(this.name));
+        let primaryService = new this.Service.Fan(this.name);
+        this._configureOnCharacteristic(primaryService);
+        this._subscribeOnCharacteristic(primaryService);
+        return primaryService;
     }
 }
 
