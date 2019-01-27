@@ -113,7 +113,8 @@ class OpenHAB {
 
     subscribe(habItem, callback) {
         let myURL = clone(this._url);
-        myURL.path = `/rest/events?topics=smarthome/items/${habItem}/statechanged`;
+        myURL.pathname = '/rest/events';
+        myURL.query = `topics=smarthome/items/${habItem}/statechanged`;
         console.log(myURL.href);
         let source = new EventSource(myURL.href);
         source.onmessage = function(eventPayload) {
