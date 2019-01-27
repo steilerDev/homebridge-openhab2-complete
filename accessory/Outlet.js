@@ -30,34 +30,52 @@ class OutletAccessory extends BinaryActorAccessory {
     }
 
     _configureInUseCharacteristic(outletService) {
-       if(this._config[IN_USE_CONF.inUseItem]) {
-           [this._inUseItem, this._inUseType] = this._getAndCheckItemType(IN_USE_CONF, ['Switch', 'Contact', 'Number'], true);
+        let transformation;
+        try {
 
-           if(this._inUseType === "Switch") {
-               outletService.getCharacteristic(this.Characteristic.OutletInUse)
-                   .on('get', getState.bind(this, this._inUseItem, {
-                       "ON": true,
-                       "OFF": false
-                   }));
-           } else if (this._inUseType === "Contact") {
-               outletService.getCharacteristic(this.Characteristic.OutletInUse)
-                   .on('get', getState.bind(this, this._inUseItem, {
-                       "OPEN": true,
-                       "CLOSED": false
-                   }));
-           } else if (this._inUseType === "Number") {
-               outletService.getCharacteristic(this.Characteristic.OutletInUse)
-                   .on('get', getState.bind(this, this._inUseItem, function(value) {
-                       return parseFloat(value) > 0;
-                   }));
-           }
-       } else {
-           outletService.getCharacteristic(this.Characteristic.OutletInUse)
-               .on('get', getState.bind(this, this._item, {
-                   "ON": true,
-                   "OFF": false
-               }));
-       }
+            [this._inUseItem, this._inUseType] = this._getAndCheckItemType(IN_USE_CONF.inUseItem, ['Switch', 'Contact', 'Number'], true);
+
+            if (this._inUseType === "Switch") {
+                transformation = {
+                    "ON": true,
+                    "OFF": false
+                };
+            } else if (this._inUseType === "Contact") {
+                transformation = {
+                    "OPEN": true,
+                    "CLOSED": false
+                }
+            } else if (this._inUseType === "Number") {
+                transformation = function (value) {
+                    return parseFloat(value) > 0;
+                };
+            }
+            outletService.getCharacteristic(this.Characteristic.OutletInUse)
+                .on('get', getState.bind(this,
+                    this._inUseItem,
+                    transformation
+                ));
+            this._subscribeCharacteristic(outletService,
+                this.Characteristic.OutletInUse,
+                this._inUseItem,
+                transformation
+            );
+        } catch {
+            let transformation = {
+                "ON": true,
+                "OFF": false
+            };
+            outletService.getCharacteristic(this.Characteristic.OutletInUse)
+                .on('get', getState.bind(this,
+                    this._item,
+                    transformation
+                ));
+            this._subscribeCharacteristic(outletService,
+                this.Characteristic.OutletInUse,
+                this._item,
+                transformation
+            );
+        }
     }
 
 }
