@@ -1,7 +1,6 @@
 # Changelog of homebridge-openhab2-complete
-
 ## Roadmap
-### V0.8.0 (unreleased)
+### V0.8.0 (planned)
 * Implement remaining Services:
   * Water Service Class with
     * Valve
@@ -22,12 +21,16 @@
   * Doorbell
   * Stateless Programmable Switch
 
-### V0.7.0 (unreleased)
+### V0.7.0 (planned)
 * Implement optional Server Side Events in order to push updated states
 * Better configuration layout?
 
-## Current working Release
-### V0.6.0 (unreleased)
+## Implemented for next release
+### V0.7.0 (unreleased)
+* NA
+
+## Changelog
+### V0.6.0
 * Addition of Binary Actors (supported openHAB item: `Switch`):
   * Switch
   * Fan
@@ -35,8 +38,6 @@
 * Addition of Lock Mechanism Service (supported openHAB item: `Switch`)
 * Addition of Security System Service (supported openHAB item: `Switch`)
 * Addition of Binary Sensor Filter Maintenance
-
-## Changelog
 
 ### V0.5.0
 * Addition of CurrentPosition/TargetPosition Actors (Supported openHAB items: `Rollershutter`, `Number` and `Switch`) with optional item representing the service's state (Supported openHAB items: `Rollershutter`, `Number`, `Switch`, `Contact`)
