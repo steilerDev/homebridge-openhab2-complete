@@ -267,10 +267,12 @@ The HomeKit Lock Mechanism Service is designed to expose and control the physica
 
 ```
 {
-    armItem: "An items name, as shown in Homekit later",
-    armItemInverted: "true",
-    alarmItem: "An items name, as shown in Homekit later",
-    alarmItemInverted: "true"
+    "name": "An items name, as shown in Homekit later",
+    "type": "security"
+    "armItem": "An items name, as shown in Homekit later",
+    "armItemInverted": "true",
+    "alarmItem": "An items name, as shown in Homekit later",
+    "alarmItemInverted": "true"
 }
 ```
 * `armItem` is expected to be of type `Switch` within openHAB, showing if the security system is armed or not
