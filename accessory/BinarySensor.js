@@ -34,6 +34,11 @@ class BinarySensorAccessory extends Accessory.Accessory {
 
         return binaryService;
     }
+
+    _subscribeBinaryService(binaryService, binaryCharacteristic) {
+        this._log.debug(`Subscribing for state changes within binary sensor service for ${this.name} [${this._item}]`);
+        this._subscribeCharacteristic(binaryService, binaryCharacteristic, this._item, this._transformation);
+    }
 }
 
 // Shows the loader, that this accessory should be ignored
