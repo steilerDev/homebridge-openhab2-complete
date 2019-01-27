@@ -4,7 +4,7 @@ const Accessory = require('./Accessory');
 
 const CONFIG = {
     item: "item",
-    inverted: "true"
+    inverted: "inverted"
 };
 
 class LockMechanismAccessory extends Accessory.Accessory {

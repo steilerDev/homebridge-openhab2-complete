@@ -3,68 +3,85 @@
 const Accessory = require('./Accessory');
 
 const CONFIG = {
-    stateItem: "item",
-    inverted: "true"
+    armItem: "armItem",
+    armItemInverted: "armItemInverted",
+    alarmItem: "alarmItem",
+    alarmItemInverted: "alarmItemInverted"
 };
 
-class LockMechanismAccessory extends Accessory.Accessory {
+class SecuritySystemAccessory extends Accessory.Accessory {
 
     constructor(platform, config) {
         super(platform, config);
 
-        if(!(this._config[CONFIG.item])) {
-            throw new Error(`Required item not defined: ${JSON.stringify(this._config)}`)
-        } else {
-            this._item = this._config[CONFIG.item];
-        }
-
-        // This will throw an error, if the item does not match the array.
-        this._getAndCheckItemType(this._item, ['Switch']);
-
-        this._inverted = Accessory.checkInvertedConf(this._config, CONFIG.inverted);
-
-        this._transformation = {
-            "ON": this._inverted ? this.Characteristic.LockCurrentState.UNSECURED : this.Characteristic.LockCurrentState.SECURED,
-            "OFF": this._inverted ? this.Characteristic.LockCurrentState.SECURED : this.Characteristic.LockCurrentState.UNSECURED,
-            [this.Characteristic.LockTargetState.UNSECURED]: this._inverted ? "ON" : "OFF",
-            [this.Characteristic.LockCurrentState.SECURED ]: this._inverted ? "OFF" : "ON"
-        };
+        [this._armItem] = this._getAndCheckItemType(CONFIG.armItem, ['Switch']);
+        this._armItemInverted = Accessory.checkInvertedConf(this._config, CONFIG.armItemInverted);
+        [this._alarmItem] = this._getAndCheckItemType(CONFIG.alarmItem, ['Switch']);
+        this._alarmItemInverted = Accessory.checkInvertedConf(this._config, CONFIG.alarmItemInverted);
 
         // Services will be retrieved by homebridge
         this._services = [
-            this._getAccessoryInformationService('Lock Mechanism'),
+            this._getAccessoryInformationService('Security System'),
             this._getPrimaryService()
         ]
     }
 
     _getPrimaryService() {
-        this._log.debug(`Creating lock mechanism service for ${this.name} [${this._item}]`);
+        this._log.debug(`Creating security system service for ${this.name}`);
 
-        let lockMechanismService = new this.Service.LockMechanism(this.name);
+        let securitySystemService = new this.Service.SecuritySystem(this.name);
 
-        lockMechanismService.getCharacteristic(this.Characteristic.LockCurrentState)
-            .on('get', Accessory.getState.bind(this, this._item, this._transformation));
+        securitySystemService.getCharacteristic(this.Characteristic.SecuritySystemCurrentState)
+            .on('get', this._getSystemState.bind(this));
 
-        lockMechanismService.getCharacteristic(this.Characteristic.LockTargetState)
-            .on('get', Accessory.getState.bind(this, this._item, this._transformation))
-            .on('set', Accessory.setState.bind(this, this._item, this._transformation))
+        securitySystemService.getCharacteristic(this.Characteristic.SecuritySystemTargetState)
+            .on('get', this._getSystemState.bind(this))
+            .on('set', this._setSystemState.bind(this))
             .on('set', function(value) { // We will use this to set the actual position to the target position, in order to stop showing 'Closing...' or 'Opening...'
                 setTimeout(function(value) {
-                        lockMechanismService.setCharacteristic(this.Characteristic.LockCurrentState, value);
+                        securitySystemService.setCharacteristic(this.Characteristic.SecuritySystemCurrentState, value);
                     }.bind(this, value),
                     5000
                 );
             }.bind(this));
 
-        return lockMechanismService;
+        return securitySystemService;
+    }
+
+    _getSystemState(callback) {
+        let armItemState = this._openHAB.getStateSync(this._armItem) === "ON" && !this._armItemInverted;
+        let alarmItemState = this._openHAB.getStateSync(this._alarmItem) === "ON" && !this._alarmItemInverted;
+        if(alarmItemState) {
+            callback(this.Characteristic.SecuritySystemCurrentState.ALARM_TRIGGERED);
+        } else if(armItemState) {
+            callback(this.Characteristic.SecuritySystemCurrentState.STAY_ARM);
+        } else {
+            callback(this.Characteristic.SecuritySystemCurrentState.DISARMED);
+        }
+    }
+
+    _setSystemState(value, callback) {
+        let armValue;
+        switch(value) {
+            case this.Characteristic.SecuritySystemTargetState.STAY_ARM:
+            case this.Characteristic.SecuritySystemTargetState.AWAY_ARM:
+            case this.Characteristic.SecuritySystemTargetState.NIGHT_ARM:
+                armValue = this._armItemInverted ? "OFF": "ON";
+                break;
+            case this.Characteristic.SecuritySystemTargetState.DISARM:
+                armValue = this._armItemInverted ? "ON": "OFF";
+                break
+        }
+        Accessory.setState.bind(this, this._armItem, null)(armValue, callback);
+        Accessory.setState.bind(this._alarmItem, null)(this._alarmItemInverted ? "ON" : "OFF");
     }
 
 }
 
-const type = "lock";
+const type = "security";
 
 function createAccessory(platform, config) {
-    return new LockMechanismAccessory(platform, config);
+    return new SecuritySystemAccessory(platform, config);
 }
 
 module.exports = {createAccessory, type};

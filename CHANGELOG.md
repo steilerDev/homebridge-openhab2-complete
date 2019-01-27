@@ -5,7 +5,8 @@
   * Switch
   * Fan
   * Outlet (with optional Outlet In Use Characteristic)
-* Addition of Lock Mechanism Service
+* Addition of Lock Mechanism Service (supported openHAB item: `Switch`)
+* Addition of Security System Service (supported openHAB item: `Switch`)
 
 ## V0.5.0
 * Addition of CurrentPosition/TargetPosition Actors (Supported openHAB items: `Rollershutter`, `Number` and `Switch`) with optional item representing the service's state (Supported openHAB items: `Rollershutter`, `Number`, `Switch`, `Contact`)

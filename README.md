@@ -64,6 +64,8 @@ The following is a list of all Services that are currently supported and which v
 * [Window Covering](#window-covering)
 * [Door](#door)
 * [Window](#window)
+* [Lock Mechanism](#lock-mechanism)
+* [Security System](#security-system)
 * Numeric Sensors:
   * [Temperature Sensor](#temperature-sensor)
   * [Humidity Sensor](#humidity-sensor)
@@ -260,6 +262,22 @@ The HomeKit Lock Mechanism Service is designed to expose and control the physica
 ```
 * `item` is expected to be of type `Switch` within openHAB
 * `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+
+### Security System
+
+```
+{
+    armItem: "An items name, as shown in Homekit later",
+    armItemInverted: "true",
+    alarmItem: "An items name, as shown in Homekit later",
+    alarmItemInverted: "true"
+}
+```
+* `armItem` is expected to be of type `Switch` within openHAB, showing if the security system is armed or not
+* `armItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `armItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `alarmItem` is expected to be of type `Switch` within openHAB, showing if the security system is currently sounding an alarm
+* `alarmItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `armItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+
 
 ### Motion Sensor
 
