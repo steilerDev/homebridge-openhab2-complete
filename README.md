@@ -269,17 +269,26 @@ The HomeKit Lock Mechanism Service is designed to expose and control the physica
 {
     "name": "An items name, as shown in Homekit later",
     "type": "security"
-    "armItem": "An items name, as shown in Homekit later",
-    "armItemInverted": "true",
-    "alarmItem": "An items name, as shown in Homekit later",
-    "alarmItemInverted": "true"
+    "homeItem": "Itemname-within-OpenHAB",
+    "homeItemInverted": "false",
+    "awayItem": "Itemname-within-OpenHAB",
+    "awayItemInverted": "false",
+    "sleepItem": "Itemname-within-OpenHAB",
+    "sleepItemInverted": "false",
+    "alarmItem": "Itemname-within-OpenHAB",
+    "alarmItemInverted": "false"
 }
 ```
-* `armItem` is expected to be of type `Switch` within openHAB, showing if the security system is armed or not
-* `armItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `armItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-* `alarmItem` is expected to be of type `Switch` within openHAB, showing if the security system is currently sounding an alarm
+* `homeItem` (optional) is expected to be of type `Switch` within openHAB, showing if the security system is in home mode.
+* `homeItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `homeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `awayItem` (optional) is expected to be of type `Switch` within openHAB, showing if the security system is in away mode.
+* `awayItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `awayItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `sleepItem` (optional) is expected to be of type `Switch` within openHAB, showing if the security system is in sleep mode.
+* `sleepItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `sleepItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `alarmItem` (optional) is expected to be of type `Switch` within openHAB, showing if the security system is currently sounding an alarm
 * `alarmItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `armItem`'s state needs to be interpreted inverted, set this value to `"true"` 
 
+Each item (`homeItem`, `awayItem`, `sleepItem`, `alarmItem`) is optional, only one of them needs to be defined. When switching between the states (`Home Armed`, `Away Armed`, `Sleep Armed` & `Off`) the respective item gets triggered and all other will be turned off. The state of the system is determined which item in the order `alarmItem` -> `homeItem` -> `awayItem` -> `sleepItem` is turned on, if all items are off the state is `OFF`
 
 ### Motion Sensor
 
