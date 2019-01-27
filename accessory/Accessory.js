@@ -41,7 +41,7 @@ class Accessory {
         this._log.debug(`Subscribing to changes for ${item}`);
         this._subsciber.push(this._openHAB.subscribe(item, function(value, item) {
             if(value instanceof Error) {
-                this._log.error(value.message);
+                this._log.error(`Error subscribing for ${item}: ${value.message}`);
             } else {
                 this._log.debug(`Received push with new state for item ${item}: ${value}`);
                 let transformedValue = transformValue(transformation, value);
