@@ -101,7 +101,7 @@ function transformValue(transformation, value) {
         } else if (transformation["_default"] !== undefined) {
             return transformation["_default"];
         } else {
-            return new Error(`Unable to transform ${state} using transformation map ${JSON.stringify(transformation)}`);
+            return new Error(`Unable to transform ${value} using transformation map ${JSON.stringify(transformation)}`);
         }
     }
 }
