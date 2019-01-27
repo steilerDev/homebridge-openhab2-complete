@@ -14,6 +14,12 @@ function addLevelCharacteristic(service, characteristic) {
 
             service.getCharacteristic(characteristic)
                 .on('get', getState.bind(this, levelItem, parseInt));
+
+            this._subscribeCharacteristic(service,
+                characteristic,
+                levelItem,
+                parseInt
+            );
         }
     } catch (e) {
         this._log.error(`Not configuring level characteristic for ${this.name}: ${e.message}`);
