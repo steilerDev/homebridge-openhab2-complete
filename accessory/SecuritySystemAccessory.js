@@ -3,8 +3,12 @@
 const Accessory = require('./Accessory');
 
 const CONFIG = {
-    armItem: "armItem",
-    armItemInverted: "armItemInverted",
+    homeItem: "homeItem",
+    homeItemInverted: "homeItemInverted",
+    awayItem: "awayItem",
+    awayItemInverted: "awayItemInverted",
+    sleepItem: "sleepItem",
+    sleepItemInverted: "sleepItemInverted",
     alarmItem: "alarmItem",
     alarmItemInverted: "alarmItemInverted"
 };
@@ -14,10 +18,18 @@ class SecuritySystemAccessory extends Accessory.Accessory {
     constructor(platform, config) {
         super(platform, config);
 
-        [this._armItem] = this._getAndCheckItemType(CONFIG.armItem, ['Switch']);
-        this._armItemInverted = Accessory.checkInvertedConf(this._config, CONFIG.armItemInverted);
-        [this._alarmItem] = this._getAndCheckItemType(CONFIG.alarmItem, ['Switch']);
+        [this._homeItem] = this._getAndCheckItemType(CONFIG.homeItem, ['Switch'], true);
+        this._homeItemInverted = Accessory.checkInvertedConf(this._config, CONFIG.homeItemInverted);
+        [this._awayItem] = this._getAndCheckItemType(CONFIG.awayItem, ['Switch'], true);
+        this._awayItemInverted = Accessory.checkInvertedConf(this._config, CONFIG.awayItemInverted);
+        [this._sleepItem] = this._getAndCheckItemType(CONFIG.sleepItem, ['Switch'], true);
+        this._sleepItemInverted = Accessory.checkInvertedConf(this._config, CONFIG.sleepItemInverted);
+        [this._alarmItem] = this._getAndCheckItemType(CONFIG.alarmItem, ['Switch'], true);
         this._alarmItemInverted = Accessory.checkInvertedConf(this._config, CONFIG.alarmItemInverted);
+
+        if(!(this._homeItem || this._awayItem || this._sleepItem || this._armItem)) {
+            throw new Error(`No item defined for security system ${this.name}: ${JSON.stringify(this._config)}`);
+        }
 
         // Services will be retrieved by homebridge
         this._services = [
@@ -49,41 +61,94 @@ class SecuritySystemAccessory extends Accessory.Accessory {
     }
 
     _getSystemState(callback) {
-        let armItemState = this._openHAB.getStateSync(this._armItem);
-        let alarmItemState = this._openHAB.getStateSync(this._alarmItem);
+        try {
+            if(this._alarmItem) {
+                let alarmItemState = this._transform(this._alarmItemInverted, this._openHAB.getStateSync(this._alarmItem));
+                if(alarmItemState) {
+                    callback(null, this.Characteristic.SecuritySystemCurrentState.ALARM_TRIGGERED);
+                    return;
+                }
+            }
 
-        if(armItemState instanceof Error) {
-            callback(armItemState);
-        }
-        if(alarmItemState instanceof Error) {
-            callback(alarmItemState)
-        }
+            if(this._homeItem) {
+                let homeItemState = this._transform(this._homeItemInverted, this._openHAB.getStateSync(this._homeItem));
+                if(homeItemState) {
+                    callback(null, this.Characteristic.SecuritySystemCurrentState.STAY_ARM);
+                    return;
+                }
+            }
 
-        this._log.debug(`Received arm state ${armItemState} and alarm state ${alarmItemState}`);
-        if(alarmItemState === "ON" && !this._alarmItemInverted) {
-            callback(null, this.Characteristic.SecuritySystemCurrentState.ALARM_TRIGGERED);
-        } else if(armItemState === "ON" && !this._armItemInverted) {
-            callback(null, this.Characteristic.SecuritySystemCurrentState.STAY_ARM);
-        } else {
+            if(this._awayItem) {
+                let awayItemState = this._transform(this._awayItemInverted, this._openHAB.getStateSync(this._awayItem));
+                if(awayItemState) {
+                    callback(null, this.Characteristic.SecuritySystemCurrentState.AWAY_ARM);
+                    return;
+                }
+            }
+
+            if(this._sleepItem) {
+                let sleepItemState = this._transform(this._sleepItemInverted, this._openHAB.getStateSync(this._sleepItem));
+                if(sleepItemState) {
+                    callback(null, this.Characteristic.SecuritySystemCurrentState.SLEEP_ARM);
+                    return;
+                }
+            }
+
             callback(null, this.Characteristic.SecuritySystemCurrentState.DISARMED);
+        } catch(e) {
+            callback(e);
         }
     }
 
     _setSystemState(value, callback) {
-        let armValue;
         switch(value) {
             case this.Characteristic.SecuritySystemTargetState.STAY_ARM:
+                this._setCharacteristicState(this._homeItem, this._homeItemInverted, true, callback);
+                this._setCharacteristicState(this._awayItem, this._awayItemInverted, false);
+                this._setCharacteristicState(this._sleepItem, this._sleepItemInverted, false);
+                this._setCharacteristicState(this._alarmItem, this._alarmItemInverted, false);
+                break;
             case this.Characteristic.SecuritySystemTargetState.AWAY_ARM:
+                this._setCharacteristicState(this._homeItem, this._homeItemInverted, false);
+                this._setCharacteristicState(this._awayItem, this._awayItemInverted, true, callback);
+                this._setCharacteristicState(this._sleepItem, this._sleepItemInverted, false);
+                this._setCharacteristicState(this._alarmItem, this._alarmItemInverted, false);
+                break;
             case this.Characteristic.SecuritySystemTargetState.NIGHT_ARM:
-                armValue = this._armItemInverted ? "OFF": "ON";
+                this._setCharacteristicState(this._homeItem, this._homeItemInverted, false);
+                this._setCharacteristicState(this._awayItem, this._awayItemInverted, false);
+                this._setCharacteristicState(this._sleepItem, this._sleepItemInverted, true, callback);
+                this._setCharacteristicState(this._alarmItem, this._alarmItemInverted, false);
                 break;
             case this.Characteristic.SecuritySystemTargetState.DISARM:
-                armValue = this._armItemInverted ? "ON": "OFF";
-                break
+                this._setCharacteristicState(this._homeItem, this._homeItemInverted, false, callback);
+                this._setCharacteristicState(this._awayItem, this._awayItemInverted, false);
+                this._setCharacteristicState(this._sleepItem, this._sleepItemInverted, false);
+                this._setCharacteristicState(this._alarmItem, this._alarmItemInverted, false);
+                break;
         }
-        this._log.debug(`Setting security system state to ${armValue}`);
-        Accessory.setState.bind(this, this._armItem, null)(armValue, callback);
-        Accessory.setState.bind(this, this._alarmItem, null)(this._alarmItemInverted ? "ON" : "OFF");
+    }
+
+    _setCharacteristicState(item, inverted, value, callback) {
+        Accessory.setState.bind(this)(item, this._transform.bind(inverted), value, callback);
+    }
+
+    _transform(inverted, value) {
+        if(value === "ON") {
+            return !inverted;
+        } else if(value === "OFF") {
+            return inverted;
+        } else if (value === true) {
+            return inverted ? "OFF" : "ON";
+        } else if (value === false) {
+            return inverted ? "ON" : "OFF";
+        } else {
+            if(value instanceof Error) {
+                throw value;
+            } else {
+                throw new Error(`Unable to convert value ${value} for security system`);
+            }
+        }
     }
 
 }
