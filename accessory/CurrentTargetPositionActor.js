@@ -63,6 +63,15 @@ class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
                 )
             ));
 
+        this._subscribeCharacteristic(service,
+            this.Characteristic.TargetPosition,
+            thisItem,
+            this._transformation.bind(this,
+                thisItemType,
+                thisInverted
+            )
+        );
+
         service.getCharacteristic(this.Characteristic.TargetPosition)
             .on('set', Accessory.setState.bind(this,
                 this._item,
