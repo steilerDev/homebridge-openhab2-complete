@@ -98,15 +98,21 @@ function getState(habItem, transformation, callback) {
     this._openHAB.getState(habItem, function(error, state) {
         if(error) {
             this._log.error(`Unable to get state for ${this.name} [${habItem}]: ${error.message}`);
-            callback(error);
+            if(callback && typeof callback === "function") {
+                callback(error);
+            }
         } else {
             let transformedState = transformValue(transformation, state);
             this._log(`Received state: ${state} (transformed to ${transformedState}) for ${this.name} [${habItem}]`);
             if(transformedState instanceof Error) {
                 this._log.error(transformedState.message);
-                callback(transformedState);
+                if(callback && typeof callback === "function") {
+                    callback(transformedState);
+                }
             } else {
-                callback(null, transformedState);
+                if(callback && typeof callback === "function") {
+                    callback(null, transformedState);
+                }
             }
         }
     }.bind(this));
@@ -117,15 +123,21 @@ function setState(habItem, transformation, state, callback) {
     this._log(`Change target state of ${this.name} [${habItem}] to ${state} (transformed to ${transformedState})`);
     if(transformedState instanceof Error) {
         this._log.error(transformedState.message);
-        callback(transformedState);
+        if(callback && typeof callback === "function") {
+            callback(transformedState);
+        }
     } else {
         this._openHAB.sendCommand(habItem, `${transformedState}`, function (error) {
             if (error) {
                 this._log.error(`Unable to send command: ${error.message}`);
-                callback(error);
+                if(callback && typeof callback === "function") {
+                    callback(error);
+                }
             } else {
                 this._log.debug(`Changed target state of ${this.name} [${habItem}] to ${transformedState}`);
-                callback();
+                if(callback && typeof callback === "function") {
+                    callback();
+                }
             }
         }.bind(this));
     }
