@@ -28,6 +28,12 @@ function addBatteryWarningCharacteristic(service) {
 
             service.getCharacteristic(this.Characteristic.StatusLowBattery)
                 .on('get', getState.bind(this, batteryItem, batteryTransformation));
+
+            this._subscribeCharacteristic(service,
+                this.Characteristic.StatusLowBattery,
+                batteryItem,
+                batteryTransformation
+            );
         }
     } catch (e) {
         this._log.error(`Not configuring battery for ${this.name}: ${e.message}`);

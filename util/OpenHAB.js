@@ -115,7 +115,6 @@ class OpenHAB {
         let myURL = clone(this._url);
         myURL.pathname = '/rest/events';
         myURL.search = `topics=smarthome/items/${habItem}/statechanged`;
-        console.log(myURL.href);
         let source = new EventSource(myURL.href);
         source.onmessage = function(eventPayload) {
             let eventData = JSON.parse(eventPayload.data);
