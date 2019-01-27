@@ -27,34 +27,48 @@ class CurrentTargetPositionActorAccessory extends Accessory.Accessory {
     }
 
     _configureCurrentPositionCharacteristic(service) {
-        if(this._stateItem) {
-            service.getCharacteristic(this.Characteristic.CurrentPosition)
-                .on('get', Accessory.getState.bind(this, this._stateItem, this._transformation.bind(this, this._stateItemType, this._stateItemInverted)));
-        } else {
-            service.getCharacteristic(this.Characteristic.CurrentPosition)
-                .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this, this._itemType, this._inverted)));
-        }
+        let thisItem = this._stateItem ? this._stateItem : this._item;
+        let thisInverted = this._stateItem ? this._stateItemInverted : this._inverted;
+
+        service.getCharacteristic(this.Characteristic.CurrentPosition)
+            .on('get', Accessory.getState.bind(this,
+                thisItem,
+                this._transformation.bind(this,
+                    thisItem,
+                    thisInverted
+                )
+            ));
+        this._subscribeCharacteristic(service,
+            this.Characteristic.CurrentPosition,
+            thisItem,
+            this._transformation.bind(this,
+                thisItem,
+                thisInverted
+            )
+        );
     }
 
     _configureTargetPositionCharacteristic(service) {
-        // If HomeKit is curious about the target state, we will just give him the actual state
-        if(this._stateItem) {
-            service.getCharacteristic(this.Characteristic.TargetPosition)
-                .on('get', Accessory.getState.bind(this, this._stateItem, this._transformation.bind(this, this._stateItemType, this._stateItemInverted)));
-        } else {
-            service.getCharacteristic(this.Characteristic.TargetPosition)
-                .on('get', Accessory.getState.bind(this, this._item, this._transformation.bind(this, this._itemType, this._inverted)));
-        }
+        let thisItem = this._stateItem ? this._stateItem : this._item;
+        let thisInverted = this._stateItem ? this._stateItemInverted : this._inverted;
+        // If HomeKit is curious about the target position we will give the actual position
+        service.getCharacteristic(this.Characteristic.TargetPosition)
+            .on('get', Accessory.getState.bind(this,
+                thisItem,
+                this._transformation.bind(this,
+                    thisItem,
+                    thisInverted
+                )
+            ));
 
         service.getCharacteristic(this.Characteristic.TargetPosition)
-            .on('set', Accessory.setState.bind(this, this._item, this._transformation.bind(this, this._itemType, this._inverted)))
-            .on('set', function(value) { // We will use this to set the actual position to the target position, in order to stop showing 'Closing...' or 'Opening...'
-                setTimeout(function(value) {
-                        service.setCharacteristic(this.Characteristic.CurrentPosition, value);
-                    }.bind(this, value),
-                    5000
-                );
-            }.bind(this));
+            .on('set', Accessory.setState.bind(this,
+                this._item,
+                this._transformation.bind(this,
+                    this._itemType,
+                    this._inverted
+                )
+            ));
     }
 
     _configurePostitionStateCharacteristic(service) {

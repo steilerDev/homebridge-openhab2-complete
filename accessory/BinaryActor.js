@@ -24,10 +24,7 @@ class BinaryActorAccessory extends Accessory.Accessory {
                 "ON": true,
                 "OFF": false
             }));
-        return binaryService;
-    }
 
-    _subscribeOnCharacteristic(binaryService) {
         this._subscribeCharacteristic(binaryService,
             this.Characteristic.On,
             this._item,
@@ -35,6 +32,7 @@ class BinaryActorAccessory extends Accessory.Accessory {
                 "ON": true,
                 "OFF": false
             });
+        return binaryService;
     }
 }
 
