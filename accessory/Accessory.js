@@ -20,7 +20,6 @@ class Accessory {
         this.name = config.name;
         this.uuid_base = config.serialNumber;
 
-        this._subsciber = [];
         this._services = [];
 
     }
@@ -39,7 +38,7 @@ class Accessory {
 
     _subscribeCharacteristic(service, characteristic, item, transformation) {
         this._log.debug(`Subscribing to changes for ${item}`);
-        this._subsciber.push(this._openHAB.subscribe(item, function(value, item) {
+        this._openHAB.subscribe(item, function(value, item) {
             if(value instanceof Error) {
                 this._log.error(`Error subscribing for ${item}: ${value.message}`);
             } else {
@@ -47,7 +46,7 @@ class Accessory {
                 let transformedValue = transformValue(transformation, value);
                 service.setCharacteristic(characteristic, transformedValue);
             }
-        }.bind(this)));
+        }.bind(this));
     }
 
     _getAndCheckItemType(key, expectedItems, optional) {
