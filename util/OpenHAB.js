@@ -106,7 +106,7 @@ class OpenHAB {
     }
 
     subscribe(habItem, callback) {
-        this._url.path = `/events?topics=smarthome/items/${habItem}/statechanged`;
+        this._url.path = `/rest/events?topics=smarthome/items/${habItem}/statechanged`;
         let source = new EventSource(this._url.href);
         source.onmessage = function(eventPayload) {
             let eventData = JSON.parse(eventPayload.data);

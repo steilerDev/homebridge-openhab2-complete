@@ -37,6 +37,7 @@ class Accessory {
     }
 
     _subscribeCharacteristic(service, characteristic, item, transformation) {
+        this._log.debug(`Subscribing to changes for ${item}`);
         this._openHAB.subscribe(item, function(value, item) {
             if(value instanceof Error) {
                 this._log.error(value.message);
