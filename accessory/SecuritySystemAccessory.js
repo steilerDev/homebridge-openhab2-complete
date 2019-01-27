@@ -130,7 +130,10 @@ class SecuritySystemAccessory extends Accessory.Accessory {
     }
 
     _setCharacteristicState(item, inverted, value, callback) {
-        Accessory.setState.bind(this)(item, this._transform.bind(inverted), value, callback);
+        if(item) {
+            this._log(`Set Characteristic called for ${item}, with inverted ${inverted} and value ${value}`);
+            Accessory.setState.bind(this)(item, this._transform.bind(inverted), value, callback);
+        }
     }
 
     _transform(inverted, value) {
