@@ -49,7 +49,6 @@ class SecuritySystemAccessory extends Accessory.Accessory {
     }
 
     _getSystemState(callback) {
-        this._log.debug(`Getting state of security system ${this.name}`);
         let armItemState = this._openHAB.getStateSync(this._armItem);
         let alarmItemState = this._openHAB.getStateSync(this._alarmItem);
 
@@ -84,7 +83,7 @@ class SecuritySystemAccessory extends Accessory.Accessory {
         }
         this._log.debug(`Setting security system state to ${armValue}`);
         Accessory.setState.bind(this, this._armItem, null)(armValue, callback);
-        Accessory.setState.bind(this._alarmItem, null)(this._alarmItemInverted ? "ON" : "OFF");
+        Accessory.setState.bind(this, this._alarmItem, null)(this._alarmItemInverted ? "ON" : "OFF");
     }
 
 }
