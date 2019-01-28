@@ -10,7 +10,7 @@ const ON_CONFIG = {
 function addOnCharacteristic(service, optional) {
     try {
         let [item] = this._getAndCheckItemType(ON_CONFIG.item, ['Switch']);
-        let inverted = this._checkInvertedConf(this._config, ON_CONFIG.inverted);
+        let inverted = this._checkInvertedConf(ON_CONFIG.inverted);
 
         this._log.debug(`Creating 'ON' characteristic for ${this.name} with item ${item} and inverted set to ${inverted}`);
 
