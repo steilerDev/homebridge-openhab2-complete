@@ -4,7 +4,7 @@ const {Accessory} = require('../util/Accessory');
 const {addBinarySensorCharacteristic} = require('./characteristic/BinarySensor');
 const {addLevelCharacteristic} = require('./characteristic/Level');
 
-class FilterMaintenanceSensorAccessory extends BinarySensorAccessory {
+class FilterMaintenanceSensorAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
 
