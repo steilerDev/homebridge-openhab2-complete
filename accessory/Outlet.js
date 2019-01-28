@@ -4,7 +4,7 @@ const {Accessory} = require('../util/Accessory');
 const {addOnCharacteristic} = require('./characteristic/On');
 const {addInUseCharacteristic} = require('./characteristic/InUse');
 
-class OutletAccessory extends BinaryActorAccessory {
+class OutletAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
