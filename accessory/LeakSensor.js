@@ -17,7 +17,7 @@ class LeakSensorAccessory extends Accessory {
     _getPrimaryService() {
         this._log.debug(`Creating leak sensor service for ${this.name}`);
         let primaryService = new this.Service.LeakSensor(this.name);
-        addBinarySensorCharacteristic(this)(primaryService, this.Characteristic.LeakDetected);
+        addBinarySensorCharacteristic.bind(this)(primaryService, this.Characteristic.LeakDetected);
         addBatteryWarningCharacteristic.bind(this)(primaryService);
         return primaryService;
     }
