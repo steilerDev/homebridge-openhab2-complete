@@ -61,7 +61,7 @@ function addPositionStateCharacteristic(service) {
 
 function addHoldPositionCharacteristic(service) {
     try {
-        let [item] = this._getAndCheckItemType(CURRENT_TARGET_CONFIG.item, ['Rollershutter']);
+        let [item] = this._getAndCheckItemType(CURRENT_TARGET_POSITION_CONFIG.item, ['Rollershutter']);
 
         this._log.debug(`Creating position state characteristic for ${this.name} with item ${item}`);
 
@@ -77,7 +77,7 @@ function addHoldPositionCharacteristic(service) {
     }
 }
 
-
+// Todo: Maybe some grace area, if target and acutall state differ a couple of percent?
 function positionTransformation(type, inverted, value) {
     let transformedValue;
 
