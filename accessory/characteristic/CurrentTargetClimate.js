@@ -1,7 +1,7 @@
 'use strict';
 
 const {addTargetStateCharacteristic, addCurrentStateCharacteristic} = require('./CurrentTarget');
-const {getState, setState} = require('../../util/Accessory');
+const {getState} = require('../../util/Accessory');
 
 const CURRENT_TARGET_CLIMATE_CONFIG = {
     currentTempItem: "currentTempItem", //required
@@ -100,7 +100,7 @@ function addTargetRelativeHumidityCharacteristic(service, optional) {
 }
 
 function addTemperatureDisplayUnitsCharacteristic(service) {
-    switch(this._config[CONFIG.tempUnit]) {
+    switch(this._config[CURRENT_TARGET_CLIMATE_CONFIG.tempUnit]) {
         default:
         case 'Celsius':
             this._tempUnit = this.Characteristic.TemperatureDisplayUnits.CELSIUS;
@@ -121,7 +121,7 @@ function addHeatingCoolingStateCharacteristic(service) {
     let mode;
 
     if(!(heatingItem || coolingItem)) {
-        throw new Error(`heatingItem and/or coolingItem need to be set: ${JSON.stringify(this._config)}`);
+        throw new Error(`heatingItem and/or coolingItem needs to be set: ${JSON.stringify(this._config)}`);
     } else {
         if(heatingItem) {
             mode = 'Heating';
@@ -129,10 +129,9 @@ function addHeatingCoolingStateCharacteristic(service) {
             this._subscribeCharacteristic(service,
                 this.Characteristic.CurrentHeatingCoolingState,
                 heatingItem,
-                transformHeatingCoolingState.bind(this,
-                    heatingItem,
-                    coolingItem,
-                    heatingItem
+                _transformHeatingCoolingState.bind(this,
+                    "heating",
+                    service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState),
                 )
             );
         }
@@ -142,7 +141,7 @@ function addHeatingCoolingStateCharacteristic(service) {
             this._subscribeCharacteristic(service,
                 this.Characteristic.CurrentHeatingCoolingState,
                 coolingItem,
-                transformHeatingCoolingState.bind(this,
+                _transformHeatingCoolingState.bind(this,
                     "cooling",
                     service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState),
                 )
@@ -153,21 +152,15 @@ function addHeatingCoolingStateCharacteristic(service) {
     service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState)
         .on('get', _getHeatingCoolingState.bind(this, mode, heatingItem, coolingItem));
 
-
-
-    thermostatService.getCharacteristic(this.Characteristic.TargetHeatingCoolingState)
+    service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState)
         .on('get', _getHeatingCoolingState.bind(this, mode, heatingItem, coolingItem))
-        .on('set', Accessory.setState(heatingItem, transformHeatingCoolingState, ))
-
-    if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "OFF", function(){});
-    if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "OFF", function(){});
+        .on('set', _setHeatingCoolingState.bind(this, heatingItem, coolingItem));
 }
 
-function transformHeatingCoolingState(thisItemMode, characteristic, value) {
+function _transformHeatingCoolingState(thisItemMode, characteristic, value) {
     let OFF = 0;
     let HEAT = 1;
     let COOL = 2;
-    let AUTO = 3;
 
     let currentState = characteristic.value;
 
@@ -181,7 +174,7 @@ function transformHeatingCoolingState(thisItemMode, characteristic, value) {
                 return OFF;
             }
         }
-    } else if(mode === "cooling") {
+    } else if(thisItemMode === "cooling") {
         if(value === "ON") {
             return COOL;
         } else if(value === "OFF") {
@@ -194,23 +187,27 @@ function transformHeatingCoolingState(thisItemMode, characteristic, value) {
     }
 }
 function _getHeatingCoolingState(mode, heatingItem, coolingItem, callback) {
+    let OFF = 0;
+    let HEAT = 1;
+    let COOL = 2;
+
     switch (mode) {
         case "Heating":
             getState.bind(this)(heatingItem, {
-                "ON": this.Characteristic.CurrentHeatingCoolingState.HEAT,
-                "OFF": this.Characteristic.CurrentHeatingCoolingState.OFF
+                "ON": HEAT,
+                "OFF": OFF
             }, callback);
             break;
         case "Cooling":
             getState.bind(this, coolingItem, {
-                "ON": this.Characteristic.CurrentHeatingCoolingState.COOL,
-                "OFF": this.Characteristic.CurrentHeatingCoolingState.OFF
+                "ON": COOL,
+                "OFF": OFF
             }, callback);
             break;
         case "HeatingCooling":
-            this._log.debug(`Getting heating/cooling state for ${this.name} [${this._heatingItem} & ${this._coolingItem}]`);
-            let coolingState = this._openHAB.getStateSync(this._coolingItem);
-            let heatingState = this._openHAB.getStateSync(this._heatingItem);
+            this._log.debug(`Getting heating/cooling state for ${this.name} [${heatingItem} & ${coolingItem}]`);
+            let coolingState = this._openHAB.getStateSync(coolingItem);
+            let heatingState = this._openHAB.getStateSync(heatingItem);
             if (coolingState instanceof Error) {
                 callback(coolingState);
             }
@@ -237,46 +234,39 @@ function _getHeatingCoolingState(mode, heatingItem, coolingItem, callback) {
     }
 }
 
-_setHeatingCoolingState(state, callback) {
-    this._log(`Setting heating cooling state for ${this.name} [${this._heatingItem}] to ${state}`);
+function _setHeatingCoolingState(heatingItem, coolingItem, state, callback) {
+    let OFF = 0;
+    let HEAT = 1;
+    let COOL = 2;
+
+    this._log(`Setting heating cooling state for ${this.name} [Heating Item: ${heatingItem}/Cooling Item: ${coolingItem}] to ${state}`);
     switch(state) {
-        case this.Characteristic.TargetHeatingCoolingState.OFF:
+        default:
+        case OFF:
+            if(heatingItem) Accessory.setState.bind(this)(heatingItem, null, "OFF", function(){});
+            if(coolingItem) Accessory.setState.bind(this)(coolingItem, null, "OFF", function(){});
             break;
-        case this.Characteristic.TargetHeatingCoolingState.HEAT:
-            if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "ON", function(){});
-            if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "OFF", function(){});
-            if(this._mode === "Cooling") {
-                this._services[1].setCharacteristic(this.Characteristic.CurrentHeatingCoolingState, this.Characteristic.CurrentHeatingCoolingState.OFF);
-            }
+        case HEAT:
+            if(heatingItem) Accessory.setState.bind(this)(heatingItem, null, "ON", function(){});
+            if(coolingItem) Accessory.setState.bind(this)(coolingItem, null, "OFF", function(){});
             break;
-        case this.Characteristic.TargetHeatingCoolingState.COOL:
-            if(this._heatingItem) Accessory.setState.bind(this)(this._heatingItem, null, "OFF", function(){});
-            if(this._coolingItem) Accessory.setState.bind(this)(this._coolingItem, null, "ON", function(){});
-            if(this._mode === "Heating") {
-                this._services[1].setCharacteristic(this.Characteristic.CurrentHeatingCoolingState, this.Characteristic.CurrentHeatingCoolingState.OFF);
-            }
+        case COOL:
+            if(heatingItem) Accessory.setState.bind(this)(heatingItem, null, "OFF", function(){});
+            if(coolingItem) Accessory.setState.bind(this)(coolingItem, null, "ON", function(){});
             break;
     }
     callback();
 }
 
-
-
-
-
-
-
-function dummyTransformation(_, _, value) {
+function dummyTransformation(itemType, inverted, value) {
     return value;
 }
 
-
-
-
-
-
 module.exports = {
-    addCurrentStateCharacteristic,
-    addTargetStateCharacteristic,
+    addHeatingCoolingStateCharacteristic,
+    addTemperatureDisplayUnitsCharacteristic,
+    addTargetRelativeHumidityCharacteristic,
+    addCurrentRelativeHumidityCharacteristic,
+    addTargetTemperatureCharacteristic,
+    addCurrentTemperatureCharacteristic
 };
-
