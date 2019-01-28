@@ -42,9 +42,11 @@ class Accessory {
             if(value instanceof Error) {
                 this._log.error(`Error subscribing for ${item}: ${value.message}`);
             } else {
-                this._log.debug(`Received push with new state for item ${habItem}: ${value}`);
+                this._log(`Received push with new state for item ${habItem}: ${value}`);
                 let transformedValue = transformValue(transformation, value);
-                service.setCharacteristic(characteristic, transformedValue);
+                if(transformedValue !== null) {
+                    service.setCharacteristic(characteristic, transformedValue);
+                }
             }
         }.bind(this));
     }
@@ -78,6 +80,14 @@ class Accessory {
         return [null, null];
     }
 
+    _checkInvertedConf(key) {
+        if(this._config[key] && (this._config[key] === "false" || this._config[key] === "true")) {
+            return this._config[key] === "true";
+        } else {
+            return false;
+        }
+    }
+
     _getAccessoryInformationService(modelDescription) {
         return new this.Service.AccessoryInformation()
             .setCharacteristic(this.Characteristic.Name, this.name)
@@ -107,7 +117,7 @@ function transformValue(transformation, value) {
 }
 
 function getState(habItem, transformation, callback) {
-    this._log(`Getting state for ${this.name} [${habItem}]`);
+    this._log.debug(`Getting state for ${this.name} [${habItem}]`);
     this._openHAB.getState(habItem, function(error, state) {
         if(error) {
             this._log.error(`Unable to get state for ${this.name} [${habItem}]: ${error.message}`);
@@ -133,7 +143,7 @@ function getState(habItem, transformation, callback) {
 
 function setState(habItem, transformation, state, callback) {
     let transformedState = transformValue(transformation, state);
-    this._log(`Change target state of ${this.name} [${habItem}] to ${state} (transformed to ${transformedState})`);
+    this._log.debug(`Change target state of ${this.name} [${habItem}] to ${state} (transformed to ${transformedState})`);
     if(transformedState instanceof Error) {
         this._log.error(transformedState.message);
         if(callback && typeof callback === "function") {
@@ -147,7 +157,7 @@ function setState(habItem, transformation, state, callback) {
                     callback(error);
                 }
             } else {
-                this._log.debug(`Changed target state of ${this.name} [${habItem}] to ${transformedState}`);
+                this._log(`Changed target state of ${this.name} [${habItem}] to ${transformedState}`);
                 if(callback && typeof callback === "function") {
                     callback();
                 }
@@ -156,15 +166,4 @@ function setState(habItem, transformation, state, callback) {
     }
 }
 
-function checkInvertedConf(config, key) {
-    if(config[key] && (config[key] === "false" || config[key] === "true")) {
-        return config[key] === "true";
-    } else {
-        return false;
-    }
-}
-
-// Shows the loader, that this accessory should be ignored
-const ignore = true;
-
-module.exports = {Accessory, getState, setState, checkInvertedConf, ignore};
+module.exports = {Accessory, getState, setState};

@@ -1,9 +1,10 @@
 'use strict';
 
-const {BinarySensorAccessory} = require('./BinarySensor');
+const {Accessory} = require('../util/Accessory');
+const {addBinarySensorCharacteristic} = require('./characteristic/BinarySensor');
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
-class SmokeSensorAccessory extends BinarySensorAccessory {
+class SmokeSensorAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
 
@@ -14,13 +15,10 @@ class SmokeSensorAccessory extends BinarySensorAccessory {
     }
 
     _getPrimaryService() {
-        let primaryService = this._configureBinaryService(
-            new this.Service.SmokeSensor(this.name),
-            this.Characteristic.SmokeDetected
-        );
-
+        this._log.debug(`Creating occupancy sensor service for ${this.name}`);
+        let primaryService = new this.Service.SmokeSensor(this.name);
+        addBinarySensorCharacteristic.bind(this)(primaryService, this.Characteristic.SmokeDetected);
         addBatteryWarningCharacteristic.bind(this)(primaryService);
-
         return primaryService;
     }
 }

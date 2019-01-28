@@ -1,10 +1,11 @@
 'use strict';
 
-const {BinarySensorAccessory} = require('./BinarySensor');
+const {Accessory} = require('../util/Accessory');
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 const {addLevelCharacteristic} = require('./characteristic/Level');
+const {addBinarySensorCharacteristic} = require('./characteristic/BinarySensor');
 
-class COSensorAccessory extends BinarySensorAccessory {
+class COSensorAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
 
@@ -15,13 +16,11 @@ class COSensorAccessory extends BinarySensorAccessory {
     }
 
     _getPrimaryService() {
-        let primaryService = this._configureBinaryService(
-            new this.Service.CarbonMonoxideSensor(this.name),
-            this.Characteristic.CarbonMonoxideDetected
-        );
-
-        addBatteryWarningCharacteristic.bind(this)(primaryService);
+        this._log.debug(`Creating carbon monoxide sensor service for ${this.name}`);
+        let primaryService = new this.Service.CarbonMonoxideSensor(this.name);
+        addBinarySensorCharacteristic.bind(this)(primaryService, this.Characteristic.CarbonMonoxideDetected);
         addLevelCharacteristic.bind(this)(primaryService, this.Characteristic.CarbonMonoxideLevel);
+        addBatteryWarningCharacteristic.bind(this)(primaryService);
         return primaryService;
     }
 }

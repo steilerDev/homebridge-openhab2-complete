@@ -18,7 +18,8 @@
 
 ## Implemented for next release
 ### V0.7.0 (unreleased)
-* NA
+* Major rework to clean up and support subscription
+* Binary actors can now have `inverted`
 
 ## Changelog
 ### V0.6.0

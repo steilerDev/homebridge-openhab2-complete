@@ -1,8 +1,9 @@
 'use strict';
 
-const {CurrentTargetPositionActorAccessory} = require('./CurrentTargetPositionActor');
+const {Accessory} = require('../util/Accessory');
+const {addCurrentPositionCharacteristic, addTargetPositionCharacteristic, addPositionStateCharacteristic, addHoldPositionCharacteristic} = require('./characteristic/CurrentTargetPosition');
 
-class WindowAccessory extends CurrentTargetPositionActorAccessory {
+class WindowAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
@@ -15,14 +16,13 @@ class WindowAccessory extends CurrentTargetPositionActorAccessory {
     }
 
     _getPrimaryService() {
-        this._log.debug(`Creating window service for ${this.name} [${this._item}]`);
-        let windowService = new this.Service.Window(this.name);
-        this._configureCurrentPositionCharacteristic(windowService);
-        this._configureTargetPositionCharacteristic(windowService);
-        this._configurePostitionStateCharacteristic(windowService);
-        this._configureHoldPosition(windowService);
-
-        return windowService;
+        this._log.debug(`Creating window service for ${this.name}`);
+        let primaryService = new this.Service.Window(this.name);
+        addCurrentPositionCharacteristic.bind(this)(primaryService);
+        addTargetPositionCharacteristic.bind(this)(primaryService);
+        addPositionStateCharacteristic.bind(this)(primaryService);
+        addHoldPositionCharacteristic.bind(this)(primaryService);
+        return primaryService;
     }
 }
 

@@ -474,7 +474,7 @@ See the `./accessory/Switch.js` accessory for a simple Service and use it as a s
 Verly little configuration within homebridge/openHAB, only tags within `*.items` files and inclusion within sitemap, obviously requiring both to be created manually | Explicit declaration within `config.json` not requiring instable openHAB `Metadata Provider` (removes items if state is `NULL`) and de-couples homebridge configuration from openHAB
 Support only 1:1 mappings between Items and HomeKit Services | Supports composite items (e.g. Thermostat)
 No documentation to support extension | Simple concept for extending functionality
-Uses `SSE` to receive push notifications from openHAB about state changes | Polling of states through REST interface
+Uses `SSE` to receive push notifications from openHAB about state change and requires sitemap definitions | Polling of states through REST interface & push notifications from openHAB through `SSE` *without*  the requirement of active sitemaps
 Battery Warnings not supported | Battery Warnings supported
 Thermostats never really worked | Thermostats working perfectly
 Two binary sensors supported without sub-characteristics | Eight distinct binary sensor types with sub-characteristics supported

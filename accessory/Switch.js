@@ -1,8 +1,9 @@
 'use strict';
 
-const {BinaryActorAccessory} = require('./BinaryActor');
+const {Accessory} = require('../util/Accessory');
+const {} = require('./characteristic/On');
 
-class SwitchAccessory extends BinaryActorAccessory {
+class SwitchAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
@@ -15,9 +16,10 @@ class SwitchAccessory extends BinaryActorAccessory {
     }
 
     _getPrimaryService() {
-        this._log.debug(`Creating switch service for ${this.name} [${this._item}]`);
-
-        return this._configureOnCharacteristic(new this.Service.Switch(this.name));
+        this._log.debug(`Creating switch service for ${this.name}`);
+        let primaryService = new this.Service.Switch(this.name);
+        addOnCharacteristic.bind(this)(primaryService);
+        return primaryService;
     }
 }
 

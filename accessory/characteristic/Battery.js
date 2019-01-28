@@ -1,6 +1,6 @@
 'use strict';
 
-const {getState, checkInvertedConf} = require('../Accessory');
+const {getState} = require('../../util/Accessory');
 
 const BATTERY_CONFIG = {
     batteryItem: "batteryItem",
@@ -10,33 +10,33 @@ const BATTERY_CONFIG = {
 // This function will try and add a battery warning characteristic to the provided service
 function addBatteryWarningCharacteristic(service) {
     try {
-        if (this._config[BATTERY_CONFIG.batteryItem]) {
-            let [batteryItem] = this._getAndCheckItemType(BATTERY_CONFIG.batteryItem, ['Switch', 'Contact']);
-            let inverted = checkInvertedConf(this._config, BATTERY_CONFIG.batteryItemInverted);
+        let [batteryItem] = this._getAndCheckItemType(BATTERY_CONFIG.batteryItem, ['Switch', 'Contact']);
+        let inverted = this._checkInvertedConf(BATTERY_CONFIG.batteryItemInverted);
 
-            let batteryTransformation = inverted ? {
-                "OFF": 1,
-                "ON": 0,
-                "CLOSED": 1,
-                "OPEN": 0
-            } : {
-                "OFF": 0,
-                "ON": 1,
-                "CLOSED": 0,
-                "OPEN": 1
-            };
+        this._log.debug(`Creating battery warning characteristic for ${this.name} [${this._item}]`);
 
-            service.getCharacteristic(this.Characteristic.StatusLowBattery)
-                .on('get', getState.bind(this, batteryItem, batteryTransformation));
+        let batteryTransformation = inverted ? {
+            "OFF": 1,
+            "ON": 0,
+            "CLOSED": 1,
+            "OPEN": 0
+        } : {
+            "OFF": 0,
+            "ON": 1,
+            "CLOSED": 0,
+            "OPEN": 1
+        };
 
-            this._subscribeCharacteristic(service,
-                this.Characteristic.StatusLowBattery,
-                batteryItem,
-                batteryTransformation
-            );
-        }
+        service.getCharacteristic(this.Characteristic.StatusLowBattery)
+            .on('get', getState.bind(this, batteryItem, batteryTransformation));
+
+        this._subscribeCharacteristic(service,
+            this.Characteristic.StatusLowBattery,
+            batteryItem,
+            batteryTransformation
+        );
     } catch (e) {
-        this._log.error(`Not configuring battery for ${this.name}: ${e.message}`);
+        this._log.error(`Not configuring battery warning characteristic for ${this.name}: ${e.message}`);
     }
 }
 

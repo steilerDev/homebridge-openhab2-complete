@@ -1,8 +1,9 @@
 'use strict';
 
-const {CurrentTargetPositionActorAccessory} = require('./CurrentTargetPositionActor');
+const {Accessory} = require('../util/Accessory');
+const {addCurrentPositionCharacteristic, addTargetPositionCharacteristic, addPositionStateCharacteristic, addHoldPositionCharacteristic} = require('./characteristic/CurrentTargetPosition');
 
-class WindowCoveringAccessory extends CurrentTargetPositionActorAccessory {
+class WindowCoveringAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
@@ -15,14 +16,13 @@ class WindowCoveringAccessory extends CurrentTargetPositionActorAccessory {
     }
 
     _getPrimaryService() {
-        this._log.debug(`Creating window covering service for ${this.name} [${this._item}]`);
-        let windowCoveringService = new this.Service.WindowCovering(this.name);
-        this._configureCurrentPositionCharacteristic(windowCoveringService);
-        this._configureTargetPositionCharacteristic(windowCoveringService);
-        this._configurePostitionStateCharacteristic(windowCoveringService);
-        this._configureHoldPosition(windowCoveringService);
-
-        return windowCoveringService;
+        this._log.debug(`Creating window covering service for ${this.name}`);
+        let primaryService = new this.Service.Window(this.name);
+        addCurrentPositionCharacteristic.bind(this)(primaryService);
+        addTargetPositionCharacteristic.bind(this)(primaryService);
+        addPositionStateCharacteristic.bind(this)(primaryService);
+        addHoldPositionCharacteristic.bind(this)(primaryService);
+        return primaryService;
     }
 }
 

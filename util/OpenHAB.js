@@ -127,7 +127,7 @@ class OpenHAB {
         source.onerror = function (err) {
             if(err.message) {
                 if(err.status) {
-                    callback(new Error(`${status}: ${err.message}`));
+                    callback(new Error(`${err.status}: ${err.message}`));
                 } else {
                     callback(new Error(err.message));
                 }

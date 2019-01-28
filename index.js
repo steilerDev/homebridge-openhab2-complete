@@ -44,25 +44,20 @@ const OpenHABComplete = class {
                 let accessoryFilePath = `${accessoryDirectory}/${accessoryFile.name}`;
                 let accessoryFileName = accessoryFilePath.split(/[\\/]/).pop();
 
-                let ignore = require(accessoryFilePath).ignore;
-                if(ignore === undefined) {
-                    let accessoryType = require(accessoryFilePath).type;
-                    if(accessoryType === undefined || !(typeof accessoryType === "string")) {
-                        this._log.warn(`Ignoring ${accessoryFileName} due to missing 'type' definition`);
-                    } else {
-                        this._log.debug(`Found accessory of type ${accessoryType}`);
-                        let accessoryFactory = require(accessoryFilePath).createAccessory;
-                        if(accessoryFactory === undefined || !(typeof accessoryFactory === "function")) {
-                            this._log.warn(`Ignoring ${accessoryFileName}, due to missing 'createAccessory' definition`);
-                        } else if (this._factories[accessoryType]) {
-                            this._log.warn(`There is already an accessory of type ${accessoryType} loaded, skipping this`);
-                        } else {
-                            this._log(`Loading and activating accessory ${accessoryType}`);
-                            this._factories[accessoryType] = require(accessoryFilePath).createAccessory;
-                        }
-                    }
+                let accessoryType = require(accessoryFilePath).type;
+                if(accessoryType === undefined || !(typeof accessoryType === "string")) {
+                    this._log.warn(`Ignoring ${accessoryFileName} due to missing 'type' definition`);
                 } else {
-                    this._log.debug(`Ignoring ${accessoryFileName} due to explicit statement`);
+                    this._log.debug(`Found accessory of type ${accessoryType}`);
+                    let accessoryFactory = require(accessoryFilePath).createAccessory;
+                    if(accessoryFactory === undefined || !(typeof accessoryFactory === "function")) {
+                        this._log.warn(`Ignoring ${accessoryFileName}, due to missing 'createAccessory' definition`);
+                    } else if (this._factories[accessoryType]) {
+                        this._log.warn(`There is already an accessory of type ${accessoryType} loaded, skipping this`);
+                    } else {
+                        this._log(`Loading and activating accessory ${accessoryType}`);
+                        this._factories[accessoryType] = require(accessoryFilePath).createAccessory;
+                    }
                 }
             }
         }.bind(this));
@@ -75,35 +70,32 @@ const OpenHABComplete = class {
         let _accessories = [];
         const { accessories } = this._config;
         accessories.forEach(acc => {
-            if (!(acc.type)) {
-                this._log.warn(`Invalid configuration: Accessory type is invalid: ${JSON.stringify(acc)}, skipping`);
-                return;
-            }
-
-            const factory = this._factories[acc.type];
-            if (factory === undefined) {
-                this._log.warn(`Invalid configuration: Accessory type is unknown: ${JSON.stringify(acc)}, skipping`);
-                return;
-            }
-
-            if(acc.name) {
-                acc.serialNumber = SerialNumberGenerator.generate(acc.name);
-            } else {
-                this._log.warn(`Invalid configuration: Accessory name is unknown: ${JSON.stringify(acc)}, skipping`);
-                return;
-            }
-
-            this._log.debug(`Found accessory in config: "${acc.name}"`);
-
-            acc.version = version;
-
             try {
+                if (!(acc.type)) {
+                    throw new Error(`Invalid configuration: Accessory type is undefined: ${JSON.stringify(acc)}`);
+                }
+
+                const factory = this._factories[acc.type];
+                if (factory === undefined) {
+                    throw new Error(`Invalid configuration: Accessory type is unknown: ${acc.type}`);
+                }
+
+                if (acc.name) {
+                    acc.serialNumber = SerialNumberGenerator.generate(acc.name, acc.type);
+                } else {
+                    throw new Error(`Invalid configuration: Accessory name is undefined: ${JSON.stringify(acc)}`);
+                }
+
+                this._log.debug(`Found accessory in config: '${acc.name}' (${acc.type})`);
+
+                acc.version = version;
+
                 // Checked that: 'serialNumber' 'version' 'name' exists and 'type' is valid
                 const accessory = factory(this._platform, acc);
                 _accessories.push(accessory);
-                this._log.info(`Added accessory ${acc.name}`);
+                this._log(`Added accessory ${acc.name} (Type: ${acc.type}`);
             } catch (e) {
-                this._log(`Unable to add accessory ${acc.name}: ${e}, skipping`);
+                this._log.warn(`Unable to add accessory ${acc.name}: ${e}, skipping`);
             }
         });
         callback(_accessories);

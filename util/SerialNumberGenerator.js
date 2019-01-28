@@ -2,11 +2,13 @@
 
 const crypto = require('crypto');
 
-function generate(name) {
-    const sha1sum = crypto.createHash('sha1');
-    sha1sum.update(name);
+function generate(name, type) {
+    const hash = crypto.createHash('sha512');
+    hash.update(name);
+    hash.update(type);
 
-    const s = sha1sum.digest('hex');
+
+    const s = hash.digest('hex');
     let i = -1;
 
     return 'xxxxxxxxxxxx'.replace(/[x]/g, () => s[++i]).toUpperCase();

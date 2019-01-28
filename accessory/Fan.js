@@ -1,8 +1,9 @@
 'use strict';
 
-const {BinaryActorAccessory} = require('./BinaryActor');
+const {Accessory} = require('../util/Accessory');
+const {addOnCharacteristic} = require('./characteristic/On');
 
-class FanAccessory extends BinaryActorAccessory {
+class FanAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
@@ -15,9 +16,9 @@ class FanAccessory extends BinaryActorAccessory {
     }
 
     _getPrimaryService() {
-        this._log.debug(`Creating fan service for ${this.name} [${this._item}]`);
+        this._log.debug(`Creating fan service for ${this.name}`);
         let primaryService = new this.Service.Fan(this.name);
-        this._configureOnCharacteristic(primaryService);
+        addOnCharacteristic.bind(this)(primaryService);
         return primaryService;
     }
 }

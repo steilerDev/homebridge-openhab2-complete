@@ -1,8 +1,9 @@
 'use strict';
 
-const {CurrentTargetPositionActorAccessory} = require('./CurrentTargetPositionActor');
+const {Accessory} = require('../util/Accessory');
+const {addCurrentPositionCharacteristic, addTargetPositionCharacteristic, addPositionStateCharacteristic, addHoldPositionCharacteristic} = require('./characteristic/CurrentTargetPosition');
 
-class DoorAccessory extends CurrentTargetPositionActorAccessory {
+class DoorAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
@@ -15,14 +16,13 @@ class DoorAccessory extends CurrentTargetPositionActorAccessory {
     }
 
     _getPrimaryService() {
-        this._log.debug(`Creating door service for ${this.name} [${this._item}]`);
-        let doorService = new this.Service.Door(this.name);
-        this._configureCurrentPositionCharacteristic(doorService);
-        this._configureTargetPositionCharacteristic(doorService);
-        this._configurePostitionStateCharacteristic(doorService);
-        this._configureHoldPosition(doorService);
-
-        return doorService;
+        this._log.debug(`Creating door service for ${this.name}`);
+        let primaryService = new this.Service.Door(this.name);
+        addCurrentPositionCharacteristic.bind(this)(primaryService);
+        addTargetPositionCharacteristic.bind(this)(primaryService);
+        addPositionStateCharacteristic.bind(this)(primaryService);
+        addHoldPositionCharacteristic.bind(this)(primaryService);
+        return primaryService;
     }
 }
 
