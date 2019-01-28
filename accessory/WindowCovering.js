@@ -17,7 +17,7 @@ class WindowCoveringAccessory extends Accessory {
 
     _getPrimaryService() {
         this._log.debug(`Creating window covering service for ${this.name}`);
-        let primaryService = new this.Service.Window(this.name);
+        let primaryService = new this.Service.WindowCovering(this.name);
         addCurrentPositionCharacteristic.bind(this)(primaryService);
         addTargetPositionCharacteristic.bind(this)(primaryService);
         addPositionStateCharacteristic.bind(this)(primaryService);
