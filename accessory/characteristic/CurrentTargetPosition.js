@@ -35,7 +35,7 @@ function addTargetPositionCharacteristic(service) {
         stateItemType = itemType;
         stateItemInverted = inverted;
     }
-    addTargetStateCharacteristic.bind(this)(service, this.Characteristic.TargetPosition, item, itemType, inverted, stateItem, stateItemType, stateItemInverted ,positionTransformation);
+    addTargetStateCharacteristic.bind(this)(service, this.Characteristic.TargetPosition, item, itemType, inverted, stateItem, stateItemType, stateItemInverted, positionTransformation);
 }
 
     // Not sure about this:
