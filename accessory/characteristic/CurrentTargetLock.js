@@ -34,10 +34,10 @@ function addTargetLockStateCharacteristic(service) {
         stateItemType = itemType;
         stateItemInverted = inverted;
     }
-    addTargetStateCharacteristic(service, this.Characteristic.LockTargetState, item, itemType, inverted, stateItem, stateItemType, stateItemInverted, transformation, lockStateTransformation);
+    addTargetStateCharacteristic(service, this.Characteristic.LockTargetState, item, itemType, inverted, stateItem, stateItemType, stateItemInverted, lockStateTransformation);
 }
 
-function lockStateTransformation(_, inverted, value) {
+function lockStateTransformation(type, inverted, value) {
     const UNSECURED = 0;
     const SECURED = 1;
 
