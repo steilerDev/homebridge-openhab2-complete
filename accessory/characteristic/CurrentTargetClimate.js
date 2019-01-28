@@ -1,7 +1,7 @@
 'use strict';
 
 const {addTargetStateCharacteristic, addCurrentStateCharacteristic} = require('./CurrentTarget');
-const {getState} = require('../../util/Accessory');
+const {getState, setState} = require('../../util/Accessory');
 
 const CURRENT_TARGET_CLIMATE_CONFIG = {
     currentTempItem: "currentTempItem", //required
@@ -243,16 +243,16 @@ function _setHeatingCoolingState(heatingItem, coolingItem, state, callback) {
     switch(state) {
         default:
         case OFF:
-            if(heatingItem) Accessory.setState.bind(this)(heatingItem, null, "OFF", function(){});
-            if(coolingItem) Accessory.setState.bind(this)(coolingItem, null, "OFF", function(){});
+            if(heatingItem) setState.bind(this)(heatingItem, null, "OFF", function(){});
+            if(coolingItem) setState.bind(this)(coolingItem, null, "OFF", function(){});
             break;
         case HEAT:
-            if(heatingItem) Accessory.setState.bind(this)(heatingItem, null, "ON", function(){});
-            if(coolingItem) Accessory.setState.bind(this)(coolingItem, null, "OFF", function(){});
+            if(heatingItem) setState.bind(this)(heatingItem, null, "ON", function(){});
+            if(coolingItem) setState.bind(this)(coolingItem, null, "OFF", function(){});
             break;
         case COOL:
-            if(heatingItem) Accessory.setState.bind(this)(heatingItem, null, "OFF", function(){});
-            if(coolingItem) Accessory.setState.bind(this)(coolingItem, null, "ON", function(){});
+            if(heatingItem) setState.bind(this)(heatingItem, null, "OFF", function(){});
+            if(coolingItem) setState.bind(this)(coolingItem, null, "ON", function(){});
             break;
     }
     callback();
