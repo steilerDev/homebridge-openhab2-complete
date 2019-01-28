@@ -13,7 +13,7 @@ function addBatteryWarningCharacteristic(service) {
         let [batteryItem] = this._getAndCheckItemType(BATTERY_CONFIG.batteryItem, ['Switch', 'Contact']);
         let inverted = this._checkInvertedConf(BATTERY_CONFIG.batteryItemInverted);
 
-        this._log.debug(`Creating battery warning characteristic for ${this.name} [${this._item}]`);
+        this._log.debug(`Creating battery warning characteristic for ${this.name} with item ${batteryItem} and inverted set to ${inverted}`);
 
         let batteryTransformation = inverted ? {
             "OFF": 1,
