@@ -11,7 +11,7 @@ const BINARY_CONFIG = {
 function addBinarySensorCharacteristic(service, characteristic, optional) {
     try {
         let [item] = this._getAndCheckItemType(BINARY_CONFIG.item, ['Contact', 'Switch']);
-        let inverted = this._checkInvertedConf(this._config, BINARY_CONFIG.inverted);
+        let inverted = this._checkInvertedConf(BINARY_CONFIG.inverted);
 
         this._log.debug(`Creating binary sensor characteristic for ${this.name} with item ${item} and inverted set to ${inverted}`);
 
