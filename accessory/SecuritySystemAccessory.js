@@ -18,7 +18,7 @@ class SecuritySystemAccessory extends Accessory.Accessory {
     _getPrimaryService() {
         this._log.debug(`Creating security system service for ${this.name}`);
         let securitySystemService = new this.Service.SecuritySystem(this.name);
-        addSecuritySystemStateCharacteristic(securitySystemService);
+        addSecuritySystemStateCharacteristic.bind(this)(securitySystemService);
         return securitySystemService;
     }
 }
