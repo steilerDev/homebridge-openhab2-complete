@@ -34,7 +34,7 @@ function addTargetLockStateCharacteristic(service) {
         stateItemType = itemType;
         stateItemInverted = inverted;
     }
-    addTargetStateCharacteristic(service, this.Characteristic.LockTargetState, item, itemType, inverted, stateItem, stateItemType, stateItemInverted, lockStateTransformation);
+    addTargetStateCharacteristic.bind(this)(service, this.Characteristic.LockTargetState, item, itemType, inverted, stateItem, stateItemType, stateItemInverted, lockStateTransformation);
 }
 
 function lockStateTransformation(type, inverted, value) {
