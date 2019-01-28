@@ -150,7 +150,6 @@ function _getSystemState(items, callback) {
 }
 
 function _setSystemState(items, value, callback) {
-    this._log.debug(`Checking ${this.name} for ${key} mode`);
     for(var key in items) {
         let thisItem = items[key][0];
         let thisItemInverted = items[key][1];
@@ -158,7 +157,7 @@ function _setSystemState(items, value, callback) {
         if(TRANSFORMATION[key] === value) {
             newState = true;
         }
-        setState.bind(this)(thisItem, this._transform.bind(this, thisItemInverted), newState);
+        setState.bind(this)(thisItem, _transformSecuritySystemValue.bind(this, thisItemInverted), newState);
     }
     callback();
 }
