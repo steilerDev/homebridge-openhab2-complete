@@ -68,6 +68,7 @@ function addSecuritySystemStateCharacteristic(service) {
             items[key][0],
             _transformSecuritySystemState.bind(this,
                 key,
+                items[key][1],
                 service.getCharacteristic(this.Characteristic.SecuritySystemCurrentState)
             )
         );
@@ -86,7 +87,8 @@ function addSecuritySystemStateCharacteristic(service) {
         .on('set', _setSystemState.bind(this, items));
 }
 
-function _transformSecuritySystemState(thisItemMode, characteristic, value) {
+// Todo: Inverted!
+function _transformSecuritySystemState(thisItemMode, inverted, characteristic, value) {
     let currentState = characteristic.value;
 
     if(value === "ON") {
