@@ -56,7 +56,7 @@ class Accessory {
             if(optional) {
                 this._log.debug(`${key} for ${this.name} not defined in config: ${JSON.stringify(this._config)})`)
             } else {
-                throw new Error(`Required item not defined: ${JSON.stringify(this._config)}`)
+                throw new Error(`Required ${key} for ${this.name} not defined: ${JSON.stringify(this._config)}`)
             }
         } else {
             let item = this._config[key];

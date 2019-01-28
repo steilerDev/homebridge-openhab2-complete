@@ -186,6 +186,7 @@ function _transformHeatingCoolingState(thisItemMode, characteristic, value) {
         }
     }
 }
+
 function _getHeatingCoolingState(mode, heatingItem, coolingItem, callback) {
     let OFF = 0;
     let HEAT = 1;
