@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {} = require('./characteristic/On');
+const {addOnCharacteristic} = require('./characteristic/On');
 
 class SwitchAccessory extends Accessory {
 
