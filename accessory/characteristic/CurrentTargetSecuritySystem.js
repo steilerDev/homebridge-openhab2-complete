@@ -62,7 +62,7 @@ function addSecuritySystemStateCharacteristic(service) {
     }
 
     let length = 0;
-    for(let key in items) {
+    for(var key in items) {
         this._subscribeCharacteristic(service,
             this.Characteristic.SecuritySystemCurrentState,
             items[key][0],
@@ -120,7 +120,7 @@ function _transformSecuritySystemValue(inverted, value) {
 
 function _getSystemState(items, callback) {
     try {
-        for(let key in items) {
+        for(var key in items) {
             this._log.debug(`Checking ${this.name} for ${key} mode`);
             let thisItem = items[key][0];
             let thisItemInverted = items[key][1];
@@ -151,7 +151,7 @@ function _getSystemState(items, callback) {
 
 function _setSystemState(items, value, callback) {
     this._log.debug(`Checking ${this.name} for ${key} mode`);
-    for(let key in items) {
+    for(var key in items) {
         let thisItem = items[key][0];
         let thisItemInverted = items[key][1];
         let newState = false;
