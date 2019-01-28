@@ -81,7 +81,7 @@ function addSecuritySystemStateCharacteristic(service) {
     service.getCharacteristic(this.Characteristic.SecuritySystemCurrentState)
         .on('get', _getSystemState.bind(this, items));
 
-    securitySystemService.getCharacteristic(this.Characteristic.SecuritySystemTargetState)
+    service.getCharacteristic(this.Characteristic.SecuritySystemTargetState)
         .on('get', _getSystemState.bind(this, items))
         .on('set', _setSystemState.bind(this, items));
 }
