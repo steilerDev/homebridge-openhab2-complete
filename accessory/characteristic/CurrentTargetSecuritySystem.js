@@ -87,9 +87,7 @@ function addSecuritySystemStateCharacteristic(service) {
 }
 
 function _transformSecuritySystemState(thisItemMode, characteristic, value) {
-
     let currentState = characteristic.value;
-    this._log.error(`Security system comes from ${currentState} with ${thisItemMode} set to ${value}`);
 
     if(value === "ON") {
         return TRANSFORMATION[thisItemMode];
