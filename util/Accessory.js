@@ -45,7 +45,7 @@ class Accessory {
                 this._log(`Received push with new state for item ${habItem}: ${value}`);
                 let transformedValue = transformValue(transformation, value);
                 if(transformedValue !== null) {
-                    this._log.error(JSON.stringify(service.getCharacteristic(characteristic));
+                    this._log.error(JSON.stringify(service.getCharacteristic(characteristic)));
                     service.setCharacteristic(characteristic, transformedValue);
                 }
             }
