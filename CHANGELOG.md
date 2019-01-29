@@ -17,7 +17,7 @@
     
 
 ## Changelog
-### V0.7.0 (unreleased)
+### V0.7.0
 * Major rework to clean up and support subscription
 * Subscription supported for every accessory type
 * Binary actors can now have `inverted`
