@@ -102,6 +102,7 @@ class OpenHAB {
         if (response.statusCode === 404) {
             return new Error(`Item does not exist!`);
         } else {
+            console.error(response.body);
             const type = JSON.parse(response.body).type;
             if (!(type)) {
                 return new Error(`Unable to retrieve type`);

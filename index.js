@@ -16,8 +16,6 @@ const OpenHABComplete = class {
 
         this._log = log;
         this._config = config;
-        log.debug(config);
-        log.debug(JSON.stringify(config));
 
         if(!(this._config.host)) {
             const msg = `OpenHAB host not configured!`;
