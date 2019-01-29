@@ -1,6 +1,6 @@
 'use strict';
 
-const {Accessory, getState} = require('../util/Accessory');
+const {Accessory} = require('../util/Accessory');
 const {addLightOnCharacteristic, addHueCharacteristic, addSaturationCharacteristic, addBrightnessCharacteristic} = require('./characteristic/Light');
 
 class LightAccessory extends Accessory {
@@ -27,7 +27,7 @@ class LightAccessory extends Accessory {
     }
 
     _getPrimaryService() {
-        this._log(`Creating lightbulb service for ${this.name}/${this._item}`);
+        this._log(`Creating lightbulb service for ${this.name}`);
         let primaryService = new this.Service.Lightbulb(this.name);
         addLightOnCharacteristic.bind(this)(primaryService);
         addHueCharacteristic.bind(this)(primaryService);

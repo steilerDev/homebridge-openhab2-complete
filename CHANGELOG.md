@@ -11,17 +11,19 @@
     * HeaterCooler
     * Humidifier/Dehumidifier
     * Air Purifier
+* More efficient configuration layout
+* Code audit & documentation
+* Extension of `WondowCovering`, `Door` and `Window` to allow manual mode and optional multipliers for state
     
-### V0.7.0 (planned)
-* Implement optional Server Side Events in order to push updated states
-* Better configuration layout?
-
-## Implemented for next release
-### V0.7.0 (unreleased)
-* Major rework to clean up and support subscription
-* Binary actors can now have `inverted`
 
 ## Changelog
+### V0.7.0 (unreleased)
+* Major rework to clean up and support subscription
+* Subscription supported for every accessory type
+* Binary actors can now have `inverted`
+* Added `Contact` support for `heatingItem` and `coolingItem` inside thermostat
+* Added `stateItem` and `stateItemInverted` to lock mechanism service
+
 ### V0.6.0
 * Addition of Binary Actors (supported openHAB item: `Switch`):
   * Switch

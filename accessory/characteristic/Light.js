@@ -106,7 +106,7 @@ function _commitState(item, value, callback) {
                     this._log.error(command.message);
                     callback(command);
                 } else {
-                    this._log(`Updating state of ${this.name} with item ${item}] to ${command}`);
+                    this._log(`Updating state of ${this.name} with item ${item} to ${command}`);
                     this._openHAB.sendCommand(item, command , callback);
                 }
             } else {

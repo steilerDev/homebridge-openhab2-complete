@@ -3,7 +3,7 @@
 
 [![NPM](https://nodei.co/npm/homebridge-openhab2-complete.png)](https://nodei.co/npm/homebridge-openhab2-complete/)
 
-This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](https://www.openhab.org) has the expectation to fully support all Services offered by Apple's Homekit Accessory Protocol (HAP), as far as it is feasible based on the Item types offered by OpenHAB. In opposite to the existing [openHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) or the native [openHAB Homekit Plugin](https://www.openhab.org/addons/integrations/homekit/) this plugin requires explicit declaration of accessories in the homebridge configuration and does not use openHAB's tagging system, which leads to a little more effort during configuration, but should prove more reliable and functional in more complex installations. See [Comparisson](#comparison) below.
+This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](https://www.openhab.org) has the expectation to fully support all Services offered by Apple's Homekit Accessory Protocol (HAP), as far as it is feasible based on the Item types offered by OpenHAB (see [below](#supported-hap-services) for the currently supported 21 accessories and `CHANGELOG.md` for my roadmap). In opposite to the existing [openHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) or the native [openHAB Homekit Plugin](https://www.openhab.org/addons/integrations/homekit/) this plugin requires explicit declaration of accessories in the homebridge configuration and does not use openHAB's tagging system, which leads to a little more effort during configuration, but should prove more reliable and functional in more complex installations. See [Comparisson](#comparison) below.
 
 
 ## Installation
@@ -50,24 +50,27 @@ This is a platform plugin, that will register all accessories within the Bridge 
 * `accessory`: An array of accessories exposed to HomeKit, see the next chapter for available services and their configurations.
 
 ## Supported HAP Services
-The following is a list of all Services that are currently supported and which values are required within the accessory configuration.
+The following is a list of all Services that are currently supported and which values are required within the accessory configuration. Every accessory needs a `name` (as shown in HomeKit later) and a `type`. 
 
 **Note: Due to the fact, that this is an early stage of development the configuration layout is not yet fixed and will change in the near future!**
- 
-* [Switch](#switch)
-* [Fan](#fan)
-* [Outlet](#outlet)
-* [Lightbulb](#lightbulb)
-* [Thermostat](#thermostat)
-* [Window Covering](#window-covering)
-* [Door](#door)
-* [Window](#window)
-* [Lock Mechanism](#lock-mechanism)
-* [Security System](#security-system)
+
+* Complex Accessories:
+  * [Lightbulb](#lightbulb)
+  * [Thermostat](#thermostat)
+  * [Security System](#security-system)
+* Position Based Actors:
+  * [Window Covering](#window-covering)
+  * [Door](#door)
+  * [Window](#window)
+  * [Lock Mechanism](#lock-mechanism)
 * Numeric Sensors:
   * [Temperature Sensor](#temperature-sensor)
   * [Humidity Sensor](#humidity-sensor)
   * [Light Sensor](#light-sensor)
+* Binary Actors:
+  * [Switch](#switch)
+  * [Fan](#fan)
+  * [Outlet](#outlet)
 * Binary Sensors:
   * [Motion Sensor](#motion-sensor)
   * [Occupancy Sensor](#occupancy-sensor)
@@ -78,9 +81,17 @@ The following is a list of all Services that are currently supported and which v
   * [Smoke Sensor](#smoke-sensor)
   * [Filter Maintenance Sensor](#filter-maintenance-sensor)
   
-**See the roadmap section in the Changelog file to see which Services will be implemented next!**
+The following services will be implemented in the near future:
+* Water Service Accessories
+  * Valve
+  * Faucet
+  * Irrigation
+* Climate Service Accessories
+  * HeaterCooler
+  * Humidifier/Dehumidifier
+  * Air Purifier
 
-The following Services are also defined by the HomeKit protocol, but since I don't know a good way to map them to openHAB items I currently don't plan to implement them. Let me know if you have any ideas!
+The following services are also defined by the HomeKit protocol, but since I don't know a good way to map them to openHAB items, I currently don't plan to implement them. Let me know if you have any ideas, by opening an issue!
 * Garage Door Opener
 * Air Quality Sensor
 * Slat
@@ -97,10 +108,15 @@ This service describes a binary switch.
 {
     "name": "An items name, as shown in Homekit later",
     "type": "switch",
-    "item": "Itemname-within-OpenHAB"
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "false"
 }
 ```
-* `item` is expected to be of type `Switch` within openHAB
+* `item`: The openHAB item controlled by this accessory
+  * Needs to be of type `Switch` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Fan
 This service describes a fan.
@@ -109,10 +125,15 @@ This service describes a fan.
 {
     "name": "An items name, as shown in Homekit later",
     "type": "fan",
-    "item": "Itemname-within-OpenHAB"
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "false"
 }
 ```
-* `item` is expected to be of type `Switch` within openHAB
+* `item`: The openHAB item controlled by this accessory
+  * Needs to be of type `Switch` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Outlet
 This service describes an outlet.
@@ -122,11 +143,21 @@ This service describes an outlet.
     "name": "An items name, as shown in Homekit later",
     "type": "outlet",
     "item": "Itemname-within-OpenHAB",
-    "inUseItem": "Itemname-within-OpenHAB"
+    "inUseItem": "Itemname-within-OpenHAB",
+    "inUseItemInverted": "false"
 }
 ```
-* `item` is expected to be of type `Switch` within openHAB
-* `inUseItem` (optional) is expected to be of type `Switch`, `Contact` or `Number` within openHAB, representing if the outlet is currently used by an appliance
+* `item`: The openHAB item controlled by this accessory
+  * Needs to be of type `Switch` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `inUseItem` *(optional)*: Representing, if the outlet is currently in use (if `Switch` is `ON`, `Contact` is `OPEN` or `Number` is greater than 0)
+  * Default: The state of `item` is used to show if the outlet is in use
+  * Needs to be of type `Switch`, `Contact` or `Number` within openHAB
+* `inUseItemInverted` *(optional)*: If `inUseItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Lightbulb
 This service describes a lightbulb.
@@ -138,7 +169,8 @@ This service describes a lightbulb.
     "item": "Itemname-within-OpenHAB"
 }
 ```
-* `item` is expected to be of type `Switch`, `Dimmer` or `Color` within openHAB (This changes the functionality within HomeKit)
+* `item`: The openHAB item controlled by this accessory
+  * Needs to be of type `Switch`, `Dimmer` or `Color` within openHAB (HomeKit will correctly display brightness (in case of `Dimmer` or `Color`) and color settings (in case of `Color`))
 
 ### Thermostat
 This service describes a thermostat.
@@ -156,13 +188,21 @@ This service describes a thermostat.
     "tempUnit": "Celsius"
 }
 ```
-* `currentTempItem` is expected to be of type `Number` within openHAB
-* `targetTempItem` is expected to be of type `Number` within openHAB and writable
-* `currentHumidityItem` (optional) is expected to be of type `Number` within openHAB
-* `targetHumidityItem` (optional) is expected to be of type `Number` within openHAB and writable
-* `heatingItem` (optional, if `coolingItem` is present, otherwise required) is expected to be of type `Switch`, showing if the thermostat is currently heating the room
-* `coolingItem` (optional, if `heatingItem` is present, otherwise required) is expected to be of type `Switch`, showing if the thermostat is currently cooling the room
-* `tempUnit` (optional, default `Celsius`, allowed values `Celsius` & `Fahrenheit`)
+* `currentTempItem`: The openHAB item representing the current temperature as measured by the thermostat
+  * Needs to be of type `Number` within openHAB
+* `targetTempItem`: The openHAB item representing the target temperature inside the room
+  * Needs to be of type `Number` within openHAB
+* `currentHumidityItem` *(optional)*: The openHAB item representing the current humidity as measured by the thermostat
+  * Needs to be of type `Number` within openHAB
+* `targetHumidityItem` *(optional)*: The openHAB item representing the target humidity inside the room
+  * Needs to be of type `Number` within openHAB
+* `heatingItem` *(optional, if `coolingItem` is present, otherwise required)*: The openHAB item showing, if the room is currently being heated
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `coolingItem` *(optional, if `heatingItem` is present, otherwise required)*: The openHAB item showing, if the room is currently being cooled
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `tempUnit` *(optional)*: Gives the measurement unit of the thermostat
+  * Default: `Celsius`
+  * Allowed values: `Celsius` & `Fahrenheit`
 
 ### Window Covering
 This service describes motorized window coverings or shades - examples include shutters, blinds, awnings etc.
@@ -177,10 +217,16 @@ This service describes motorized window coverings or shades - examples include s
     "stateItemInverted": "false"
 }
 ```
-* `item` is expected to be of type `Rollershutter`, `Number` or `Switch` within openHAB
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted, set this value to `"true"` 
-* `stateItem` (optional) is expected to be of type `Rollershutter`, `Number`, `Switch` or `Contact` and will be used to determine the state of the Window Covering instead of `item`'s state
-* `stateItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `item`: The openHAB item representing the window covering, receiving commands about the target position and determining the current position (if `stateItem` is not set)
+  * Needs to be of type `Rollershutter`, `Number` or `Switch` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `stateItem` *(optional)*: The openHAB item, used to determine the state of the window covering instead of `item`'s state
+  * Needs to be of type `Rollershutter`, `Number`, `Switch` or `Contact` within openHAB
+* `stateItemInverted` *(optional)*: If `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Door 
 This service describes a motorized door
@@ -195,10 +241,16 @@ This service describes a motorized door
     "stateItemInverted": "false"
 }
 ```
-* `item` is expected to be of type `Rollershutter`, `Number` or `Switch` within openHAB
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted, set this value to `"true"` 
-* `stateItem` (optional) is expected to be of type `Rollershutter`, `Number`, `Switch` or `Contact` and will be used to determine the state of the Door instead of `item`'s state
-* `stateItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `item`: The openHAB item representing the door, receiving commands about the target position and determining the current position (if `stateItem` is not set)
+  * Needs to be of type `Rollershutter`, `Number` or `Switch` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `stateItem` *(optional)*: The openHAB item, used to determine the state of the door instead of `item`'s state
+  * Needs to be of type `Rollershutter`, `Number`, `Switch` or `Contact` within openHAB
+* `stateItemInverted` *(optional)*: If `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Window
 This service describes a motorized window
@@ -213,10 +265,16 @@ This service describes a motorized window
     "stateItemInverted": "false"
 }
 ```
-* `item` is expected to be of type `Rollershutter`, `Number` or `Switch` within openHAB
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted, set this value to `"true"` 
-* `stateItem` (optional) is expected to be of type `Rollershutter`, `Number`, `Switch` or `Contact` and will be used to determine the state of the Window instead of `item`'s state
-* `stateItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `item`: The openHAB item representing the window, receiving commands about the target position and determining the current position (if `stateItem` is not set)
+  * Needs to be of type `Rollershutter`, `Number` or `Switch` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `stateItem` *(optional)*: The openHAB item, used to determine the state of the window instead of `item`'s state
+  * Needs to be of type `Rollershutter`, `Number`, `Switch` or `Contact` within openHAB
+* `stateItemInverted` *(optional)*: If `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Lock Mechanism
 The HomeKit Lock Mechanism Service is designed to expose and control the physical lock mechanism on a device.
@@ -226,11 +284,21 @@ The HomeKit Lock Mechanism Service is designed to expose and control the physica
     "name": "An items name, as shown in Homekit later",
     "type": "lock", 
     "item": "Itemname-within-OpenHAB",
-    "inverted": "false"
+    "inverted": "false",
+    "stateItem": "Itemname-within-OpenHAB",
+    "stateItemInverted": "false"
 }
 ```
-* `item` is expected to be of type `Switch` within openHAB
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `item`: The openHAB item representing the lock, receiving commands about the target position and determining the current position (if `stateItem` is not set)
+  * Needs to be of type `Switch` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `stateItem` *(optional)*: The openHAB item, used to determine the state of the lock instead of `item`'s state
+  * Needs to be of type `Rollershutter`, `Number`, `Switch` or `Contact` within openHAB
+* `stateItemInverted` *(optional)*: If `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Security System
 ```
@@ -247,14 +315,26 @@ The HomeKit Lock Mechanism Service is designed to expose and control the physica
     "alarmItemInverted": "false"
 }
 ```
-* `homeItem` (optional) is expected to be of type `Switch` within openHAB, showing if the security system is in home mode.
-* `homeItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `homeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-* `awayItem` (optional) is expected to be of type `Switch` within openHAB, showing if the security system is in away mode.
-* `awayItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `awayItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-* `sleepItem` (optional) is expected to be of type `Switch` within openHAB, showing if the security system is in sleep mode.
-* `sleepItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `sleepItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-* `alarmItem` (optional) is expected to be of type `Switch` within openHAB, showing if the security system is currently sounding an alarm
-* `alarmItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `armItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `homeItem` *(optional)*: The openHAB item representing if the system is in home mode
+  * Needs to be of type `Switch` within openHAB
+* `homeItemInverted` *(optional)*: If `homeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `awayItem` *(optional)*: The openHAB item representing if the system is in away mode
+  * Needs to be of type `Switch` within openHAB
+* `awayItemInverted` *(optional)*: If `awayItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `sleepItem` *(optional)*: The openHAB item representing if the system is in sleep mode
+  * Needs to be of type `Switch` within openHAB
+* `sleepItemInverted` *(optional)*: If `sleepItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `alarmItem` *(optional)*: The openHAB item representing if the system is currently sounding an alarm
+  * Needs to be of type `Switch` within openHAB
+* `alarmItemInverted` *(optional)*: If `alarmItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 Each item (`homeItem`, `awayItem`, `sleepItem`, `alarmItem`) is optional, only one of them needs to be defined. When switching between the states (`Home Armed`, `Away Armed`, `Sleep Armed` & `Off`) the respective item gets triggered and all other will be turned off. The state of the system is determined which item in the order `alarmItem` -> `homeItem` -> `awayItem` -> `sleepItem` is turned on, if all items are off the state is `OFF`
 
@@ -270,9 +350,13 @@ This service describes a temperature sensor.
     "batteryItemInverted": "false"
 }
 ```
-* `item` is expected to be of type `Number` within openHAB 
-* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
-* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+* `item`: The openHAB item representing the current temperature
+  * Needs to be of type `Number` within openHAB
+* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Humidity Sensor
 This service describes a humidity sensor.
@@ -286,9 +370,13 @@ This service describes a humidity sensor.
     "batteryItemInverted": "false"
 }
 ```
-* `item` is expected to be of type `Number` within openHAB 
-* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
-* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+* `item`: The openHAB item representing the current humidity 
+  * Needs to be of type `Number` within openHAB
+* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Light Sensor
 This service describes a light sensor.
@@ -302,9 +390,13 @@ This service describes a light sensor.
     "batteryItemInverted": "false"
 }
 ```
-* `item` is expected to be of type `Number` within openHAB 
-* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
-* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+* `item`: The openHAB item representing the current light in lux 
+  * Needs to be of type `Number` within openHAB
+* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Motion Sensor
 This service describes a motion sensor.
@@ -319,10 +411,16 @@ This service describes a motion sensor.
     "batteryItemInverted": "false"
 }
 ```
-* `item` is expected to be of type `Switch` or `Contact` within openHAB 
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show motion was detected) set this value to `"true"` 
-* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
-* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+* `item`: The openHAB item showing, if motion is detected
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Occupancy Sensor
 This service describes an occupancy sensor.
@@ -337,10 +435,16 @@ This service describes an occupancy sensor.
     "batteryItemInverted": "false"
 }
 ```
-* `item` is expected to be of type `Switch` or `Contact` within openHAB 
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show occupancy was detected) set this value to `"true"` 
-* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
-* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+* `item`: The openHAB item showing, if occupancy is detected
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Leak Sensor
 This service describes a leak sensor.
@@ -355,10 +459,16 @@ This service describes a leak sensor.
     "batteryItemInverted": "false"
 }
 ```
-* `item` is expected to be of type `Switch` or `Contact` within openHAB 
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show leakage was detected) set this value to `"true"` 
-* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
-* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+* `item`: The openHAB item showing, if a leak is detected
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Carbon Monoxide Sensor
 This service describes a carbon monoxide sensor.
@@ -369,16 +479,23 @@ This service describes a carbon monoxide sensor.
     "type": "co",
     "item": "Itemname-within-OpenHAB",
     "inverted": "true",
+    "levelItem": "Itemname-within-OpenHAB",
     "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false",
-    "levelItem": "Itemname-within-OpenHAB"
+    "batteryItemInverted": "false"
 }
 ```
-* `item` is expected to be of type `Switch` or `Contact` within openHAB 
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show Carbon Monoxide was detected) set this value to `"true"` 
-* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
-* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
-* `levelItem` (optional) defines an openHAB item of type `Number` that represents the Carbon Monoxide level of the sensor
+* `item`: The openHAB item showing, if carbon monoxide is detected
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `levelItem` *(optional)*: The openHAB item representing the current carbon monoxide level, measured by the sensor
+  * Needs to be of type `Number` within openHAB
+* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Carbon Dioxide Sensor
 This service describes a carbon dioxide sensor.
@@ -389,16 +506,23 @@ This service describes a carbon dioxide sensor.
     "type": "co2",
     "item": "Itemname-within-OpenHAB",
     "inverted": "true",
+    "levelItem": "Itemname-within-OpenHAB",
     "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false",
-    "levelItem": "Itemname-within-OpenHAB"
+    "batteryItemInverted": "false"
 }
 ```
-* `item` is expected to be of type `Switch` or `Contact` within openHAB 
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show Carbon Dioxide was detected) set this value to `"true"` 
-* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
-* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
-* `levelItem` (optional) defines an openHAB item of type `Number` that represents the Carbon Dioxide level of the sensor
+* `item`: The openHAB item showing, if carbon dioxide is detected
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `levelItem` *(optional)*: The openHAB item representing the current carbon dioxide level, measured by the sensor
+  * Needs to be of type `Number` within openHAB
+* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Contact Sensor
 This service describes a contact sensor.
@@ -413,10 +537,16 @@ This service describes a contact sensor.
     "batteryItemInverted": "false",
 }
 ```
-* `item` is expected to be of type `Switch` or `Contact` within openHAB 
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show contact was detected) set this value to `"true"` 
-* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
-* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+* `item`: The openHAB item showing, if contact is detected
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Smoke Sensor
 This service describes a smoke sensor.
@@ -431,10 +561,16 @@ This service describes a smoke sensor.
     "batteryItemInverted": "false",
 }
 ```
-* `item` is expected to be of type `Switch` or `Contact` within openHAB 
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show smoke was detected) set this value to `"true"` 
-* `batteryItem` (optional) defines an openHAB item of type `Switch` or `Contact` that represents a battery warning for the service, if the item has the state `ON` or `OPEN` the battery warning will be triggered
-* `batteryItemInverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `batteryItem`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to trigger the warning) set this value to `"true"` 
+* `item`: The openHAB item showing, if smoke is detected
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Filter Maintenance Sensor
 This service describes a filter maintenance sensor.
@@ -448,9 +584,13 @@ This service describes a filter maintenance sensor.
     "levelItem": "Itemname-within-OpenHAB"
 }
 ```
-* `item` is expected to be of type `Switch` or `Contact` within openHAB 
-* `inverted` (optional, default: `"false"`, allowed values `"true"` & `"false"` don't forget the quotes!) if `item`'s state needs to be interpreted inverted (`OFF` or `CLOSED` to show filter maintenance is required) set this value to `"true"` 
-* `levelItem` (optional) defines an openHAB item of type `Number` that represents the Filter Life level of the sensor
+* `item`: The openHAB item showing, if filter maintenance is required 
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `levelItem` *(optional)*: The openHAB item representing the current filter level
+  * Needs to be of type `Number` within openHAB
 
 ## Additional Services & Notes from the Developer
 Obviously the aim of this project is a full coverage of the HAP specification. Due to the limitations of smart devices in my home I can only test a subset and would love to have your feedback and input for this project.
@@ -464,19 +604,18 @@ If you would like to contribute just send me a pull request. In order to add a n
 2. The only *required* functions are `getServices()` (returning an array of `HAP.Service` with attached `HAP.Characteristic`) and `identify()` (which does not need to do anything). Those are implemented in the `Accessory` super class and don't need to be overridden. Make sure that `this._services` is populated and reflects your service
 3. Define `const type = "YourTypeName"` (this will be used inside `config.json` to identify an accessory of your type) and `function createAccessory(platform, config)` returning an instance of your Accessory.
 4. Finally expose `type` and `createAccessory` through `module.exports = {type, createAccessory}`
-    
-See the `./accessory/Switch.js` accessory for a simple Service and use it as a skeleton
+   
+My accessories are using centrally defined characteristics inside `./accessory/characteristic`. See `NumericSensor.js` for a simple characteristic implementation and `TemperatureSensor.js` for a simple accessory using this characteristic. This is not a requirement, but highly recommended. 
 
 
 ## Comparision
 | [homebridge-openhab2 plugin](https://www.npmjs.com/package/homebridge-openhab2) | openHAB2 - Complete Edition
 --- | --- 
 Verly little configuration within homebridge/openHAB, only tags within `*.items` files and inclusion within sitemap, obviously requiring both to be created manually | Explicit declaration within `config.json` not requiring instable openHAB `Metadata Provider` (removes items if state is `NULL`) and de-couples homebridge configuration from openHAB
-Support only 1:1 mappings between Items and HomeKit Services | Supports composite items (e.g. Thermostat)
-No documentation to support extension | Simple concept for extending functionality
-Uses `SSE` to receive push notifications from openHAB about state change and requires sitemap definitions | Polling of states through REST interface & push notifications from openHAB through `SSE` *without*  the requirement of active sitemaps
-Battery Warnings not supported | Battery Warnings supported
-Thermostats never really worked | Thermostats working perfectly
-Two binary sensors supported without sub-characteristics | Eight distinct binary sensor types with sub-characteristics supported
+Support only 1:1 mappings between Items and HomeKit Services | Supports composite items (e.g. Thermostat, Security System, Battery States, etc.)
+Uses `SSE` to receive push notifications from openHAB about state change and requires sitemap definitions | Polling of states through REST interface & push notifications from openHAB through `SSE` *without*  the requirement of a sitemap
+Thermostats never really worked | Thermostats working as expected
+4 accessory types supported | 21 different accessory types supported
+Light item in openHAB gets triggered multiple times from single user interaction | Light item in openHAB receives only one command per user interaction
 
 Concluding, I personally would use the [OpenHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) in smaller, less diverse installations. However my own installation has a magnitude of different devices, that I want to fully include in HomeKit, therefore this plugin is the only feasible way for me and everyone alike.
