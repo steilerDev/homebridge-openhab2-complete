@@ -138,7 +138,7 @@ class OpenHAB {
                         callback(new Error(`Trying to reconnect subscription for ${habItem}...`));
                         source.close();
                         this.subscribe(habItem, callback);
-                    }, 1000);
+                    }.bind(this), 1000);
                 }
             }
         }.bind(this);
