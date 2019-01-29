@@ -15,7 +15,7 @@ class LightSensorAccessory extends Accessory {
     }
 
     _getPrimaryService() {
-        this._log.debug(`Creating humidity sensor service for ${this.name}`);
+        this._log.debug(`Creating light sensor service for ${this.name}`);
         let primaryService = new this.Service.LightSensor(this.name);
         addNumericSensorCharacteristic.bind(this)(primaryService, this.Characteristic.CurrentAmbientLightLevel);
         addBatteryWarningCharacteristic.bind(this)(primaryService);
