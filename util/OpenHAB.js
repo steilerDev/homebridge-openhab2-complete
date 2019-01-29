@@ -126,24 +126,21 @@ class OpenHAB {
             }
         };
         source.onerror = function (err) {
-                if(err.message) {
-                    if(err.status) {
-                        callback(new Error(`${err.status}: ${err.message}`));
-                    } else {
-                        callback(new Error(err.message));
-                    }
-                    if(source.readyState === CLOSED || err.status === 404) {
-                        callback(new Error(`Subscription closed for ${habItem}, trying to reconnect in 1sec...`));
-                        setTimeout(function() {
-                            callback(new Error(`Trying to reconnect subscription for ${habItem}...`);
-                            source.close();
-                            subscribe(habItem, callback);
-                        }, 1000);
-                    }
+            if(err.message) {
+                if(err.status) {
+                    callback(new Error(`${err.status}: ${err.message}`));
+                } else {
+                    callback(new Error(err.message));
                 }
-            };
-
-
+                if(source.readyState === CLOSED || err.status === 404) {
+                    callback(new Error(`Subscription closed for ${habItem}, trying to reconnect in 1sec...`));
+                    setTimeout(function() {
+                        callback(new Error(`Trying to reconnect subscription for ${habItem}...`);
+                        source.close();
+                        subscribe(habItem, callback);
+                    }, 1000);
+                }
+            }
         };
         return source;
     }
