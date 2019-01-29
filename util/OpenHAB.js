@@ -99,12 +99,10 @@ class OpenHAB {
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items/${habItem}`;
         const response = syncRequest('GET', myURL.href);
-        if (response.statusCode === 404) {
-            return new Error(`Item does not exist!`);
+        if (response.statusCode !== 200) {
+            return new Error(`Unable to get item: HTTP code ${response.statusCode}!`);
         } else {
-            let responseBody = response.body.toString('ASCII');
-            console.error(responseBody);
-            const type = JSON.parse(responseBody).type;
+            const type = JSON.parse(response.body).type;
             if (!(type)) {
                 return new Error(`Unable to retrieve type`);
             } else {
