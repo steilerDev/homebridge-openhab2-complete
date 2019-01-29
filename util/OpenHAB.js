@@ -135,7 +135,7 @@ class OpenHAB {
                 if(source.readyState === CLOSED || err.status === 404) {
                     callback(new Error(`Subscription closed for ${habItem}, trying to reconnect in 1sec...`));
                     setTimeout(function() {
-                        callback(new Error(`Trying to reconnect subscription for ${habItem}...`);
+                        callback(new Error(`Trying to reconnect subscription for ${habItem}...`));
                         source.close();
                         subscribe(habItem, callback);
                     }, 1000);
