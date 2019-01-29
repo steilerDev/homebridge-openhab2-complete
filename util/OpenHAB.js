@@ -137,11 +137,11 @@ class OpenHAB {
                     setTimeout(function() {
                         callback(new Error(`Trying to reconnect subscription for ${habItem}...`));
                         source.close();
-                        subscribe(habItem, callback);
+                        this.subscribe(habItem, callback);
                     }, 1000);
                 }
             }
-        };
+        }.bind(this);
         return source;
     }
 }
