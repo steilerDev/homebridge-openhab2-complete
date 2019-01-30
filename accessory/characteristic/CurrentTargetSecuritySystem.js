@@ -63,8 +63,7 @@ function addSecuritySystemStateCharacteristic(service) {
 
     let length = 0;
     for(var key in items) {
-        this._subscribeCharacteristic(service,
-            this.Characteristic.SecuritySystemCurrentState,
+        this._subscribeCharacteristic(service.getCharacteristic(this.Characteristic.SecuritySystemCurrentState),
             items[key][0],
             _transformSecuritySystemState.bind(this,
                 key,

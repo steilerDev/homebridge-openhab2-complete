@@ -1,5 +1,5 @@
 
-const {getState} = require('../../util/Accessory')
+const {getState} = require('../../util/Accessory');
 
 const LIGHT_CONFIG = {
     item: "item"
@@ -36,8 +36,7 @@ function _addLightCharacteristic(service, characteristic, characteristicType, ex
                 _transformation.bind(this, characteristicType, type)
             ));
 
-        this._subscribeCharacteristic(service,
-            characteristic,
+        this._subscribeCharacteristic(service.getCharacteristic(characteristic),
             item,
             _transformation.bind(this, characteristicType, type)
         );

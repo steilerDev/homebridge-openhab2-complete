@@ -36,7 +36,7 @@ class Accessory {
         return this._services;
     }
 
-    _subscribeCharacteristic(service, characteristic, item, transformation) {
+    _subscribeCharacteristic(characteristic, item, transformation, callback) {
         this._log.debug(`Subscribing to changes for ${item}`);
         this._openHAB.subscribe(item, function(value, habItem) {
             if(value instanceof Error) {
@@ -45,7 +45,10 @@ class Accessory {
                 this._log(`Received push with new state for item ${habItem}: ${value}`);
                 let transformedValue = transformValue(transformation, value);
                 if(transformedValue !== null) {
-                    service.setCharacteristic(characteristic, transformedValue);
+                    characteristic.setValue(transformedValue);
+                    if(callback && typeof(callback) === "function") {
+                        callback(transformedValue);
+                    }
                 }
             }
         }.bind(this));
@@ -159,30 +162,34 @@ function getState(habItem, transformation, callback) {
     }.bind(this));
 }
 
+// context and connectionID are variables giving information about the origin of the request. If a setValue/setCharacteristic is called, we are able to manipulate those.
+// If context is set to 'openHABIgnore' the actual set state will not be executed towards openHAB
 function setState(habItem, transformation, state, callback, context, connectionID) {
     let transformedState = transformValue(transformation, state);
     this._log.debug(`Change target state of ${this.name} [${habItem}] to ${state} (transformed to ${transformedState})`);
-    this._log.error(`Context: ${JSON.stringify(context)}`);
-    this._log.error(`Connection ID: ${JSON.stringify(connectionID)}`);
-    if(transformedState instanceof Error) {
-        this._log.error(transformedState.message);
-        if(callback && typeof callback === "function") {
-            callback(transformedState);
-        }
+    if(context === "openHABIgnore") {
+        callback();
     } else {
-        this._openHAB.sendCommand(habItem, `${transformedState}`, function (error) {
-            if (error) {
-                this._log.error(`Unable to send command: ${error.message}`);
-                if(callback && typeof callback === "function") {
-                    callback(error);
-                }
-            } else {
-                this._log(`Changed target state of ${this.name} [${habItem}] to ${transformedState}`);
-                if(callback && typeof callback === "function") {
-                    callback();
-                }
+        if(transformedState instanceof Error) {
+            this._log.error(transformedState.message);
+            if(callback && typeof callback === "function") {
+                callback(transformedState);
             }
-        }.bind(this));
+        } else {
+            this._openHAB.sendCommand(habItem, `${transformedState}`, function (error) {
+                if (error) {
+                    this._log.error(`Unable to send command: ${error.message}`);
+                    if(callback && typeof callback === "function") {
+                        callback(error);
+                    }
+                } else {
+                    this._log(`Changed target state of ${this.name} [${habItem}] to ${transformedState}`);
+                    if(callback && typeof callback === "function") {
+                        callback();
+                    }
+                }
+            }.bind(this));
+        }
     }
 }
 

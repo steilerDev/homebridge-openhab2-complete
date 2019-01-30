@@ -128,8 +128,7 @@ function addHeatingCoolingStateCharacteristic(service) {
         if(heatingItem) {
             mode = 'Heating';
 
-            this._subscribeCharacteristic(service,
-                this.Characteristic.CurrentHeatingCoolingState,
+            this._subscribeCharacteristic(service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState),
                 heatingItem,
                 _transformHeatingCoolingState.bind(this,
                     "heating",
@@ -140,8 +139,7 @@ function addHeatingCoolingStateCharacteristic(service) {
         if(coolingItem) {
             mode = mode === 'Heating' ? 'HeatingCooling' : 'Cooling'; // If heating device was present this means we have Heating Cooling
 
-            this._subscribeCharacteristic(service,
-                this.Characteristic.CurrentHeatingCoolingState,
+            this._subscribeCharacteristic(service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState),
                 coolingItem,
                 _transformHeatingCoolingState.bind(this,
                     "cooling",

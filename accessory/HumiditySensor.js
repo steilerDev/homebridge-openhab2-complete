@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory}  = require('../util/Accessory');
-const {addNumericSensorCharacteristic} = require('./characteristic/NumericSensor');
+const {addCurrentRelativeHumidityCharacteristic} = require('./characteristic/NumericSensor');
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class HumiditySensorAccessory extends Accessory {
@@ -17,7 +17,7 @@ class HumiditySensorAccessory extends Accessory {
     _getPrimaryService() {
         this._log.debug(`Creating humidity sensor service for ${this.name}`);
         let primaryService = new this.Service.HumiditySensor(this.name);
-        addNumericSensorCharacteristic.bind(this)(primaryService, this.Characteristic.CurrentRelativeHumidity);
+        addCurrentRelativeHumidityCharacteristic.bind(this)(primaryService);
         addBatteryWarningCharacteristic.bind(this)(primaryService);
         return primaryService;
     }

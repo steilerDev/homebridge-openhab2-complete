@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addBinarySensorCharacteristic} = require('./characteristic/BinarySensor');
+const {addLeakDetectedCharacteristic} = require('./characteristic/BinarySensor');
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class LeakSensorAccessory extends Accessory {
@@ -17,8 +17,8 @@ class LeakSensorAccessory extends Accessory {
     _getPrimaryService() {
         this._log.debug(`Creating leak sensor service for ${this.name}`);
         let primaryService = new this.Service.LeakSensor(this.name);
-        addBinarySensorCharacteristic.bind(this)(primaryService, this.Characteristic.LeakDetected);
         addBatteryWarningCharacteristic.bind(this)(primaryService);
+        addLeakDetectedCharacteristic.bind(this)(primaryService);
         return primaryService;
     }
 }

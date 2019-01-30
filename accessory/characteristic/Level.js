@@ -7,19 +7,17 @@ const LEVEL_CONFIG = {
 };
 
 // This function will try and add a level characteristic for numeric levels on binary sensors (e.g. CO level) to the provided service
-function addLevelCharacteristic(service, characteristic) {
+function addLevelCharacteristic(characteristic) {
     try {
         let [levelItem] = this._getAndCheckItemType(LEVEL_CONFIG.levelItem, ['Number']);
 
         this._log.debug(`Creating level characteristic for ${this.name} with item ${levelItem}`);
 
-        service.getCharacteristic(characteristic)
-            .on('get', getState.bind(this,
+        characteristic.on('get', getState.bind(this,
                 levelItem,
                 parseInt));
 
-        this._subscribeCharacteristic(service,
-            characteristic,
+        this._subscribeCharacteristic(characteristic,
             levelItem,
             parseInt
         );
@@ -28,4 +26,20 @@ function addLevelCharacteristic(service, characteristic) {
     }
 }
 
-module.exports = {addLevelCharacteristic};
+function addCarbonDioxideLevelCharacteristic(service) {
+    addLevelCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CarbonDioxideLevel));
+}
+
+function addCarbonMonoxideLevelCharacteristic(service) {
+    addLevelCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CarbonMonoxideLevel));
+}
+
+function addFilterLifeLevelCharacteristic(service) {
+    addLevelCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.FilterLifeLevel));
+}
+module.exports = {
+    addCarbonDioxideLevelCharacteristic,
+    addCarbonMonoxideLevelCharacteristic,
+    addFilterLifeLevelCharacteristic
+
+};

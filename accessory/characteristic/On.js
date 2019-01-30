@@ -31,8 +31,7 @@ function addOnCharacteristic(service, optional) {
                 transformation
             ));
 
-        this._subscribeCharacteristic(service,
-            this.Characteristic.On,
+        this._subscribeCharacteristic(service.getCharacteristic(this.Characteristic.On),
             item,
             transformation
         );

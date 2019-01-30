@@ -2,11 +2,10 @@
 
 const {getState, setState} = require('../../util/Accessory');
 
-function addCurrentStateCharacteristic(service, characteristic, item, itemType, inverted, transformation) {
+function addCurrentStateCharacteristic(characteristic, item, itemType, inverted, transformation, targetCharacteristic) {
     this._log.debug(`Creating current state characteristic for ${this.name} with item ${item} (${itemType}), inverted set to ${inverted}`);
 
-    service.getCharacteristic(characteristic)
-        .on('get', getState.bind(this,
+    characteristic.on('get', getState.bind(this,
             item,
             transformation.bind(this,
                 itemType,
@@ -14,13 +13,21 @@ function addCurrentStateCharacteristic(service, characteristic, item, itemType, 
             )
         ));
 
-    this._subscribeCharacteristic(service,
-        characteristic,
+    let callback;
+    if(targetCharacteristic) {
+        this._log.error(`We are in manu mode`);
+        callback = function(value) {
+            targetCharacteristic.setValue(value, "openHABIgnore");
+        }
+    }
+
+    this._subscribeCharacteristic(characteristic,
         item,
         transformation.bind(this,
             itemType,
             inverted
-        )
+        ),
+        callback
     );
 }
 

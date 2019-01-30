@@ -8,7 +8,7 @@ const BINARY_CONFIG = {
 };
 
 // This function will try and add a battery warning characteristic to the provided service
-function addBinarySensorCharacteristic(service, characteristic, optional) {
+function addBinarySensorCharacteristic(characteristic, optional) {
     try {
         let [item] = this._getAndCheckItemType(BINARY_CONFIG.item, ['Contact', 'Switch']);
         let inverted = this._checkInvertedConf(BINARY_CONFIG.inverted);
@@ -22,14 +22,12 @@ function addBinarySensorCharacteristic(service, characteristic, optional) {
             "OPEN": !inverted
         };
 
-        service.getCharacteristic(characteristic)
-            .on('get', getState.bind(this,
+        characteristic.on('get', getState.bind(this,
                 item,
                 transformation
             ));
 
-        this._subscribeCharacteristic(service,
-            characteristic,
+        this._subscribeCharacteristic(characteristic,
             item,
             transformation
         );
@@ -43,4 +41,45 @@ function addBinarySensorCharacteristic(service, characteristic, optional) {
     }
 }
 
-module.exports = {addBinarySensorCharacteristic};
+function addCarbonDioxideDetectedCharacteristic(service) {
+    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CarbonDioxideDetected));
+}
+
+function addContactSensorCharacteristic(service) {
+    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.ContactSensorState));
+}
+
+function addCarbonMonoxideDetectedCharacteristic(service) {
+    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CarbonMonoxideDetected));
+}
+
+function addFilterChangeIndicationCharacteristic(service) {
+    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.FilterChangeIndication));
+}
+
+function addLeakDetectedCharacteristic(service) {
+    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.LeakDetected));
+}
+
+function addMotionDetectedCharacteristic(service) {
+    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.MotionDetected));
+}
+
+function addOccupancyDetectedCharacteristic(service) {
+    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.OccupancyDetected));
+}
+
+function addSmokeDetectedCharacteristic(service) {
+    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.SmokeDetected));
+}
+
+module.exports = {
+    addCarbonDioxideDetectedCharacteristic,
+    addContactSensorCharacteristic,
+    addCarbonMonoxideDetectedCharacteristic,
+    addFilterChangeIndicationCharacteristic,
+    addLeakDetectedCharacteristic,
+    addMotionDetectedCharacteristic,
+    addOccupancyDetectedCharacteristic,
+    addSmokeDetectedCharacteristic
+};

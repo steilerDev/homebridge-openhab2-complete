@@ -9,11 +9,13 @@ const CURRENT_TARGET_POSITION_CONFIG = {
     multiplier: "multiplier",
     stateItem: "stateItem",
     stateItemInverted: "stateItemInverted",
-    stateItemMultiplier: "stateItemMultiplier"
+    stateItemMultiplier: "stateItemMultiplier",
+    manuMode: "manuMode"
 };
 
 function addCurrentPositionCharacteristic(service) {
     let item, itemType, inverted, multiplier;
+    let manuMode = this._checkInvertedConf(CURRENT_TARGET_POSITION_CONFIG.manuMode);
     if(this._config[CURRENT_TARGET_POSITION_CONFIG.stateItem]) {
         [item, itemType] = this._getAndCheckItemType(CURRENT_TARGET_POSITION_CONFIG.stateItem, ['Rollershutter', 'Number', 'Switch', 'Contact']);
         inverted = this._checkInvertedConf(CURRENT_TARGET_POSITION_CONFIG.stateItemInverted);
@@ -24,6 +26,8 @@ function addCurrentPositionCharacteristic(service) {
         multiplier = this._checkMultiplierConf(CURRENT_TARGET_POSITION_CONFIG.multiplier, itemType);
     }
 
+    let targetCharacteristic = manuMode ? this.Characteristic.TargetPosition : null;
+
     addCurrentStateCharacteristic.bind(this)(service,
         this.Characteristic.CurrentPosition,
         item,
@@ -32,7 +36,8 @@ function addCurrentPositionCharacteristic(service) {
         positionTransformation.bind(this,
             multiplier,
             service.getCharacteristic(this.Characteristic.TargetPosition)
-        )
+        ),
+        targetCharacteristic
     );
 }
 
@@ -98,7 +103,6 @@ function addHoldPositionCharacteristic(service) {
     }
 }
 
-// Todo: Maybe some grace area, if target and acutall state differ a couple of percent?
 function positionTransformation(multiplier, targetStateCharacteristic, type, inverted, value) {
     let transformedValue;
 
