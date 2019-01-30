@@ -140,8 +140,9 @@ function positionTransformation(multiplier, targetStateCharacteristic, type, inv
             break;
     }
 
-    const threshold = 5;
-    if(targetStateCharacteristic) {
+    const threshold = 3;
+    if(targetStateCharacteristic && targetStateCharacteristic.value !== transformedValue) {
+        this._log.debug(`Checking if actual state is within threshold (${threshold}) of target state`);
         if((targetStateCharacteristic.value > transformedValue && (targetStateCharacteristic.value - threshold) <= transformedValue) ||
             (targetStateCharacteristic.value < transformedValue && (targetStateCharacteristic.value + threshold) >= transformedValue))
         {
