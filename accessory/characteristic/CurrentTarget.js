@@ -31,14 +31,14 @@ function addTargetStateCharacteristic(service, characteristic, item, itemType, i
     service.getCharacteristic(characteristic)
         .on('get', getState.bind(this,
             stateItem,
-            transformation.bind(this,
+            stateItemTransformation.bind(this,
                 stateItemType,
                 stateItemInverted
             )
         ))
         .on('set', setState.bind(this,
             item,
-            stateItemTransformation.bind(this,
+            transformation.bind(this,
                 itemType,
                 inverted
             )

@@ -89,7 +89,7 @@ class Accessory {
     }
 
     _checkMultiplierConf(key, itemType) {
-        if(itemType === 'Number') {
+        if(itemType === 'Number' || itemType === 'Rollershutter') {
             if(this._config[key]) {
                 let parsedValue = parseFloat(this._config[key]);
                 if (!isNaN(parsedValue)) {
