@@ -88,6 +88,24 @@ class Accessory {
         }
     }
 
+    _checkMultiplierConf(key, itemType) {
+        if(itemType === 'Number') {
+            if(this._config[key]) {
+                let parsedValue = parseFloat(this._config[key]);
+                if (!isNaN(parsedValue)) {
+                    return parsedValue;
+                } else {
+                    this._log.debug(`Not parsing multiplier for ${this.name}, because value (${this._config[key]}) is not parsable as float: Result ${parsedValue})`);
+                }
+            } else {
+                this._log.debug(`Not parsing multiplier for ${this.name}, because ${key} is not defined in config: ${JSON.stringify(this._config)}`);
+            }
+        } else {
+            this._log.debug(`Not parsing multiplier for ${this.name}, because of item's type ${itemType}`);
+        }
+        return 1;
+    }
+
     _getAccessoryInformationService(modelDescription) {
         return new this.Service.AccessoryInformation()
             .setCharacteristic(this.Characteristic.Name, this.name)

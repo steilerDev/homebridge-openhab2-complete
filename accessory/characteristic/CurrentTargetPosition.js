@@ -13,24 +13,15 @@ const CURRENT_TARGET_POSITION_CONFIG = {
 };
 
 function addCurrentPositionCharacteristic(service) {
-    let item, itemType, inverted;
-    let multiplier = 1;
+    let item, itemType, inverted, multiplier;
     if(this._config[CURRENT_TARGET_POSITION_CONFIG.stateItem]) {
         [item, itemType] = this._getAndCheckItemType(CURRENT_TARGET_POSITION_CONFIG.stateItem, ['Rollershutter', 'Number', 'Switch', 'Contact']);
         inverted = this._checkInvertedConf(CURRENT_TARGET_POSITION_CONFIG.stateItemInverted);
-        if(itemType === 'Number' && this._config[CURRENT_TARGET_POSITION_CONFIG.stateItemMultiplier] && !isNaN(parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.stateItemMultiplier]))) {
-            multiplier = parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.stateItemMultiplier]);
-        } else {
-            this._log.debug(`Not parsing multiplier for stateItem of ${this.name}: ${JSON.stringify(this._config)}`);
-        }
+        multiplier = this._checkMultiplierConf(CURRENT_TARGET_POSITION_CONFIG.stateItemMultiplier, itemType);
     } else {
         [item, itemType] = this._getAndCheckItemType(CURRENT_TARGET_POSITION_CONFIG.item, ['Rollershutter', 'Number', 'Switch']);
         inverted = this._checkInvertedConf(CURRENT_TARGET_POSITION_CONFIG.inverted);
-        if(itemType === 'Number' && this._config[CURRENT_TARGET_POSITION_CONFIG.multiplier] && !isNaN(parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.multiplier]))) {
-            multiplier = parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.multiplier]);
-        } else {
-            this._log.debug(`Not parsing multiplier for stateItem of ${this.name}: ${JSON.stringify(this._config)}`);
-        }
+        multiplier = this._checkMultiplierConf(CURRENT_TARGET_POSITION_CONFIG.multiplier, itemType);
     }
 
     addCurrentStateCharacteristic.bind(this)(service,
@@ -48,24 +39,13 @@ function addCurrentPositionCharacteristic(service) {
 function addTargetPositionCharacteristic(service) {
     let [item, itemType] = this._getAndCheckItemType(CURRENT_TARGET_POSITION_CONFIG.item, ['Rollershutter', 'Number', 'Switch']);
     let inverted = this._checkInvertedConf(CURRENT_TARGET_POSITION_CONFIG.inverted);
-    let stateItem, stateItemType, stateItemInverted;
-    let multiplier = 1;
-    let stateItemMultiplier = 1;
-    if(itemType === 'Number' && this._config[CURRENT_TARGET_POSITION_CONFIG.multiplier] && !isNaN(parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.multiplier]))) {
-        multiplier = parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.multiplier]);
-    } else {
-        this._log.debug(`Not parsing multiplier for stateItem of ${this.name}: ${JSON.stringify(this._config)}`);
-    }
+    let multiplier = this._checkMultiplierConf(CURRENT_TARGET_POSITION_CONFIG.multiplier, itemType);
+    let stateItem, stateItemType, stateItemInverted, stateItemMultiplier;
 
     if(this._config[CURRENT_TARGET_POSITION_CONFIG.stateItem]) {
         [stateItem, stateItemType] = this._getAndCheckItemType(CURRENT_TARGET_POSITION_CONFIG.stateItem, ['Rollershutter', 'Number', 'Switch', 'Contact']);
         stateItemInverted = this._checkInvertedConf(CURRENT_TARGET_POSITION_CONFIG.stateItemInverted);
-
-        if(stateItemType === 'Number' && this._config[CURRENT_TARGET_POSITION_CONFIG.stateItemMultiplier] && !isNaN(parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.stateItemMultiplier]))) {
-            stateItemMultiplier = parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.stateItemMultiplier]);
-        } else {
-            this._log.debug(`Not parsing multiplier for stateItem of ${this.name}: ${JSON.stringify(this._config)}`);
-        }
+        stateItemMultiplier = this._checkMultiplierConf(CURRENT_TARGET_POSITION_CONFIG.stateItemMultiplier, stateItemType);
     } else {
         stateItem = item;
         stateItemType = itemType;
