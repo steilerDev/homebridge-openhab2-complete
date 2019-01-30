@@ -136,7 +136,15 @@ function positionTransformation(multiplier, targetStateCharacteristic, type, inv
 
     const threshold = 5;
     if(targetStateCharacteristic) {
-        this._log.error(`Trying grace area with ${targetStateCharacteristic.value}`);
+        this._log.error(`Trying grace area with target state: ${targetStateCharacteristic.value} & transformed value ${transformedValue}`);
+
+        this._log.error(targetStateCharacteristic.value > transformedValue);
+        this._log.error((targetStateCharacteristic - threshold) <= transformedValue);
+        this._log.error(targetStateCharacteristic.value < transformedValue);
+        this._log.error((targetStateCharacteristic + threshold) >= transformedValue);
+
+
+
         if((targetStateCharacteristic.value > transformedValue && (targetStateCharacteristic - threshold) <= transformedValue) ||
             (targetStateCharacteristic.value < transformedValue && (targetStateCharacteristic + threshold) >= transformedValue))
         {
