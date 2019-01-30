@@ -87,7 +87,7 @@ function addHoldPositionCharacteristic(service) {
     try {
         let [item] = this._getAndCheckItemType(CURRENT_TARGET_POSITION_CONFIG.item, ['Rollershutter']);
 
-        this._log.debug(`Creating position state characteristic for ${this.name} with item ${item}`);
+        this._log.debug(`Creating hold position state characteristic for ${this.name} with item ${item}`);
 
         service.getCharacteristic(this.Characteristic.HoldPosition) // Never tested, since I don't know how to invoke it
             .on('set', setState.bind(this,
