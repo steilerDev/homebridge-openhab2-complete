@@ -26,7 +26,7 @@ function addCurrentPositionCharacteristic(service) {
         multiplier = this._checkMultiplierConf(CURRENT_TARGET_POSITION_CONFIG.multiplier, itemType);
     }
 
-    let targetCharacteristic = manuMode ? this.Characteristic.TargetPosition : null;
+    let targetCharacteristic = manuMode ? service.getCharacteristic(this.Characteristic.TargetPosition) : null;
 
     addCurrentStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CurrentPosition),
         item,
