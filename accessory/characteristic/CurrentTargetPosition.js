@@ -102,7 +102,7 @@ function addHoldPositionCharacteristic(service) {
 }
 
 function positionTransformation(multiplier, targetStateCharacteristic, type, inverted, value) {
-    this._log(`Starting transformation with value ${value}: ${JSON.stringify(this)}`);
+    this._log(`Starting transformation with value ${value} for ${this.name}`);
     let transformedValue;
 
     let onCommand = type === 'Contact' ? "OPEN": "ON";
