@@ -17,6 +17,7 @@ function addCurrentStateCharacteristic(characteristic, item, itemType, inverted,
     if(targetCharacteristic) {
         this._log.error(`We are in manu mode`);
         callback = function(value) {
+            console.error(`Setting target characteristic to ${value}`);
             targetCharacteristic.setValue(value, null, "openHABIgnore");
         }
     }
