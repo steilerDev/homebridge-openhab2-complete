@@ -151,6 +151,8 @@ function positionTransformation(multiplier, targetStateCharacteristic, type, inv
         }
     }
 
+    targetStateCharacteristic.value = 0;
+
     this._log.debug(`Transformed ${value} with inverted set to ${inverted} and multiplier set to ${multiplier} for ${this.name} to ${transformedValue}`);
     return transformedValue;
 }
