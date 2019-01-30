@@ -131,6 +131,12 @@ function positionTransformation(multiplier, targetStateCharacteristic, type, inv
             } else {
                 transformedValue = Math.floor(parseFloat(value) * multiplier);
             }
+            if(transformedValue >= 99) { // Weird not showing 100 or 0 bug of openHAB
+                transformedValue = 100;
+            }
+            if(transformedValue <= 1) {
+                transformedValue = 0;
+            }
             break;
     }
 
