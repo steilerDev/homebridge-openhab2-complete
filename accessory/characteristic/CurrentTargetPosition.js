@@ -149,7 +149,7 @@ function positionTransformation(multiplier, targetStateCharacteristic, type, inv
             this._log.debug(`Actually assigning target state ${targetStateCharacteristic.value}, because its within the threshold (${threshold}) of the actual state ${transformedValue}`);
             transformedValue = targetStateCharacteristic.value;
         }
-        targetStateCharacteristic.value = 0;
+        targetStateCharacteristic.setValue(0);
     }
 
 

@@ -134,8 +134,10 @@ function transformValue(transformation, value) {
     }
 }
 
-function getState(habItem, transformation, callback) {
+function getState(habItem, transformation, callback, context, connectionID) {
     this._log.debug(`Getting state for ${this.name} [${habItem}]`);
+    this._log.error(`Context: ${JSON.stringify(context)}`);
+    this._log.error(`Connection ID: ${JSON.stringify(connectionID)}`);
     this._openHAB.getState(habItem, function(error, state) {
         if(error) {
             this._log.error(`Unable to get state for ${this.name} [${habItem}]: ${error.message}`);
