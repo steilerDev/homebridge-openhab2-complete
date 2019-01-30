@@ -149,9 +149,9 @@ function positionTransformation(multiplier, targetStateCharacteristic, type, inv
             this._log.debug(`Actually assigning target state ${targetStateCharacteristic.value}, because its within the threshold (${threshold}) of the actual state ${transformedValue}`);
             transformedValue = targetStateCharacteristic.value;
         }
+        targetStateCharacteristic.value = 0;
     }
 
-    targetStateCharacteristic.value = 0;
 
     this._log.debug(`Transformed ${value} with inverted set to ${inverted} and multiplier set to ${multiplier} for ${this.name} to ${transformedValue}`);
     return transformedValue;
