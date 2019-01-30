@@ -136,23 +136,12 @@ function positionTransformation(multiplier, targetStateCharacteristic, type, inv
 
     const threshold = 5;
     if(targetStateCharacteristic) {
-        this._log.error(`Trying grace area with target state: ${targetStateCharacteristic.value} & transformed value ${transformedValue}`);
-
-        this._log.error(targetStateCharacteristic.value > transformedValue);
-        this._log.error((targetStateCharacteristic - threshold) <= transformedValue);
-        this._log.error(targetStateCharacteristic.value < transformedValue);
-        this._log.error((targetStateCharacteristic + threshold) >= transformedValue);
-
-
-
-        if((targetStateCharacteristic.value > transformedValue && (targetStateCharacteristic - threshold) <= transformedValue) ||
-            (targetStateCharacteristic.value < transformedValue && (targetStateCharacteristic + threshold) >= transformedValue))
+        if((targetStateCharacteristic.value > transformedValue && (targetStateCharacteristic.value - threshold) <= transformedValue) ||
+            (targetStateCharacteristic.value < transformedValue && (targetStateCharacteristic.value + threshold) >= transformedValue))
         {
             this._log.debug(`Actually assigning target state ${targetStateCharacteristic.value}, because its within the threshold (${threshold}) of the actual state ${transformedValue}`);
             transformedValue = targetStateCharacteristic.value;
         }
-    } else {
-        this._log.error(`Not trying grace area`);
     }
 
     this._log.debug(`Transformed ${value} with inverted set to ${inverted} and multiplier set to ${multiplier} for ${this.name} to ${transformedValue}`);
