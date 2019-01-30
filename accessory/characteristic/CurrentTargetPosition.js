@@ -127,9 +127,9 @@ function positionTransformation(multiplier, targetStateCharacteristic, type, inv
         case 'Rollershutter':
         case 'Number':
             if(inverted) {
-                transformedValue = 100 - (parseFloat(value) * multiplier);
+                transformedValue = Math.floor(100 - (parseFloat(value) * multiplier));
             } else {
-                transformedValue = (parseFloat(value) * multiplier);
+                transformedValue = Math.floor(parseFloat(value) * multiplier);
             }
             break;
     }
