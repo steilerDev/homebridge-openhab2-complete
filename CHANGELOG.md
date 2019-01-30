@@ -17,6 +17,9 @@
     
 
 ## Changelog
+### V0.8.0 (unreleased)
+* Added optional `multiplier` and `stateMultiplier` to `WindowCovering`, `Door` and `Window`, in order to multiply openHAB's item state and show it differently in HomeKit
+
 ### V0.7.0
 * Major rework to clean up and support subscription
 * Subscription supported for every accessory type

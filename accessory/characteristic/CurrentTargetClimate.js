@@ -44,6 +44,7 @@ function addTargetTemperatureCharacteristic(service, optional) {
             targetTempItem,
             targetTempType,
             false,
+            dummyTransformation,
             dummyTransformation
         );
     } catch(e) {
@@ -87,6 +88,7 @@ function addTargetRelativeHumidityCharacteristic(service, optional) {
             targetHumidityItem,
             targetHumidityType,
             false,
+            dummyTransformation,
             dummyTransformation
         );
     } catch(e) {

@@ -6,50 +6,93 @@ const {addCurrentStateCharacteristic, addTargetStateCharacteristic} = require('.
 const CURRENT_TARGET_POSITION_CONFIG = {
     item: "item",
     inverted: "inverted",
+    multiplier: "multiplier",
     stateItem: "stateItem",
-    stateItemInverted: "stateItemInverted"
+    stateItemInverted: "stateItemInverted",
+    stateItemMultiplier: "stateItemMultiplier"
 };
 
 function addCurrentPositionCharacteristic(service) {
     let item, itemType, inverted;
+    let multiplier = 1;
     if(this._config[CURRENT_TARGET_POSITION_CONFIG.stateItem]) {
         [item, itemType] = this._getAndCheckItemType(CURRENT_TARGET_POSITION_CONFIG.stateItem, ['Rollershutter', 'Number', 'Switch', 'Contact']);
         inverted = this._checkInvertedConf(CURRENT_TARGET_POSITION_CONFIG.stateItemInverted);
+        if(itemType === 'Number' && this._config[CURRENT_TARGET_POSITION_CONFIG.stateItemMultiplier] && !isNaN(parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.stateItemMultiplier]))) {
+            multiplier = parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.stateItemMultiplier]);
+        } else {
+            this._log.debug(`Not parsing multiplier for stateItem of ${this.name}: ${JSON.stringify(this._config)}`);
+        }
     } else {
         [item, itemType] = this._getAndCheckItemType(CURRENT_TARGET_POSITION_CONFIG.item, ['Rollershutter', 'Number', 'Switch']);
         inverted = this._checkInvertedConf(CURRENT_TARGET_POSITION_CONFIG.inverted);
+        if(itemType === 'Number' && this._config[CURRENT_TARGET_POSITION_CONFIG.multiplier] && !isNaN(parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.multiplier]))) {
+            multiplier = parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.multiplier]);
+        } else {
+            this._log.debug(`Not parsing multiplier for stateItem of ${this.name}: ${JSON.stringify(this._config)}`);
+        }
     }
-    addCurrentStateCharacteristic.bind(this)(service, this.Characteristic.CurrentPosition, item, itemType, inverted, positionTransformation);
+
+    addCurrentStateCharacteristic.bind(this)(service,
+        this.Characteristic.CurrentPosition,
+        item,
+        itemType,
+        inverted,
+        positionTransformation.bind(this,
+            multiplier,
+            service.getCharacteristic(this.Characteristic.TargetPosition)
+        )
+    );
 }
 
 function addTargetPositionCharacteristic(service) {
     let [item, itemType] = this._getAndCheckItemType(CURRENT_TARGET_POSITION_CONFIG.item, ['Rollershutter', 'Number', 'Switch']);
     let inverted = this._checkInvertedConf(CURRENT_TARGET_POSITION_CONFIG.inverted);
     let stateItem, stateItemType, stateItemInverted;
+    let multiplier = 1;
+    let stateItemMultiplier = 1;
+    if(itemType === 'Number' && this._config[CURRENT_TARGET_POSITION_CONFIG.multiplier] && !isNaN(parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.multiplier]))) {
+        multiplier = parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.multiplier]);
+    } else {
+        this._log.debug(`Not parsing multiplier for stateItem of ${this.name}: ${JSON.stringify(this._config)}`);
+    }
 
     if(this._config[CURRENT_TARGET_POSITION_CONFIG.stateItem]) {
         [stateItem, stateItemType] = this._getAndCheckItemType(CURRENT_TARGET_POSITION_CONFIG.stateItem, ['Rollershutter', 'Number', 'Switch', 'Contact']);
         stateItemInverted = this._checkInvertedConf(CURRENT_TARGET_POSITION_CONFIG.stateItemInverted);
+
+        if(stateItemType === 'Number' && this._config[CURRENT_TARGET_POSITION_CONFIG.stateItemMultiplier] && !isNaN(parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.stateItemMultiplier]))) {
+            stateItemMultiplier = parseFloat(this._config[CURRENT_TARGET_POSITION_CONFIG.stateItemMultiplier]);
+        } else {
+            this._log.debug(`Not parsing multiplier for stateItem of ${this.name}: ${JSON.stringify(this._config)}`);
+        }
     } else {
         stateItem = item;
         stateItemType = itemType;
         stateItemInverted = inverted;
+        stateItemMultiplier = multiplier;
     }
-    addTargetStateCharacteristic.bind(this)(service, this.Characteristic.TargetPosition, item, itemType, inverted, stateItem, stateItemType, stateItemInverted, positionTransformation);
+    addTargetStateCharacteristic.bind(this)(service,
+        this.Characteristic.TargetPosition,
+        item,
+        itemType,
+        inverted,
+        multiplier,
+        stateItem,
+        stateItemType,
+        stateItemInverted,
+        stateItemMultiplier,
+        positionTransformation.bind(this,
+            multiplier,
+            null
+        ),
+        positionTransformation.bind(this,
+            stateItemMultiplier,
+            null
+        )
+    );
 }
 
-    // Not sure about this:
-    //
-    // this._subscribeCharacteristic(service,
-    //     this.Characteristic.TargetPosition,
-    //     thisItem,
-    //     this._transformation.bind(this,
-    //         thisItemType,
-    //         thisInverted
-    //     )
-    // );
-
-// Todo: Maybe a clean fix for the problem above with subscribing to current state & Manu-Mode option
 function addPositionStateCharacteristic(service) {
     this._log.debug(`Creating position state characteristic for ${this.name}`);
 
@@ -78,7 +121,7 @@ function addHoldPositionCharacteristic(service) {
 }
 
 // Todo: Maybe some grace area, if target and acutall state differ a couple of percent?
-function positionTransformation(type, inverted, value) {
+function positionTransformation(multiplier, targetStateCharacteristic, type, inverted, value) {
     let transformedValue;
 
     let onCommand = type === 'Contact' ? "OPEN": "ON";
@@ -106,14 +149,24 @@ function positionTransformation(type, inverted, value) {
         case 'Rollershutter':
         case 'Number':
             if(inverted) {
-                transformedValue = 100 - value;
+                transformedValue = 100 - (parseFloat(value) * multiplier);
             } else {
-                transformedValue = value;
+                transformedValue = (parseFloat(value) * multiplier);
             }
             break;
     }
 
-    this._log.debug(`Transformed ${value} with inverted set to ${inverted} for ${this.name} to ${transformedValue}`);
+    const threshold = 5;
+    if(targetStateCharacteristic) {
+        if(targetStateCharacteristic.value > transformedValue && (targetStateCharacteristic - threshold) <= transformedValue ||
+            targetStateCharacteristic.value < transformedValue && (targetStateCharacteristic + threshold) >= transformedValue)
+        {
+            this._log.debug(`Actually assigning target state ${targetStateCharacteristic.value}, because its within the threshold (${threshold}) of the actual state ${transformedValue}`);
+            transformedValue = targetStateCharacteristic.value;
+        }
+    }
+
+    this._log.debug(`Transformed ${value} with inverted set to ${inverted} and multiplier set to ${multiplier} for ${this.name} to ${transformedValue}`);
     return transformedValue;
 }
 
