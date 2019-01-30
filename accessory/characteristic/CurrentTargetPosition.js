@@ -77,11 +77,9 @@ function addTargetPositionCharacteristic(service) {
         item,
         itemType,
         inverted,
-        multiplier,
         stateItem,
         stateItemType,
         stateItemInverted,
-        stateItemMultiplier,
         positionTransformation.bind(this,
             multiplier,
             null
