@@ -31,12 +31,11 @@ function addCurrentStateCharacteristic(characteristic, item, itemType, inverted,
     );
 }
 
-function addTargetStateCharacteristic(service, characteristic, item, itemType, inverted, stateItem, stateItemType, stateItemInverted, transformation, stateItemTransformation) {
+function addTargetStateCharacteristic(characteristic, item, itemType, inverted, stateItem, stateItemType, stateItemInverted, transformation, stateItemTransformation) {
     this._log.debug(`Creating target state characteristic for ${this.name} with item ${item} (${itemType}), inverted set to ${inverted} and state item ${stateItem} (${stateItemType}), inverted set to ${stateItemInverted}`);
 
     // If HomeKit is curious about the target position we will give the actual position
-    service.getCharacteristic(characteristic)
-        .on('get', getState.bind(this,
+    characteristic.on('get', getState.bind(this,
             stateItem,
             stateItemTransformation.bind(this,
                 stateItemType,

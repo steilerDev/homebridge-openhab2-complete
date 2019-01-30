@@ -16,8 +16,7 @@ const CURRENT_TARGET_CLIMATE_CONFIG = {
 function addCurrentTemperatureCharacteristic(service, optional) {
     try {
         let [currentTempItem, currentTempType] = this._getAndCheckItemType(CURRENT_TARGET_CLIMATE_CONFIG.currentTempItem, ['Number']);
-        addCurrentStateCharacteristic.bind(this)(service,
-            this.Characteristic.CurrentTemperature,
+        addCurrentStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CurrentTemperature),
             currentTempItem,
             currentTempType,
             false,
@@ -36,8 +35,7 @@ function addCurrentTemperatureCharacteristic(service, optional) {
 function addTargetTemperatureCharacteristic(service, optional) {
     try {
         let [targetTempItem, targetTempType] = this._getAndCheckItemType(CURRENT_TARGET_CLIMATE_CONFIG.targetTempItem, ['Number']);
-        addTargetStateCharacteristic.bind(this)(service,
-            this.Characteristic.TargetTemperature,
+        addTargetStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.TargetTemperature),
             targetTempItem,
             targetTempType,
             false,
@@ -60,8 +58,7 @@ function addTargetTemperatureCharacteristic(service, optional) {
 function addCurrentRelativeHumidityCharacteristic(service, optional) {
     try {
         let [currentHumidityItem, currentHumidityType] = this._getAndCheckItemType(CURRENT_TARGET_CLIMATE_CONFIG.currentHumidityItem, ['Number']);
-        addCurrentStateCharacteristic.bind(this)(service,
-            this.Characteristic.CurrentRelativeHumidity,
+        addCurrentStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity),
             currentHumidityItem,
             currentHumidityType,
             false,
@@ -80,8 +77,7 @@ function addCurrentRelativeHumidityCharacteristic(service, optional) {
 function addTargetRelativeHumidityCharacteristic(service, optional) {
     try {
         let [targetHumidityItem, targetHumidityType] = this._getAndCheckItemType(CURRENT_TARGET_CLIMATE_CONFIG.targetHumidityItem, ['Number']);
-        addTargetStateCharacteristic.bind(this)(service,
-            this.Characteristic.TargetRelativeHumidity,
+        addTargetStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.TargetRelativeHumidity),
             targetHumidityItem,
             targetHumidityType,
             false,

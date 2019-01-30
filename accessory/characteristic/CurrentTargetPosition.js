@@ -28,8 +28,7 @@ function addCurrentPositionCharacteristic(service) {
 
     let targetCharacteristic = manuMode ? this.Characteristic.TargetPosition : null;
 
-    addCurrentStateCharacteristic.bind(this)(service,
-        this.Characteristic.CurrentPosition,
+    addCurrentStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CurrentPosition),
         item,
         itemType,
         inverted,
@@ -57,8 +56,7 @@ function addTargetPositionCharacteristic(service) {
         stateItemInverted = inverted;
         stateItemMultiplier = multiplier;
     }
-    addTargetStateCharacteristic.bind(this)(service,
-        this.Characteristic.TargetPosition,
+    addTargetStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.TargetPosition),
         item,
         itemType,
         inverted,
