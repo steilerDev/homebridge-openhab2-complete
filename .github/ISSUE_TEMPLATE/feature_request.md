@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest an idea on how to better integrate openHAB into Homebridge
 title: ''
 labels: ''
 assignees: ''
