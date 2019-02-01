@@ -133,38 +133,38 @@ function positionTransformation(multiplier, targetStateCharacteristic, type, inv
         case 'RollershutterSetter':
         case 'Rollershutter':
         case 'Number':
-            if(inverted) {
-                transformedValue = Math.floor(100 - (parseFloat(value) * multiplier));
+            //This part is only invoked if this is used in a setter context and the item is a rollershutter
+            // Not sure if `inverted` should matter here
+            if(type === 'RollershutterSetter') {
+                if(value === 100) {
+                    transformedValue = `UP`;
+                } else if(transformedValue === 0) {
+                    transformedValue = `DOWN`;
+                }
             } else {
-                transformedValue = Math.floor(parseFloat(value) * multiplier);
-            }
-            if(transformedValue >= 99) { // Weird not showing 100 or 0 bug of openHAB
-                transformedValue = 100;
-            }
-            if(transformedValue <= 1) {
-                transformedValue = 0;
-            }
 
-            const threshold = 3;
-            if(targetStateCharacteristic && targetStateCharacteristic.value !== transformedValue) {
-                this._log.debug(`Checking if actual state is within threshold (${threshold}) of target state`);
-                if((targetStateCharacteristic.value > transformedValue && (targetStateCharacteristic.value - threshold) <= transformedValue) ||
-                    (targetStateCharacteristic.value < transformedValue && (targetStateCharacteristic.value + threshold) >= transformedValue))
-                {
-                    this._log.debug(`Actually assigning target state ${targetStateCharacteristic.value}, because its within the threshold (${threshold}) of the actual state ${transformedValue}`);
-                    transformedValue = targetStateCharacteristic.value;
+                if (inverted) {
+                    transformedValue = Math.floor(100 - (parseFloat(value) * multiplier));
+                } else {
+                    transformedValue = Math.floor(parseFloat(value) * multiplier);
+                }
+                if (transformedValue >= 99) { // Weird not showing 100 or 0 bug of openHAB
+                    transformedValue = 100;
+                }
+                if (transformedValue <= 1) {
+                    transformedValue = 0;
+                }
+
+                const threshold = 3;
+                if (targetStateCharacteristic && targetStateCharacteristic.value !== transformedValue) {
+                    this._log.debug(`Checking if actual state is within threshold (${threshold}) of target state`);
+                    if ((targetStateCharacteristic.value > transformedValue && (targetStateCharacteristic.value - threshold) <= transformedValue) ||
+                        (targetStateCharacteristic.value < transformedValue && (targetStateCharacteristic.value + threshold) >= transformedValue)) {
+                        this._log.debug(`Actually assigning target state ${targetStateCharacteristic.value}, because its within the threshold (${threshold}) of the actual state ${transformedValue}`);
+                        transformedValue = targetStateCharacteristic.value;
+                    }
                 }
             }
-
-            //This part is only invoked if this is used in a setter context and the item is a rollershutter
-            if(type === 'RollershutterSetter') {
-               if(transformedValue === 100) {
-                   transformedValue = `UP`;
-               } else if(transformedValue === 0) {
-                   transformedValue = `DOWN`;
-               }
-            }
-
             break;
     }
 
