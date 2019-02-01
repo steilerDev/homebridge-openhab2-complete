@@ -39,8 +39,8 @@ function addInUseCharacteristic(characteristic) {
                 return + (parseFloat(value) > 0 && !inverted);
             };
     }
-    service.getCharacteristic(characteristic)
-        .on('get', getState.bind(this,
+
+    characteristic.on('get', getState.bind(this,
             item,
             transformation
         ));
