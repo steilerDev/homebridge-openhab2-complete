@@ -138,7 +138,7 @@ function positionTransformation(multiplier, targetStateCharacteristic, type, inv
             if(type === 'RollershutterSetter') {
                 if(value === 100) {
                     transformedValue = `UP`;
-                } else if(transformedValue === 0) {
+                } else if(value === 0) {
                     transformedValue = `DOWN`;
                 }
             } else {
