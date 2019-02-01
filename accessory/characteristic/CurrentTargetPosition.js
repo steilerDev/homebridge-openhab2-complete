@@ -56,6 +56,10 @@ function addTargetPositionCharacteristic(service) {
         stateItemInverted = inverted;
         stateItemMultiplier = multiplier;
     }
+    // In order to know if this is the setter and apply `UP`/`DOWN` to it in case of 100 and 0
+    if(itemType === 'Rollershutter') {
+        itemType = `${itemType}Setter`;
+    }
     addTargetStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.TargetPosition),
         item,
         itemType,
@@ -113,19 +117,20 @@ function positionTransformation(multiplier, targetStateCharacteristic, type, inv
             if(value === onCommand) {
                 transformedValue = inverted ?
                     0 :
-                    100
+                    100;
             } else if (value === offCommand) {
                 transformedValue = inverted ?
                     100 :
-                    0
+                    0;
             } else {
                 if(value >= 50 && !(inverted)) {
-                    transformedValue = onCommand
+                    transformedValue = onCommand;
                 } else {
-                    transformedValue = offCommand
+                    transformedValue = offCommand;
                 }
             }
             break;
+        case 'RollershutterSetter':
         case 'Rollershutter':
         case 'Number':
             if(inverted) {
@@ -150,6 +155,16 @@ function positionTransformation(multiplier, targetStateCharacteristic, type, inv
                     transformedValue = targetStateCharacteristic.value;
                 }
             }
+
+            //This part is only invoked if this is used in a setter context and the item is a rollershutter
+            if(type === 'RollershutterSetter') {
+               if(transformedValue === 100) {
+                   transformedValue = `UP`;
+               } else if(transformedValue === 0) {
+                   transformedValue = `DOWN`;
+               }
+            }
+
             break;
     }
 
