@@ -27,7 +27,7 @@ class LightAccessory extends Accessory {
     }
 
     _getPrimaryService() {
-        this._log(`Creating lightbulb service for ${this.name}`);
+        this._log.debug(`Creating lightbulb service for ${this.name}`);
         let primaryService = new this.Service.Lightbulb(this.name);
         addLightOnCharacteristic.bind(this)(primaryService);
         addHueCharacteristic.bind(this)(primaryService);
