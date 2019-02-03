@@ -21,7 +21,7 @@ class OpenHAB {
 
     isOnline() {
         let myURL = clone(this._url);
-        myURL.pathname = `/rest/`;
+        myURL.pathname = `/rest/items`;
         const response = syncRequest('GET', myURL.href);
         return response.statusCode === 200;
     }
