@@ -62,6 +62,14 @@ const OpenHABComplete = class {
             }
         }.bind(this));
 
+        this._log.info(`Waiting for openHAB host (${config.host}) to come online...`);
+        let online = false;
+        while(!online) {
+            this._log.debug(`Checking if openHAB host (${config.host}) is online...`);
+            online = this._platform.openHAB.isOnline();
+        }
+        this._log.info(`openHAB host (${config.host}) is online!`);
+
         this._log.info(`'OpenHAB2 - Complete Edition' plugin loaded - Version ${version}`);
         this._log.info(`---`);
     }

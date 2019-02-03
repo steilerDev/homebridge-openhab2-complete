@@ -19,6 +19,13 @@ class OpenHAB {
         }
     }
 
+    isOnline() {
+        let myURL = clone(this._url);
+        myURL.pathname = `/rest/`;
+        const response = syncRequest('GET', myURL.href);
+        return response.statusCode === 200;
+    }
+
     getState(habItem, callback) {
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items/${habItem}/state`;
