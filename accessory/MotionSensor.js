@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addBinarySensorCharacteristic} = require('./characteristic/BinarySensor');
+const {addMotionDetectedCharacteristic} = require('./characteristic/BinarySensor');
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class MotionSensorAccessory extends Accessory {
@@ -17,7 +17,7 @@ class MotionSensorAccessory extends Accessory {
     _getPrimaryService() {
         this._log.debug(`Creating motion sensor service for ${this.name}`);
         let primaryService = new this.Service.MotionSensor(this.name);
-        addBinarySensorCharacteristic.bind(this)(primaryService, this.Characteristic.MotionDetected);
+        addMotionDetectedCharacteristic.bind(this)(primaryService);
         addBatteryWarningCharacteristic.bind(this)(primaryService);
         return primaryService;
     }

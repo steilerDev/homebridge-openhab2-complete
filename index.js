@@ -1,4 +1,5 @@
 const fs = require('fs');
+const sleep = require('sleep');
 
 const version = require('./package').version;
 const platformName = require('./package').name;
@@ -27,7 +28,7 @@ const OpenHABComplete = class {
            throw new Error(msg);
        } else {
             this._platform = {
-                openHAB: new OpenHAB(config.host, config.port),
+                openHAB: new OpenHAB(config.host, config.port, log),
                 api:  api,
                 log: log
             };
@@ -36,7 +37,7 @@ const OpenHABComplete = class {
         this._factories = {};
 
         // Loading accessories from file system
-        this._log(`Loading accessories...`);
+        this._log(`Loading accessory types...`);
         let accessoryDirectory = `${__dirname}/accessory`;
         let accessoryFiles = fs.readdirSync(accessoryDirectory, {"withFileTypes": true});
         accessoryFiles.forEach(function (accessoryFile) {
@@ -62,6 +63,16 @@ const OpenHABComplete = class {
             }
         }.bind(this));
 
+        this._log.info(`Waiting for openHAB host (${config.host}) to come online...`);
+        let online = false;
+        while(!online) {
+            sleep.sleep(2);
+            this._log.debug(`Checking if openHAB host (${config.host}) is online...`);
+            online = this._platform.openHAB.isOnline();
+        }
+        sleep.sleep(10);
+        this._log.info(`openHAB host (${config.host}) is online!`);
+
         this._log.info(`'OpenHAB2 - Complete Edition' plugin loaded - Version ${version}`);
         this._log.info(`---`);
     }
@@ -69,6 +80,7 @@ const OpenHABComplete = class {
     accessories(callback) {
         let _accessories = [];
         const { accessories } = this._config;
+        this._log.info(`Loading accessories from configuration, this might take a while...`);
         accessories.forEach(acc => {
             try {
                 if (!(acc.type)) {
@@ -98,6 +110,9 @@ const OpenHABComplete = class {
                 this._log.warn(`Unable to add accessory ${acc.name}: ${e}, skipping`);
             }
         });
+        this._platform.openHAB.startSubscription();
+        this._log.info(`Finished loading accessories from configuration`);
+        this._log.info(`---`);
         callback(_accessories);
     }
 };

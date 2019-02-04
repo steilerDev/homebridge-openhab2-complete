@@ -2,11 +2,10 @@
 
 const {getState, setState} = require('../../util/Accessory');
 
-function addCurrentStateCharacteristic(service, characteristic, item, itemType, inverted, transformation) {
+function addCurrentStateCharacteristic(characteristic, item, itemType, inverted, transformation, targetCharacteristic) {
     this._log.debug(`Creating current state characteristic for ${this.name} with item ${item} (${itemType}), inverted set to ${inverted}`);
 
-    service.getCharacteristic(characteristic)
-        .on('get', getState.bind(this,
+    characteristic.on('get', getState.bind(this,
             item,
             transformation.bind(this,
                 itemType,
@@ -14,24 +13,33 @@ function addCurrentStateCharacteristic(service, characteristic, item, itemType, 
             )
         ));
 
-    this._subscribeCharacteristic(service,
-        characteristic,
+    let callback;
+    if(targetCharacteristic) {
+        this._log.debug(`Creating characteristic for ${this.name} with item ${item} in manu mode`);
+        callback = function(value) {
+            if(targetCharacteristic.value !== value) {
+                targetCharacteristic.setValue(value, null, "openHABIgnore");
+            }
+        }
+    }
+
+    this._subscribeCharacteristic(characteristic,
         item,
         transformation.bind(this,
             itemType,
             inverted
-        )
+        ),
+        callback
     );
 }
 
-function addTargetStateCharacteristic(service, characteristic, item, itemType, inverted, stateItem, stateItemType, stateItemInverted, transformation) {
+function addTargetStateCharacteristic(characteristic, item, itemType, inverted, stateItem, stateItemType, stateItemInverted, transformation, stateItemTransformation) {
     this._log.debug(`Creating target state characteristic for ${this.name} with item ${item} (${itemType}), inverted set to ${inverted} and state item ${stateItem} (${stateItemType}), inverted set to ${stateItemInverted}`);
 
     // If HomeKit is curious about the target position we will give the actual position
-    service.getCharacteristic(characteristic)
-        .on('get', getState.bind(this,
+    characteristic.on('get', getState.bind(this,
             stateItem,
-            transformation.bind(this,
+            stateItemTransformation.bind(this,
                 stateItemType,
                 stateItemInverted
             )

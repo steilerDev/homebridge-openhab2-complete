@@ -63,8 +63,7 @@ function addSecuritySystemStateCharacteristic(service) {
 
     let length = 0;
     for(var key in items) {
-        this._subscribeCharacteristic(service,
-            this.Characteristic.SecuritySystemCurrentState,
+        this._subscribeCharacteristic(service.getCharacteristic(this.Characteristic.SecuritySystemCurrentState),
             items[key][0],
             _transformSecuritySystemState.bind(this,
                 key,
@@ -91,7 +90,7 @@ function addSecuritySystemStateCharacteristic(service) {
 function _transformSecuritySystemState(thisItemMode, inverted, characteristic, value) {
     let currentState = characteristic.value;
 
-    if(value === "ON") {
+    if(value === "ON" || (inverted && value === "OFF")) {
         return TRANSFORMATION[thisItemMode];
     } else if(currentState === TRANSFORMATION[thisItemMode]) {
         return DISARMED;
@@ -120,6 +119,7 @@ function _transformSecuritySystemValue(inverted, value) {
 
 function _getSystemState(items, callback) {
     try {
+        this._log.debug(`Checking security system state based on item: ${JSON.stringify(items)}`);
         for(var key in items) {
             this._log.debug(`Checking ${this.name} for ${key} mode`);
             let thisItem = items[key][0];
@@ -143,6 +143,7 @@ function _getSystemState(items, callback) {
                 }
             }
         }
+        this._log.debug(`Security system looks unarmed`);
         callback(null, DISARMED);
     } catch(e) {
         callback(e);

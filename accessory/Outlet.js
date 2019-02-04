@@ -2,7 +2,7 @@
 
 const {Accessory} = require('../util/Accessory');
 const {addOnCharacteristic} = require('./characteristic/On');
-const {addInUseCharacteristic} = require('./characteristic/InUse');
+const {addOutletInUseCharacteristic} = require('./characteristic/InUse');
 
 class OutletAccessory extends Accessory {
 
@@ -18,10 +18,10 @@ class OutletAccessory extends Accessory {
 
     _getPrimaryService() {
         this._log.debug(`Creating outlet service for ${this.name} [${this._item}]`);
-        let outletService = new this.Service.Outlet(this.name);
-        addOnCharacteristic.bind(this)(outletService);
-        addInUseCharacteristic.bind(this)(outletService, this.Characteristic.OutletInUse);
-        return outletService;
+        let primaryService = new this.Service.Outlet(this.name);
+        addOnCharacteristic.bind(this)(primaryService);
+        addOutletInUseCharacteristic.bind(this)(primaryService);
+        return primaryService;
     }
 }
 

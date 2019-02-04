@@ -18,7 +18,7 @@ function addCurrentLockStateCharacteristic(service) {
         [item, itemType] = this._getAndCheckItemType(CURRENT_TARGET_LOCK_CONFIG.item, ['Switch']);
         inverted = this._checkInvertedConf(CURRENT_TARGET_LOCK_CONFIG.inverted);
     }
-    addCurrentStateCharacteristic.bind(this)(service, this.Characteristic.LockCurrentState, item, itemType, inverted, lockStateTransformation);
+    addCurrentStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.LockCurrentState), item, itemType, inverted, lockStateTransformation);
 }
 
 function addTargetLockStateCharacteristic(service) {
@@ -34,7 +34,7 @@ function addTargetLockStateCharacteristic(service) {
         stateItemType = itemType;
         stateItemInverted = inverted;
     }
-    addTargetStateCharacteristic.bind(this)(service, this.Characteristic.LockTargetState, item, itemType, inverted, stateItem, stateItemType, stateItemInverted, lockStateTransformation);
+    addTargetStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.LockTargetState), item, itemType, inverted, stateItem, stateItemType, stateItemInverted, lockStateTransformation, lockStateTransformation);
 }
 
 function lockStateTransformation(type, inverted, value) {

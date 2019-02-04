@@ -2,8 +2,8 @@
 
 const {Accessory} = require('../util/Accessory');
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
-const {addLevelCharacteristic} = require('./characteristic/Level');
-const {addBinarySensorCharacteristic} = require('./characteristic/BinarySensor');
+const {addCarbonMonoxideLevelCharacteristic} = require('./characteristic/Level');
+const {addCarbonMonoxideDetectedCharacteristic} = require('./characteristic/BinarySensor');
 
 class COSensorAccessory extends Accessory {
     constructor(platform, config) {
@@ -18,8 +18,8 @@ class COSensorAccessory extends Accessory {
     _getPrimaryService() {
         this._log.debug(`Creating carbon monoxide sensor service for ${this.name}`);
         let primaryService = new this.Service.CarbonMonoxideSensor(this.name);
-        addBinarySensorCharacteristic.bind(this)(primaryService, this.Characteristic.CarbonMonoxideDetected);
-        addLevelCharacteristic.bind(this)(primaryService, this.Characteristic.CarbonMonoxideLevel);
+        addCarbonMonoxideDetectedCharacteristic.bind(this)(primaryService);
+        addCarbonMonoxideLevelCharacteristic.bind(this)(primaryService);
         addBatteryWarningCharacteristic.bind(this)(primaryService);
         return primaryService;
     }

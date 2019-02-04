@@ -5,10 +5,16 @@ const request = require('request');
 const syncRequest = require('sync-request');
 const EventSource = require('eventsource');
 const clone = require('clone');
+const cache = require('nano-cache');
+
+// One hour ttl for cached item states
+const valueCacheTTL = 60 * 60 * 1000;
+// 10 mins ttl for cached item types, because those are only required during startup
+const typeCacheTTL = 10 * 60 * 1000;
 
 class OpenHAB {
 
-    constructor(hostname, port) {
+    constructor(hostname, port, log) {
         if(hostname.startsWith("http://") || hostname.startsWith("https://")) {
             this._url = new URL(hostname);
         } else {
@@ -17,42 +23,77 @@ class OpenHAB {
         if (port !== undefined) {
             this._url.port = port
         }
+        this._valueCache = new cache({
+            ttl: valueCacheTTL
+        });
+        this._typeCache = new cache({
+            ttl: typeCacheTTL
+        });
+        this._subscriptions = {};
+        this._log = log;
+    }
+
+    isOnline() {
+        let myURL = clone(this._url);
+        myURL.pathname = `/rest/items`;
+        const response = syncRequest('GET', myURL.href);
+        this._log.debug(`Online request for openHAB (${myURL.href}) resulted in status code ${response.statusCode}`);
+        return response.statusCode === 200;
     }
 
     getState(habItem, callback) {
-        let myURL = clone(this._url);
-        myURL.pathname = `/rest/items/${habItem}/state`;
-        request({
-            url: myURL.href,
-            method: 'GET'
-        },
-        function (error, response, body) {
-            if(error) {
-                callback(error);
-            } else if (response.statusCode === 404) {
-                callback(new Error(`Item does not exist!`));
-            } else if (!(body)) {
-                callback(new Error(`Unable to retrieve state`));
-            } else {
-                callback(null, body);
-            }
-        })
+        if(this._valueCache.get(habItem)) {
+            this._log.debug(`Getting value for ${habItem} from the cache`);
+            callback(null, this._valueCache.get(habItem));
+        } else {
+            this._log.warn(`Getting value for ${habItem} from openHAB, because no cached state exists`);
+            let myURL = clone(this._url);
+            myURL.pathname = `/rest/items/${habItem}/state`;
+            request({
+                    url: myURL.href,
+                    method: 'GET'
+                },
+                function (error, response, body) {
+                    if(error) {
+                        callback(error);
+                    } else if (response.statusCode === 404) {
+                        callback(new Error(`Item does not exist!`));
+                    } else if (!(body)) {
+                        callback(new Error(`Unable to retrieve state`));
+                    } else {
+                        callback(null, body);
+                        this._valueCache.set(habItem, body);
+                    }
+                }.bind(this))
+        }
     }
 
     getStateSync(habItem) {
-        let myURL = clone(this._url);
-        myURL.pathname = `/rest/items/${habItem}/state`;
-        const response = syncRequest('GET', myURL.href);
-        if (response.statusCode === 404) {
-            return new Error(`Item does not exist!`);
-        } else if (!(response.body)) {
-            return new Error(`Unable to retrieve state`);
+        if(this._valueCache.get(habItem)) {
+            this._log.debug(`Getting value for ${habItem} from the cache`);
+            return this._valueCache.get(habItem);
         } else {
-            return response.body.toString('ASCII');
+            this._log.warn(`Getting value for ${habItem} from openHAB, because no cached state exists`);
+            let myURL = clone(this._url);
+            myURL.pathname = `/rest/items/${habItem}/state`;
+            const response = syncRequest('GET', myURL.href);
+            if (response.statusCode === 404) {
+                return new Error(`Item does not exist!`);
+            } else if (!(response.body)) {
+                return new Error(`Unable to retrieve state`);
+            } else {
+                let value = response.body.toString('ASCII');
+                this._valueCache.set(habItem, value);
+                return value;
+            }
         }
     }
 
     sendCommand(habItem, command, callback) {
+        if(this._valueCache.get(habItem)) {
+            this._log.debug(`Invalidating cache for ${habItem}`);
+            this._valueCache.del(habItem);
+        }
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items/${habItem}`;
         request({
@@ -74,6 +115,10 @@ class OpenHAB {
     }
 
     updateState(habItem, state, callback) {
+        if(this._valueCache.get(habItem)) {
+            this._log.debug(`Invalidating cache for ${habItem}`);
+            this._valueCache.del(habItem);
+        }
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items/${habItem}/state`;
         request({
@@ -96,53 +141,83 @@ class OpenHAB {
 
     // Will call callback with callback(error, type)
     getItemType(habItem) {
-        let myURL = clone(this._url);
-        myURL.pathname = `/rest/items/${habItem}`;
-        const response = syncRequest('GET', myURL.href);
-        if (response.statusCode !== 200) {
-            return new Error(`Unable to get item: HTTP code ${response.statusCode}!`);
+        if(this._typeCache.get(habItem)) {
+            this._log.debug(`Getting type for ${habItem} from the cache`);
+            return this._valueCache.get(habItem);
         } else {
-            const type = JSON.parse(response.body).type;
-            if (!(type)) {
-                return new Error(`Unable to retrieve type`);
+            this._log.debug(`Getting type for ${habItem} from openHAB, because no cached state exists`);
+            let myURL = clone(this._url);
+            myURL.pathname = `/rest/items/${habItem}`;
+            const response = syncRequest('GET', myURL.href);
+            if (response.statusCode !== 200) {
+                return new Error(`Unable to get item: HTTP code ${response.statusCode}!`);
             } else {
-                return type;
+                const type = JSON.parse(response.body).type;
+                if (!(type)) {
+                    return new Error(`Unable to retrieve type`);
+                } else {
+                    return type;
+                }
             }
         }
     }
 
     subscribe(habItem, callback) {
+        if(!this._subscriptions[habItem]) {
+            this._subscriptions[habItem] = [];
+        }
+        this._log.debug(`Queueing subscription for ${habItem}`);
+        this._subscriptions[habItem].push(callback);
+    }
+
+    startSubscription() {
         let myURL = clone(this._url);
-        const CLOSED = 2;
         myURL.pathname = '/rest/events';
-        myURL.search = `topics=smarthome/items/${habItem}/statechanged`;
-        let source = new EventSource(myURL.href);
-        source.onmessage = function(eventPayload) {
+
+        for(var key in this._subscriptions) {
+            myURL.search = `topics=smarthome/items/${key}/statechanged`;
+            this.startSubscriptionForItem(myURL.href, key, this._subscriptions[key]);
+        }
+    }
+
+    startSubscriptionForItem(url, habItem, callbacks) {
+        const CLOSED = 2;
+
+        this._log.debug(`Starting subscription for ${habItem} with ${callbacks.length} subscribed characteristic(s)`);
+        let source = new EventSource(url);
+
+        source.onmessage = function (eventPayload) {
             let eventData = JSON.parse(eventPayload.data);
-            if(eventData.type === "ItemStateChangedEvent") {
+            if (eventData.type === "ItemStateChangedEvent") {
                 let item = eventData.topic.replace("smarthome/items/", "").replace("/statechanged", "");
                 let value = JSON.parse(eventData.payload).value;
-                callback(value, item);
-            }
-        };
-        source.onerror = function (err) {
-            if(err.message) {
-                if(err.status) {
-                    callback(new Error(`${err.status}: ${err.message}`));
-                } else {
-                    callback(new Error(err.message));
-                }
-                if(source.readyState === CLOSED || err.status === 404) {
-                    callback(new Error(`Subscription closed for ${habItem}, trying to reconnect in 1sec...`));
-                    setTimeout(function() {
-                        callback(new Error(`Trying to reconnect subscription for ${habItem}...`));
-                        source.close();
-                        this.subscribe(habItem, callback);
-                    }.bind(this), 1000);
-                }
+                callbacks.forEach(function(callback){
+                    callback(value, item);
+                });
+                this._valueCache.set(item, value);
             }
         }.bind(this);
-        return source;
+        source.onerror = function (err) {
+            if (err.message) {
+                let msg;
+                if (err.status) {
+                } else {
+                    msg = err.message;
+                }
+                if (source.readyState === CLOSED || err.status === 404) {
+                    msg = `Subscription closed for ${habItem}, trying to reconnect in 1sec...`;
+                    setTimeout(function () {
+                        this._log.warn(`Trying to reconnect subscription for ${habItem}...`);
+                        source.close();
+                        this.startSubscriptionForItem(url, habItem, callbacks);
+                    }.bind(this), 1000);
+                }
+                this._log.error(msg);
+                callbacks.forEach(function(callback){
+                    callback(new Error(msg));
+                });
+            }
+        }.bind(this);
     }
 }
 

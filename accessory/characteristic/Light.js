@@ -1,5 +1,5 @@
 
-const {getState} = require('../../util/Accessory')
+const {getState} = require('../../util/Accessory');
 
 const LIGHT_CONFIG = {
     item: "item"
@@ -36,8 +36,7 @@ function _addLightCharacteristic(service, characteristic, characteristicType, ex
                 _transformation.bind(this, characteristicType, type)
             ));
 
-        this._subscribeCharacteristic(service,
-            characteristic,
+        this._subscribeCharacteristic(service.getCharacteristic(characteristic),
             item,
             _transformation.bind(this, characteristicType, type)
         );
@@ -53,18 +52,25 @@ function _addLightCharacteristic(service, characteristic, characteristicType, ex
 }
 
 // Set the state unless it's locked
-function _setState(stateType, value) {
-    this._log.debug(`Change ${stateType} target state of ${this.name} to ${value}`);
-    if (!(this._stateLock)) {
-        this._newState[stateType] = value;
+function _setState(stateType, value, callback, context, connectionID) {
+    if(context === "openHABIgnore") {
+        this._log.debug(`Not changing target state of ${this.name} due to ignore flag`);
+    } else {
+        this._log.debug(`Change ${stateType} target state of ${this.name} to ${value}`);
+        if (!(this._stateLock)) {
+            this._newState[stateType] = value;
+        }
     }
 }
 
 
 // Wait for all states to be set (250ms should be sufficient) and then commit once
-function _commitState(item, value, callback) {
+function _commitState(item, value, callback, context, connectionID) {
     if(this._commitLock) {
         this._log.debug(`Not executing commit due to commit lock`);
+        callback();
+    } else if(context === "openHABIgnore") {
+        this._log.debug(`Not executing commit due to ignore flag`);
         callback();
     } else {
         this._commitLock = true;

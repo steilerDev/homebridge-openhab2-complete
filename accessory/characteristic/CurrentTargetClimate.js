@@ -16,8 +16,7 @@ const CURRENT_TARGET_CLIMATE_CONFIG = {
 function addCurrentTemperatureCharacteristic(service, optional) {
     try {
         let [currentTempItem, currentTempType] = this._getAndCheckItemType(CURRENT_TARGET_CLIMATE_CONFIG.currentTempItem, ['Number']);
-        addCurrentStateCharacteristic.bind(this)(service,
-            this.Characteristic.CurrentTemperature,
+        addCurrentStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CurrentTemperature),
             currentTempItem,
             currentTempType,
             false,
@@ -36,14 +35,14 @@ function addCurrentTemperatureCharacteristic(service, optional) {
 function addTargetTemperatureCharacteristic(service, optional) {
     try {
         let [targetTempItem, targetTempType] = this._getAndCheckItemType(CURRENT_TARGET_CLIMATE_CONFIG.targetTempItem, ['Number']);
-        addTargetStateCharacteristic.bind(this)(service,
-            this.Characteristic.TargetTemperature,
+        addTargetStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.TargetTemperature),
             targetTempItem,
             targetTempType,
             false,
             targetTempItem,
             targetTempType,
             false,
+            dummyTransformation,
             dummyTransformation
         );
     } catch(e) {
@@ -59,8 +58,7 @@ function addTargetTemperatureCharacteristic(service, optional) {
 function addCurrentRelativeHumidityCharacteristic(service, optional) {
     try {
         let [currentHumidityItem, currentHumidityType] = this._getAndCheckItemType(CURRENT_TARGET_CLIMATE_CONFIG.currentHumidityItem, ['Number']);
-        addCurrentStateCharacteristic.bind(this)(service,
-            this.Characteristic.CurrentRelativeHumidity,
+        addCurrentStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity),
             currentHumidityItem,
             currentHumidityType,
             false,
@@ -79,14 +77,14 @@ function addCurrentRelativeHumidityCharacteristic(service, optional) {
 function addTargetRelativeHumidityCharacteristic(service, optional) {
     try {
         let [targetHumidityItem, targetHumidityType] = this._getAndCheckItemType(CURRENT_TARGET_CLIMATE_CONFIG.targetHumidityItem, ['Number']);
-        addTargetStateCharacteristic.bind(this)(service,
-            this.Characteristic.TargetRelativeHumidity,
+        addTargetStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.TargetRelativeHumidity),
             targetHumidityItem,
             targetHumidityType,
             false,
             targetHumidityItem,
             targetHumidityType,
             false,
+            dummyTransformation,
             dummyTransformation
         );
     } catch(e) {
@@ -126,8 +124,7 @@ function addHeatingCoolingStateCharacteristic(service) {
         if(heatingItem) {
             mode = 'Heating';
 
-            this._subscribeCharacteristic(service,
-                this.Characteristic.CurrentHeatingCoolingState,
+            this._subscribeCharacteristic(service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState),
                 heatingItem,
                 _transformHeatingCoolingState.bind(this,
                     "heating",
@@ -138,8 +135,7 @@ function addHeatingCoolingStateCharacteristic(service) {
         if(coolingItem) {
             mode = mode === 'Heating' ? 'HeatingCooling' : 'Cooling'; // If heating device was present this means we have Heating Cooling
 
-            this._subscribeCharacteristic(service,
-                this.Characteristic.CurrentHeatingCoolingState,
+            this._subscribeCharacteristic(service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState),
                 coolingItem,
                 _transformHeatingCoolingState.bind(this,
                     "cooling",

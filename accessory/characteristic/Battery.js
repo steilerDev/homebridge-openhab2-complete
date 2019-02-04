@@ -30,8 +30,7 @@ function addBatteryWarningCharacteristic(service) {
         service.getCharacteristic(this.Characteristic.StatusLowBattery)
             .on('get', getState.bind(this, batteryItem, batteryTransformation));
 
-        this._subscribeCharacteristic(service,
-            this.Characteristic.StatusLowBattery,
+        this._subscribeCharacteristic(service.getCharacteristic(this.Characteristic.StatusLowBattery),
             batteryItem,
             batteryTransformation
         );

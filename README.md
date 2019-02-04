@@ -192,8 +192,11 @@ This service describes motorized window coverings or shades - examples include s
     "type": "windowcovering", 
     "item": "Itemname-within-OpenHAB",
     "inverted": "false",
+    "multiplier": "1",
     "stateItem": "Itemname-within-OpenHAB",
     "stateItemInverted": "false"
+    "stateItemMultiplier": "1",
+    "manuMode": "false"
 }
 ```
 * `item`: The openHAB item representing the window covering, receiving commands about the target position and determining the current position (if `stateItem` is not set)
@@ -201,9 +204,18 @@ This service describes motorized window coverings or shades - examples include s
 * `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `multiplier` *(optional)*: If `item`'s state need to be multiplied by a fixed amount to make sense to HomeKit, set this to a number (e.g. if your device stores its state in a float range from 0 to 1, where HomeKit expects integer numbers from 0 to 100 use a multiplier of 100)
+  * Default: `"1"`
+  * Needs to be a number *don't forget the quotes*
 * `stateItem` *(optional)*: The openHAB item, used to determine the state of the window covering instead of `item`'s state
   * Needs to be of type `Rollershutter`, `Number`, `Switch` or `Contact` within openHAB
 * `stateItemInverted` *(optional)*: If `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `stateItemMultiplier` *(optional)*: If `stateItem`'s state need to be multiplied by a fixed amount to make sense to HomeKit, set this to a number (e.g. if your device stores its state in a float range from 0 to 1, where HomeKit expects integer numbers from 0 to 100 use a multiplier of 100)
+  * Default: `"1"`
+  * Needs to be a number *don't forget the quotes*
+* `manuMode` *(optional)*: If your item can be operated manually, you should enable this mode to not see `Opening...` or `Closing...` on the item when manipulating the state manually (This is due to the fact that HomeKit stores a `TargetState` value and compares it to the `ActualState` to show this metadata. The `manuMode` automatically changes the `TargetState` of the item, when the `ActualState` is changed)
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
@@ -216,8 +228,11 @@ This service describes a motorized door
     "type": "door", 
     "item": "Itemname-within-OpenHAB",
     "inverted": "false",
+    "multiplier": "1",
     "stateItem": "Itemname-within-OpenHAB",
-    "stateItemInverted": "false"
+    "stateItemInverted": "false",
+    "stateItemMultiplier": "1",
+    "manuMode": "false"
 }
 ```
 * `item`: The openHAB item representing the door, receiving commands about the target position and determining the current position (if `stateItem` is not set)
@@ -225,9 +240,18 @@ This service describes a motorized door
 * `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `multiplier` *(optional)*: If `item`'s state need to be multiplied by a fixed amount to make sense to HomeKit, set this to a number (e.g. if your device stores its state in a float range from 0 to 1, where HomeKit expects integer numbers from 0 to 100 use a multiplier of 100)
+  * Default: `"1"`
+  * Needs to be a number *don't forget the quotes*
 * `stateItem` *(optional)*: The openHAB item, used to determine the state of the door instead of `item`'s state
   * Needs to be of type `Rollershutter`, `Number`, `Switch` or `Contact` within openHAB
 * `stateItemInverted` *(optional)*: If `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `stateItemMultiplier` *(optional)*: If `stateItem`'s state need to be multiplied by a fixed amount to make sense to HomeKit, set this to a number (e.g. if your device stores its state in a float range from 0 to 1, where HomeKit expects integer numbers from 0 to 100 use a multiplier of 100)
+  * Default: `"1"`
+  * Needs to be a number *don't forget the quotes*
+* `manuMode` *(optional)*: If your item can be operated manually, you should enable this mode to not see `Opening...` or `Closing...` on the item when manipulating the state manually (This is due to the fact that HomeKit stores a `TargetState` value and compares it to the `ActualState` to show this metadata. The `manuMode` automatically changes the `TargetState` of the item, when the `ActualState` is changed)
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
@@ -240,8 +264,11 @@ This service describes a motorized window
     "type": "door", 
     "item": "Itemname-within-OpenHAB",
     "inverted": "false",
+    "multiplier": "1",
     "stateItem": "Itemname-within-OpenHAB",
-    "stateItemInverted": "false"
+    "stateItemInverted": "false",
+    "stateItemMultiplier": "1",
+    "manuMode": "false"
 }
 ```
 * `item`: The openHAB item representing the window, receiving commands about the target position and determining the current position (if `stateItem` is not set)
@@ -249,9 +276,18 @@ This service describes a motorized window
 * `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `multiplier` *(optional)*: If `item`'s state need to be multiplied by a fixed amount to make sense to HomeKit, set this to a number (e.g. if your device stores its state in a float range from 0 to 1, where HomeKit expects integer numbers from 0 to 100 use a multiplier of 100)
+  * Default: `"1"`
+  * Needs to be a number *don't forget the quotes*
 * `stateItem` *(optional)*: The openHAB item, used to determine the state of the window instead of `item`'s state
   * Needs to be of type `Rollershutter`, `Number`, `Switch` or `Contact` within openHAB
 * `stateItemInverted` *(optional)*: If `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `stateItemMultiplier` *(optional)*: If `stateItem`'s state need to be multiplied by a fixed amount to make sense to HomeKit, set this to a number (e.g. if your device stores its state in a float range from 0 to 1, where HomeKit expects integer numbers from 0 to 100 use a multiplier of 100)
+  * Default: `"1"`
+  * Needs to be a number *don't forget the quotes*
+* `manuMode` *(optional)*: If your item can be operated manually, you should enable this mode to not see `Opening...` or `Closing...` on the item when manipulating the state manually (This is due to the fact that HomeKit stores a `TargetState` value and compares it to the `ActualState` to show this metadata. The `manuMode` automatically changes the `TargetState` of the item, when the `ActualState` is changed)
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 

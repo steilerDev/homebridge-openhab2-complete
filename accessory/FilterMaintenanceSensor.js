@@ -1,8 +1,8 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addBinarySensorCharacteristic} = require('./characteristic/BinarySensor');
-const {addLevelCharacteristic} = require('./characteristic/Level');
+const {addFilterChangeIndicationCharacteristic} = require('./characteristic/BinarySensor');
+const {addFilterLifeLevelCharacteristic} = require('./characteristic/Level');
 
 class FilterMaintenanceSensorAccessory extends Accessory {
     constructor(platform, config) {
@@ -17,8 +17,8 @@ class FilterMaintenanceSensorAccessory extends Accessory {
     _getPrimaryService() {
         this._log.debug(`Creating filter maintenance service for ${this.name}`);
         let primaryService = new this.Service.FilterMaintenance(this.name);
-        addBinarySensorCharacteristic.bind(this)(primaryService, this.Characteristic.FilterChangeIndication)
-        addLevelCharacteristic.bind(this)(primaryService, this.Characteristic.FilterLifeLevel);
+        addFilterChangeIndicationCharacteristic.bind(this)(primaryService);
+        addFilterLifeLevelCharacteristic.bind(this)(primaryService);
         return primaryService;
     }
 }
