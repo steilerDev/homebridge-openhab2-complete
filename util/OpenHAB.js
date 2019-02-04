@@ -24,6 +24,7 @@ class OpenHAB {
         this._cache = new cache({
             ttl: cacheTTL
         });
+        this._typeCache = new cache();
         this._subscriptions = {};
         this._log = log;
     }
@@ -136,17 +137,23 @@ class OpenHAB {
 
     // Will call callback with callback(error, type)
     getItemType(habItem) {
-        let myURL = clone(this._url);
-        myURL.pathname = `/rest/items/${habItem}`;
-        const response = syncRequest('GET', myURL.href);
-        if (response.statusCode !== 200) {
-            return new Error(`Unable to get item: HTTP code ${response.statusCode}!`);
+        if(this._typeCache.get(habItem)) {
+            this._log.debug(`Getting type for ${habItem} from the cache`);
+            return this._cache.get(habItem);
         } else {
-            const type = JSON.parse(response.body).type;
-            if (!(type)) {
-                return new Error(`Unable to retrieve type`);
+            this._log.warn(`Getting type for ${habItem} from openHAB, because no cached state exists`);
+            let myURL = clone(this._url);
+            myURL.pathname = `/rest/items/${habItem}`;
+            const response = syncRequest('GET', myURL.href);
+            if (response.statusCode !== 200) {
+                return new Error(`Unable to get item: HTTP code ${response.statusCode}!`);
             } else {
-                return type;
+                const type = JSON.parse(response.body).type;
+                if (!(type)) {
+                    return new Error(`Unable to retrieve type`);
+                } else {
+                    return type;
+                }
             }
         }
     }
