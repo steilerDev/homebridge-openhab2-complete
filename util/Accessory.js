@@ -167,6 +167,7 @@ function getState(habItem, transformation, callback) {
 function setState(habItem, transformation, state, callback, context, connectionID) {
     let transformedState = transformValue(transformation, state);
     this._log.debug(`Change target state of ${this.name} [${habItem}] to ${state} (transformed to ${transformedState})`);
+    this._log.error(`Context: ${context}, connectionID: ${connectionID}`);
     if(context === "openHABIgnore") {
         callback();
     } else {
