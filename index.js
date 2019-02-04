@@ -37,7 +37,7 @@ const OpenHABComplete = class {
         this._factories = {};
 
         // Loading accessories from file system
-        this._log(`Loading accessories...`);
+        this._log(`Loading accessory types...`);
         let accessoryDirectory = `${__dirname}/accessory`;
         let accessoryFiles = fs.readdirSync(accessoryDirectory, {"withFileTypes": true});
         accessoryFiles.forEach(function (accessoryFile) {
@@ -80,6 +80,8 @@ const OpenHABComplete = class {
     accessories(callback) {
         let _accessories = [];
         const { accessories } = this._config;
+        this._log.info(`---`);
+        this._log.info(`Loading accessories from configuration, this might take a while...`);
         accessories.forEach(acc => {
             try {
                 if (!(acc.type)) {
@@ -110,6 +112,8 @@ const OpenHABComplete = class {
             }
         });
         this._platform.openHAB.startSubscription();
+        this._log.info(`Finished loading accessories from configuration`);
+        this._log.info(`---`);
         callback(_accessories);
     }
 };
