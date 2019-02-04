@@ -45,7 +45,7 @@ class Accessory {
                 this._log(`Received push with new state for item ${habItem}: ${value}`);
                 let transformedValue = transformValue(transformation, value);
                 if(transformedValue !== null) {
-                    characteristic.setValue(transformedValue);
+                    characteristic.setValue(transformedValue, null, "openHABIgnore");
                     if(callback && typeof(callback) === "function") {
                         callback(transformedValue);
                     }

@@ -5,6 +5,9 @@ const request = require('request');
 const syncRequest = require('sync-request');
 const EventSource = require('eventsource');
 const clone = require('clone');
+const cache = require('nano-cache');
+
+const cacheTTL = 5 * 60 * 1000;
 
 class OpenHAB {
 
@@ -17,6 +20,10 @@ class OpenHAB {
         if (port !== undefined) {
             this._url.port = port
         }
+        this._cache = new cache({
+            ttl: cacheTTL
+        });
+        this._subscriptions = {};
     }
 
     isOnline() {
@@ -27,39 +34,56 @@ class OpenHAB {
     }
 
     getState(habItem, callback) {
-        let myURL = clone(this._url);
-        myURL.pathname = `/rest/items/${habItem}/state`;
-        request({
-            url: myURL.href,
-            method: 'GET'
-        },
-        function (error, response, body) {
-            if(error) {
-                callback(error);
-            } else if (response.statusCode === 404) {
-                callback(new Error(`Item does not exist!`));
-            } else if (!(body)) {
-                callback(new Error(`Unable to retrieve state`));
-            } else {
-                callback(null, body);
-            }
-        })
+        if(this._cache.get(habItem)) {
+            console.log(`Getting value for ${habItem} from the cache`);
+            callback(null, this._cache.get(habItem));
+        } else {
+            let myURL = clone(this._url);
+            myURL.pathname = `/rest/items/${habItem}/state`;
+            request({
+                    url: myURL.href,
+                    method: 'GET'
+                },
+                function (error, response, body) {
+                    if(error) {
+                        callback(error);
+                    } else if (response.statusCode === 404) {
+                        callback(new Error(`Item does not exist!`));
+                    } else if (!(body)) {
+                        callback(new Error(`Unable to retrieve state`));
+                    } else {
+                        callback(null, body);
+                        this._cache.set(habItem, body);
+                    }
+                }.bind(this))
+        }
     }
 
     getStateSync(habItem) {
-        let myURL = clone(this._url);
-        myURL.pathname = `/rest/items/${habItem}/state`;
-        const response = syncRequest('GET', myURL.href);
-        if (response.statusCode === 404) {
-            return new Error(`Item does not exist!`);
-        } else if (!(response.body)) {
-            return new Error(`Unable to retrieve state`);
+        if(this._cache.get(habItem)) {
+            console.log(`Getting value for ${habItem} from the cache`);
+            return this._cache.get(habItem);
         } else {
-            return response.body.toString('ASCII');
+            let myURL = clone(this._url);
+            myURL.pathname = `/rest/items/${habItem}/state`;
+            const response = syncRequest('GET', myURL.href);
+            if (response.statusCode === 404) {
+                return new Error(`Item does not exist!`);
+            } else if (!(response.body)) {
+                return new Error(`Unable to retrieve state`);
+            } else {
+                let value = response.body.toString('ASCII');
+                this._cache.set(habItem, value);
+                return value;
+            }
         }
     }
 
     sendCommand(habItem, command, callback) {
+        if(this._cache.get(habItem)) {
+            console.log(`Invalidating cache for ${habItem}`);
+            this._cache.del(habItem);
+        }
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items/${habItem}`;
         request({
@@ -81,6 +105,10 @@ class OpenHAB {
     }
 
     updateState(habItem, state, callback) {
+        if(this._cache.get(habItem)) {
+            console.log(`Invalidating cache for ${habItem}`);
+            this._cache.del(habItem);
+        }
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items/${habItem}/state`;
         request({
@@ -119,37 +147,60 @@ class OpenHAB {
     }
 
     subscribe(habItem, callback) {
+        if(!this._subscriptions[habItem]) {
+            this._subscriptions[habItem] = [];
+        }
+        console.log(`Adding subscription for ${habItem}`);
+        this._subscriptions[habItem].push(callback);
+    }
+
+    startSubscription() {
         let myURL = clone(this._url);
-        const CLOSED = 2;
         myURL.pathname = '/rest/events';
-        myURL.search = `topics=smarthome/items/${habItem}/statechanged`;
-        let source = new EventSource(myURL.href);
-        source.onmessage = function(eventPayload) {
+
+        for(var key in this._subscriptions) {
+            myURL.search = `topics=smarthome/items/${key}/statechanged`;
+            this.startSubscriptionForItem(myURL.href, key, this._subscriptions[key]);
+        }
+    }
+
+    startSubscriptionForItem(url, habItem, callbacks) {
+        const CLOSED = 2;
+
+        console.log(`Adding subscription for ${habItem}`);
+        let source = new EventSource(url);
+
+        source.onmessage = function (eventPayload) {
             let eventData = JSON.parse(eventPayload.data);
-            if(eventData.type === "ItemStateChangedEvent") {
+            if (eventData.type === "ItemStateChangedEvent") {
                 let item = eventData.topic.replace("smarthome/items/", "").replace("/statechanged", "");
                 let value = JSON.parse(eventData.payload).value;
-                callback(value, item);
-            }
-        };
-        source.onerror = function (err) {
-            if(err.message) {
-                if(err.status) {
-                    callback(new Error(`${err.status}: ${err.message}`));
-                } else {
-                    callback(new Error(err.message));
-                }
-                if(source.readyState === CLOSED || err.status === 404) {
-                    callback(new Error(`Subscription closed for ${habItem}, trying to reconnect in 1sec...`));
-                    setTimeout(function() {
-                        callback(new Error(`Trying to reconnect subscription for ${habItem}...`));
-                        source.close();
-                        this.subscribe(habItem, callback);
-                    }.bind(this), 1000);
-                }
+                callbacks.forEach(function(callback){
+                    callback(value, item);
+                });
+                this._cache.set(item, value);
             }
         }.bind(this);
-        return source;
+        source.onerror = function (err) {
+            if (err.message) {
+                let msg;
+                if (err.status) {
+                } else {
+                    msg = err.message;
+                }
+                if (source.readyState === CLOSED || err.status === 404) {
+                    msg = `Subscription closed for ${habItem}, trying to reconnect in 1sec...`;
+                    setTimeout(function () {
+                        console.log(`Trying to reconnect subscription for ${habItem}...`);
+                        source.close();
+                        this.startSubscriptionForItem(url, habItem, callbacks);
+                    }.bind(this), 1000);
+                }
+                callbacks.forEach(function(callback){
+                    callback(new Error(msg));
+                });
+            }
+        }.bind(this);
     }
 }
 

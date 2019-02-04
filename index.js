@@ -109,6 +109,7 @@ const OpenHABComplete = class {
                 this._log.warn(`Unable to add accessory ${acc.name}: ${e}, skipping`);
             }
         });
+        this._platform.openHAB.startSubscription();
         callback(_accessories);
     }
 };

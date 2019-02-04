@@ -119,7 +119,7 @@ function _transformSecuritySystemValue(inverted, value) {
 
 function _getSystemState(items, callback) {
     try {
-        this._log.error(`Checking security system state based on item: ${JSON.stringify(items)}`);
+        this._log.debug(`Checking security system state based on item: ${JSON.stringify(items)}`);
         for(var key in items) {
             this._log.debug(`Checking ${this.name} for ${key} mode`);
             let thisItem = items[key][0];
@@ -143,7 +143,7 @@ function _getSystemState(items, callback) {
                 }
             }
         }
-        this._log.error(`Security system looks unarmed`);
+        this._log.debug(`Security system looks unarmed`);
         callback(null, DISARMED);
     } catch(e) {
         callback(e);
