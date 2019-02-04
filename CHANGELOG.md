@@ -1,6 +1,6 @@
 # Changelog of homebridge-openhab2-complete
 ## Roadmap
-### V0.8.0 (planned)
+### V0.9.0 (planned)
 * Implement remaining Services:
   * Water Service Class with
     * Valve
@@ -13,11 +13,10 @@
     * Air Purifier
 * More efficient configuration layout
 * Code audit & documentation
-* Extension of `WondowCovering`, `Door` and `Window` to allow manual mode and optional multipliers for state
     
 
 ## Changelog
-### V0.8.0 (unreleased)
+### V0.8.0
 * Added optional `multiplier` and `stateMultiplier` to `WindowCovering`, `Door` and `Window`, in order to multiply openHAB's item state and show it differently in HomeKit
 * Added optional `manuMode` to `WindowCovering`, `Door` and `Window`
 * Bug fixing:
@@ -26,6 +25,7 @@
 * Performance improvements:
   * No more duplicate subscriptions on the same item
   * Caching of states improves updating speed when launching Home.app significantly
+  * Caching of types improves startup speed of homebridge
 
 ### V0.7.0
 * Major rework to clean up and support subscription

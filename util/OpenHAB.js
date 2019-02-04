@@ -8,7 +8,9 @@ const clone = require('clone');
 const cache = require('nano-cache');
 
 // One hour ttl for cached item states
-const cacheTTL = 60 * 60 * 1000;
+const valueCacheTTL = 60 * 60 * 1000;
+// 10 mins ttl for cached item types, because those are only required during startup
+const typeCacheTTL = 10 * 60 * 1000;
 
 class OpenHAB {
 
@@ -21,10 +23,12 @@ class OpenHAB {
         if (port !== undefined) {
             this._url.port = port
         }
-        this._cache = new cache({
-            ttl: cacheTTL
+        this._valueCache = new cache({
+            ttl: valueCacheTTL
         });
-        this._typeCache = new cache();
+        this._typeCache = new cache({
+            ttl: typeCacheTTL
+        });
         this._subscriptions = {};
         this._log = log;
     }
@@ -38,9 +42,9 @@ class OpenHAB {
     }
 
     getState(habItem, callback) {
-        if(this._cache.get(habItem)) {
+        if(this._valueCache.get(habItem)) {
             this._log.debug(`Getting value for ${habItem} from the cache`);
-            callback(null, this._cache.get(habItem));
+            callback(null, this._valueCache.get(habItem));
         } else {
             this._log.warn(`Getting value for ${habItem} from openHAB, because no cached state exists`);
             let myURL = clone(this._url);
@@ -58,16 +62,16 @@ class OpenHAB {
                         callback(new Error(`Unable to retrieve state`));
                     } else {
                         callback(null, body);
-                        this._cache.set(habItem, body);
+                        this._valueCache.set(habItem, body);
                     }
                 }.bind(this))
         }
     }
 
     getStateSync(habItem) {
-        if(this._cache.get(habItem)) {
+        if(this._valueCache.get(habItem)) {
             this._log.debug(`Getting value for ${habItem} from the cache`);
-            return this._cache.get(habItem);
+            return this._valueCache.get(habItem);
         } else {
             this._log.warn(`Getting value for ${habItem} from openHAB, because no cached state exists`);
             let myURL = clone(this._url);
@@ -79,16 +83,16 @@ class OpenHAB {
                 return new Error(`Unable to retrieve state`);
             } else {
                 let value = response.body.toString('ASCII');
-                this._cache.set(habItem, value);
+                this._valueCache.set(habItem, value);
                 return value;
             }
         }
     }
 
     sendCommand(habItem, command, callback) {
-        if(this._cache.get(habItem)) {
+        if(this._valueCache.get(habItem)) {
             this._log.debug(`Invalidating cache for ${habItem}`);
-            this._cache.del(habItem);
+            this._valueCache.del(habItem);
         }
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items/${habItem}`;
@@ -111,9 +115,9 @@ class OpenHAB {
     }
 
     updateState(habItem, state, callback) {
-        if(this._cache.get(habItem)) {
+        if(this._valueCache.get(habItem)) {
             this._log.debug(`Invalidating cache for ${habItem}`);
-            this._cache.del(habItem);
+            this._valueCache.del(habItem);
         }
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items/${habItem}/state`;
@@ -139,9 +143,9 @@ class OpenHAB {
     getItemType(habItem) {
         if(this._typeCache.get(habItem)) {
             this._log.debug(`Getting type for ${habItem} from the cache`);
-            return this._cache.get(habItem);
+            return this._valueCache.get(habItem);
         } else {
-            this._log.warn(`Getting type for ${habItem} from openHAB, because no cached state exists`);
+            this._log.debug(`Getting type for ${habItem} from openHAB, because no cached state exists`);
             let myURL = clone(this._url);
             myURL.pathname = `/rest/items/${habItem}`;
             const response = syncRequest('GET', myURL.href);
@@ -190,7 +194,7 @@ class OpenHAB {
                 callbacks.forEach(function(callback){
                     callback(value, item);
                 });
-                this._cache.set(item, value);
+                this._valueCache.set(item, value);
             }
         }.bind(this);
         source.onerror = function (err) {

@@ -1,6 +1,6 @@
 {
   "name": "homebridge-openhab2-complete",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A homebridge plugin for openHAB, that has the expectation to fully support all Services offered by Apple's Homekit Accessory Protocol (HAP)",
   "license": "GPLV3",
   "preferGlobal": true,
