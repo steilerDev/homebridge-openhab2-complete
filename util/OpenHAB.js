@@ -7,11 +7,12 @@ const EventSource = require('eventsource');
 const clone = require('clone');
 const cache = require('nano-cache');
 
-const cacheTTL = 5 * 60 * 1000;
+// One hour ttl for cached item states
+const cacheTTL = 60 * 60 * 1000;
 
 class OpenHAB {
 
-    constructor(hostname, port) {
+    constructor(hostname, port, log) {
         if(hostname.startsWith("http://") || hostname.startsWith("https://")) {
             this._url = new URL(hostname);
         } else {
@@ -24,20 +25,23 @@ class OpenHAB {
             ttl: cacheTTL
         });
         this._subscriptions = {};
+        this._log = log;
     }
 
     isOnline() {
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items`;
         const response = syncRequest('GET', myURL.href);
+        this._log.debug(`Online request for openHAB (${myURL.href}) resulted in status code ${response.statusCode}`);
         return response.statusCode === 200;
     }
 
     getState(habItem, callback) {
         if(this._cache.get(habItem)) {
-            console.log(`Getting value for ${habItem} from the cache`);
+            this._log.debug(`Getting value for ${habItem} from the cache`);
             callback(null, this._cache.get(habItem));
         } else {
+            this._log.warn(`Getting value for ${habItem} from openHAB, because no cached state exists`);
             let myURL = clone(this._url);
             myURL.pathname = `/rest/items/${habItem}/state`;
             request({
@@ -61,9 +65,10 @@ class OpenHAB {
 
     getStateSync(habItem) {
         if(this._cache.get(habItem)) {
-            console.log(`Getting value for ${habItem} from the cache`);
+            this._log.debug(`Getting value for ${habItem} from the cache`);
             return this._cache.get(habItem);
         } else {
+            this._log.warn(`Getting value for ${habItem} from openHAB, because no cached state exists`);
             let myURL = clone(this._url);
             myURL.pathname = `/rest/items/${habItem}/state`;
             const response = syncRequest('GET', myURL.href);
@@ -81,7 +86,7 @@ class OpenHAB {
 
     sendCommand(habItem, command, callback) {
         if(this._cache.get(habItem)) {
-            console.log(`Invalidating cache for ${habItem}`);
+            this._log.debug(`Invalidating cache for ${habItem}`);
             this._cache.del(habItem);
         }
         let myURL = clone(this._url);
@@ -106,7 +111,7 @@ class OpenHAB {
 
     updateState(habItem, state, callback) {
         if(this._cache.get(habItem)) {
-            console.log(`Invalidating cache for ${habItem}`);
+            this._log.debug(`Invalidating cache for ${habItem}`);
             this._cache.del(habItem);
         }
         let myURL = clone(this._url);
@@ -150,7 +155,7 @@ class OpenHAB {
         if(!this._subscriptions[habItem]) {
             this._subscriptions[habItem] = [];
         }
-        console.log(`Adding subscription for ${habItem}`);
+        this._log.debug(`Queueing subscription for ${habItem}`);
         this._subscriptions[habItem].push(callback);
     }
 
@@ -167,7 +172,7 @@ class OpenHAB {
     startSubscriptionForItem(url, habItem, callbacks) {
         const CLOSED = 2;
 
-        console.log(`Adding subscription for ${habItem}`);
+        this._log.debug(`Starting subscription for ${habItem} with ${callbacks.length} subscribed characteristic(s)`);
         let source = new EventSource(url);
 
         source.onmessage = function (eventPayload) {
@@ -191,11 +196,12 @@ class OpenHAB {
                 if (source.readyState === CLOSED || err.status === 404) {
                     msg = `Subscription closed for ${habItem}, trying to reconnect in 1sec...`;
                     setTimeout(function () {
-                        console.log(`Trying to reconnect subscription for ${habItem}...`);
+                        this._log.warn(`Trying to reconnect subscription for ${habItem}...`);
                         source.close();
                         this.startSubscriptionForItem(url, habItem, callbacks);
                     }.bind(this), 1000);
                 }
+                this._log.error(msg);
                 callbacks.forEach(function(callback){
                     callback(new Error(msg));
                 });

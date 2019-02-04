@@ -20,6 +20,12 @@
 ### V0.8.0 (unreleased)
 * Added optional `multiplier` and `stateMultiplier` to `WindowCovering`, `Door` and `Window`, in order to multiply openHAB's item state and show it differently in HomeKit
 * Added optional `manuMode` to `WindowCovering`, `Door` and `Window`
+* Bug fixing:
+  * `Rollerhutter` items now receive an `UP` or `DOWN` command if target state is `100`/`0`
+  * Fixed issue with lights, where there was a feedback loop based on subscriptions
+* Performance improvements:
+  * No more duplicate subscriptions on the same item
+  * Caching of states improves updating speed when launching Home.app significantly
 
 ### V0.7.0
 * Major rework to clean up and support subscription

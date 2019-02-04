@@ -53,7 +53,6 @@ function _addLightCharacteristic(service, characteristic, characteristicType, ex
 
 // Set the state unless it's locked
 function _setState(stateType, value, callback, context, connectionID) {
-    this._log.error(`Context: ${context}, connectionID: ${connectionID}`);
     if(context === "openHABIgnore") {
         this._log.debug(`Not changing target state of ${this.name} due to ignore flag`);
     } else {
@@ -67,7 +66,6 @@ function _setState(stateType, value, callback, context, connectionID) {
 
 // Wait for all states to be set (250ms should be sufficient) and then commit once
 function _commitState(item, value, callback, context, connectionID) {
-    this._log.error(`Context: ${context}, connectionID: ${connectionID}`);
     if(this._commitLock) {
         this._log.debug(`Not executing commit due to commit lock`);
         callback();
