@@ -31,7 +31,7 @@ class OpenHAB {
         this._valueCache.on('del', function (habItem) {
             if(this._valueCache.isTTLExpired(habItem)) {
                 this._log.debug(`Item ${habItem}'s state was cleared from the cache, getting the current value`);
-                this.getState(habItem, function (error, value) {
+                this._getStateWithoutCache(habItem, function (error, value) {
                     if (error) {
                         this._log.error(`Unable to get ${habItem}'s new state: ${error.message}`);
                     } else {
@@ -63,25 +63,30 @@ class OpenHAB {
             callback(null, this._valueCache.get(habItem));
         } else {
             this._log.warn(`Getting value for ${habItem} from openHAB, because no cached state exists`);
-            let myURL = clone(this._url);
-            myURL.pathname = `/rest/items/${habItem}/state`;
-            request({
-                    url: myURL.href,
-                    method: 'GET'
-                },
-                function (error, response, body) {
-                    if(error) {
-                        callback(error);
-                    } else if (response.statusCode === 404) {
-                        callback(new Error(`Item does not exist!`));
-                    } else if (!(body)) {
-                        callback(new Error(`Unable to retrieve state`));
-                    } else {
-                        callback(null, body);
-                        this._valueCache.set(habItem, body);
-                    }
-                }.bind(this))
+            this._getStateWithoutCache(habItem, callback);
         }
+    }
+
+    _getStateWithoutCache(habItem, callback) {
+        let myURL = clone(this._url);
+        this._log.debug(`Getting value for ${habItem} from openHAB`);
+        myURL.pathname = `/rest/items/${habItem}/state`;
+        request({
+                url: myURL.href,
+                method: 'GET'
+            },
+            function (error, response, body) {
+                if(error) {
+                    callback(error);
+                } else if (response.statusCode === 404) {
+                    callback(new Error(`Item does not exist!`));
+                } else if (!(body)) {
+                    callback(new Error(`Unable to retrieve state`));
+                } else {
+                    callback(null, body);
+                    this._valueCache.set(habItem, body);
+                }
+            }.bind(this))
     }
 
     getStateSync(habItem) {
