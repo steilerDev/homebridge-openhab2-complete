@@ -17,7 +17,7 @@ class OutletAccessory extends Accessory {
     }
 
     _getPrimaryService() {
-        this._log.debug(`Creating outlet service for ${this.name} [${this._item}]`);
+        this._log.debug(`Creating outlet service for ${this.name}`);
         let primaryService = new this.Service.Outlet(this.name);
         addOnCharacteristic.bind(this)(primaryService);
         addOutletInUseCharacteristic.bind(this)(primaryService);

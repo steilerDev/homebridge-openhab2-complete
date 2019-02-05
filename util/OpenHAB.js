@@ -7,8 +7,8 @@ const EventSource = require('eventsource');
 const clone = require('clone');
 const cache = require('nano-cache');
 
-// One hour ttl for cached item states
-const valueCacheTTL = 60 * 60 * 1000;
+// 30 mins ttl for cached item states
+const valueCacheTTL = 30 * 60 * 1000;
 // 10 mins ttl for cached item types, because those are only required during startup
 const typeCacheTTL = 10 * 60 * 1000;
 
@@ -26,6 +26,19 @@ class OpenHAB {
         this._valueCache = new cache({
             ttl: valueCacheTTL
         });
+
+        this._valueCache.on('get', function (habItem) {
+            this._log.debug(`Item ${habItem}'s state was cleared from the cache, getting the current value`);
+            this.getState(habItem, function(error, value) {
+                if(error) {
+                    this._log.error(`Unable to get ${habItem}'s new state: ${error.message}`);
+                } else {
+                    this._log.debug(`Updating cache entry for ${habItem} with new value ${value}`);
+                    this._valueCache.set(habItem, value);
+                }
+            }.bind(this))
+        }.bind(this));
+
         this._typeCache = new cache({
             ttl: typeCacheTTL
         });
@@ -91,8 +104,10 @@ class OpenHAB {
 
     sendCommand(habItem, command, callback) {
         if(this._valueCache.get(habItem)) {
-            this._log.debug(`Invalidating cache for ${habItem}`);
-            this._valueCache.del(habItem);
+            setTimeout(function() {
+                this._log.debug(`Invalidating cache for ${habItem}`);
+                this._valueCache.del(habItem);
+            }.bind(this), 500);
         }
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items/${habItem}`;
@@ -116,8 +131,10 @@ class OpenHAB {
 
     updateState(habItem, state, callback) {
         if(this._valueCache.get(habItem)) {
-            this._log.debug(`Invalidating cache for ${habItem}`);
-            this._valueCache.del(habItem);
+            setTimeout(function() {
+                this._log.debug(`Invalidating cache for ${habItem}`);
+                this._valueCache.del(habItem);
+            }.bind(this), 500);
         }
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items/${habItem}/state`;
