@@ -16,6 +16,9 @@
     
 
 ## Changelog
+### V0.9.0
+* Improvements to caching mechanism
+
 ### V0.8.0
 * Added optional `multiplier` and `stateMultiplier` to `WindowCovering`, `Door` and `Window`, in order to multiply openHAB's item state and show it differently in HomeKit
 * Added optional `manuMode` to `WindowCovering`, `Door` and `Window`

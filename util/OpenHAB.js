@@ -9,8 +9,8 @@ const cache = require('nano-cache');
 
 // 30 mins ttl for cached item states
 const valueCacheTTL = 30 * 60 * 1000;
-// 10 mins ttl for cached item types, because those are only required during startup
-const typeCacheTTL = 10 * 60 * 1000;
+// Checking every 10 minutes, if item states from the cache need to be cleared
+const monitorInterval = 10 * 60 * 1000;
 
 class OpenHAB {
 
@@ -41,6 +41,11 @@ class OpenHAB {
                 }.bind(this))
             }
         }.bind(this));
+
+        this._monitorCache = setInterval(function() {
+            this._log.warn(`Clearing expired values from cache`);
+            this._valueCache.clearExpired()
+        }.bind(this), monitorInterval);
 
         this._typeCache = new cache({
             compress: false
