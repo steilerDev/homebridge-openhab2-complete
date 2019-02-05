@@ -24,23 +24,26 @@ class OpenHAB {
             this._url.port = port
         }
         this._valueCache = new cache({
-            ttl: valueCacheTTL
+            ttl: valueCacheTTL,
+            compress: false
         });
 
         this._valueCache.on('del', function (habItem) {
-            this._log.debug(`Item ${habItem}'s state was cleared from the cache, getting the current value`);
-            this.getState(habItem, function(error, value) {
-                if(error) {
-                    this._log.error(`Unable to get ${habItem}'s new state: ${error.message}`);
-                } else {
-                    this._log.debug(`Updating cache entry for ${habItem} with new value ${value}`);
-                    this._valueCache.set(habItem, value);
-                }
-            }.bind(this))
+            if(this._valueCache.isTTLExpired(habItem)) {
+                this._log.debug(`Item ${habItem}'s state was cleared from the cache, getting the current value`);
+                this.getState(habItem, function (error, value) {
+                    if (error) {
+                        this._log.error(`Unable to get ${habItem}'s new state: ${error.message}`);
+                    } else {
+                        this._log.debug(`Updating cache entry for ${habItem} with new value ${value}`);
+                        this._valueCache.set(habItem, value);
+                    }
+                }.bind(this))
+            }
         }.bind(this));
 
         this._typeCache = new cache({
-            ttl: typeCacheTTL
+            compress: false
         });
         this._subscriptions = {};
         this._log = log;
