@@ -27,7 +27,7 @@ class OpenHAB {
             ttl: valueCacheTTL
         });
 
-        this._valueCache.on('get', function (habItem) {
+        this._valueCache.on('del', function (habItem) {
             this._log.debug(`Item ${habItem}'s state was cleared from the cache, getting the current value`);
             this.getState(habItem, function(error, value) {
                 if(error) {
