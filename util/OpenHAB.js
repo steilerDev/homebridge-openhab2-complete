@@ -115,7 +115,7 @@ class OpenHAB {
             setTimeout(function() {
                 this._log.debug(`Invalidating cache for ${habItem}`);
                 this._valueCache.del(habItem);
-            }.bind(this), 500);
+            }.bind(this), 1000);
         }
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items/${habItem}`;
@@ -142,7 +142,7 @@ class OpenHAB {
             setTimeout(function() {
                 this._log.debug(`Invalidating cache for ${habItem}`);
                 this._valueCache.del(habItem);
-            }.bind(this), 500);
+            }.bind(this), 1000);
         }
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items/${habItem}/state`;

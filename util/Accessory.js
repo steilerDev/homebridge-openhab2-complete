@@ -166,7 +166,7 @@ function getState(habItem, transformation, callback) {
 // If context is set to 'openHABIgnore' the actual set state will not be executed towards openHAB
 function setState(habItem, transformation, state, callback, context, connectionID) {
     let transformedState = transformValue(transformation, state);
-    this._log.debug(`Change target state of ${this.name} [${habItem}] to ${state} (transformed to ${transformedState}) [Context: ${context}, ConnectionID: ${connectionID}`);
+    this._log.debug(`Change target state of ${this.name} [${habItem}] to ${state} (transformed to ${transformedState}) [Context: ${context ? JSON.stringify(context): 'Not defined'}, ConnectionID: ${connectionID}`);
     if(context === "openHABIgnore") {
         callback();
     } else {
