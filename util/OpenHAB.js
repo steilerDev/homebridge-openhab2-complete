@@ -30,7 +30,7 @@ class OpenHAB {
 
         this._valueCache.on('del', function (habItem) {
             if(this._valueCache.isTTLExpired(habItem)) {
-                this._log.debug(`Item ${habItem}'s state was cleared from the cache, getting the current value`);
+                this._log.warn(`Item ${habItem}'s state was cleared from the cache, getting the current value`);
                 this._getStateWithoutCache(habItem, function (error, value) {
                     if (error) {
                         this._log.error(`Unable to get ${habItem}'s new state: ${error.message}`);

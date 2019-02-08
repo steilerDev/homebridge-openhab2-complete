@@ -45,6 +45,7 @@ class Accessory {
                 this._log(`Received push with new state for item ${habItem}: ${value}`);
                 let transformedValue = transformValue(transformation, value);
                 if(transformedValue !== null) {
+                    // Setting value for the stored characteristic, but not executing it agains openHAB
                     characteristic.setValue(transformedValue, null, "openHABIgnore");
                     if(callback && typeof(callback) === "function") {
                         callback(transformedValue);

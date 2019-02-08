@@ -54,31 +54,52 @@ The following is a list of all services that are currently supported and which v
 **Note: Due to the fact, that this is an early stage of development the configuration layout is not yet fixed and will change in the near future!**
 
 * Complex Accessories:
-  * [Lightbulb](#lightbulb)
+  * [Lightbulb](#lightbulb) 
+    * Homebridge configuration type: `light`
   * [Thermostat](#thermostat)
+    * Homebridge configuration type: `thermostat`
   * [Security System](#security-system)
+    * Homebridge configuration type: `security`
 * Position Based Actors:
   * [Window Covering](#window-covering)
+    * Homebridge configuration type: `windowcovering`
   * [Door](#door)
+    * Homebridge configuration type: `door`
   * [Window](#window)
+    * Homebridge configuration type: `window`
   * [Lock Mechanism](#lock-mechanism)
+    * Homebridge configuration type: `lock`
 * Numeric Sensors:
   * [Temperature Sensor](#temperature-sensor)
+    * Homebridge configuration type: `temp`
   * [Humidity Sensor](#humidity-sensor)
+    * Homebridge configuration type: `humidity`
   * [Light Sensor](#light-sensor)
+    * Homebridge configuration type: `lightSensor`
 * Binary Actors:
   * [Switch](#switch)
+    * Homebridge configuration type: `switch`
   * [Fan](#fan)
+    * Homebridge configuration type: `fan`
   * [Outlet](#outlet)
+    * Homebridge configuration type: `outlet`
 * Binary Sensors:
   * [Motion Sensor](#motion-sensor)
+    * Homebridge configuration type: `motion`
   * [Occupancy Sensor](#occupancy-sensor)
+    * Homebridge configuration type: `occupancy`
   * [Leak Sensor](#leak-sensor)
+    * Homebridge configuration type: `leak`
   * [Carbon Monoxide Sensor](#carbon-monoxide-sensor)
+    * Homebridge configuration type: `co`
   * [Carbon Dioxide Sensor](#carbon-dioxide-sensor)
+    * Homebridge configuration type: `co2`
   * [Contact Sensor](#contact-sensor)
+    * Homebridge configuration type: `contact`
   * [Smoke Sensor](#smoke-sensor)
+    * Homebridge configuration type: `smoke`
   * [Filter Maintenance Sensor](#filter-maintenance-sensor)
+    * Homebridge configuration type: `filter`
   
 The following services will be implemented in the near future:
 * Water service accessories
@@ -261,7 +282,7 @@ This service describes a motorized window
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "door", 
+    "type": "window", 
     "item": "Itemname-within-OpenHAB",
     "inverted": "false",
     "multiplier": "1",
@@ -487,7 +508,7 @@ This service describes a leak sensor.
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "motion",
+    "type": "leak",
     "item": "Itemname-within-OpenHAB",
     "inverted": "true",
     "batteryItem": "Itemname-within-OpenHAB",
@@ -565,7 +586,7 @@ This service describes a contact sensor.
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "co2",
+    "type": "contact",
     "item": "Itemname-within-OpenHAB",
     "inverted": "true",
     "batteryItem": "Itemname-within-OpenHAB",
