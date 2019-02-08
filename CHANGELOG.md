@@ -18,7 +18,7 @@
 ## Changelog
 ### V0.9.0 (unreleased)
 
-### V0.8.1
+### V0.8.2
 * Created own caching mechanism, supporting this use case & improving UX performance & stress to openHAB.
 * Improved startup performance due to bulk sync of item states
 

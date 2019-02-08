@@ -6,7 +6,6 @@ const syncRequest = require('sync-request');
 const EventSource = require('eventsource');
 const clone = require('clone');
 const {Cache} = require('./Cache');
-const cache = require('nano-cache');
 
 // 30 mins ttl for cached item states
 const valueCacheTTL = 30 * 60 * 1000;
