@@ -16,6 +16,8 @@ const monitorInterval = 10 * 60 * 1000;
 class OpenHAB {
 
     constructor(hostname, port, log) {
+        this._log = log;
+
         if(hostname.startsWith("http://") || hostname.startsWith("https://")) {
             this._url = new URL(hostname);
         } else {
@@ -42,7 +44,6 @@ class OpenHAB {
         this._typeCache = new Cache(log);
 
         this._subscriptions = {};
-        this._log = log;
     }
 
     isOnline() {
@@ -159,25 +160,30 @@ class OpenHAB {
 
     // Will call callback with callback(error, type)
     getItemType(habItem) {
-        if(this._typeCache.get(habItem)) {
-            this._log.debug(`Getting type for ${habItem} from the cache`);
-            return this._valueCache.get(habItem);
+        return this._typeCache.get(habItem);
+    }
+
+    syncItemTypes() {
+        this._log.info(`Syncing all items & types from openHAB`);
+        let myURL = clone(this._url);
+        myURL.pathname = `/rest/items`;
+        myURL.search = `recursive=false&fields=name%2Ctype`;
+        const response = syncRequest('GET', myURL.href);
+        if (response.statusCode !== 200) {
+            return new Error(`Unable to get items: HTTP code ${response.statusCode}!`);
         } else {
-            this._log.debug(`Getting type for ${habItem} from openHAB, because no cached state exists`);
-            let myURL = clone(this._url);
-            myURL.pathname = `/rest/items/${habItem}`;
-            const response = syncRequest('GET', myURL.href);
-            if (response.statusCode !== 200) {
-                return new Error(`Unable to get item: HTTP code ${response.statusCode}!`);
+            const items = JSON.parse(response.body);
+            if(items.length > 0) {
+                this._log.debug(`Got array with ${items.length} item/s`);
+                items.forEach(function(item) {
+                    this._log.debug(`Got item ${item.name} of type ${item.type}, adding to type cache`);
+                    this._typeCache.set(item.name, item.type);
+                }.bind(this));
             } else {
-                const type = JSON.parse(response.body).type;
-                if (!(type)) {
-                    return new Error(`Unable to retrieve type`);
-                } else {
-                    return type;
-                }
+                this._log.error(`Received no items from openHAB, unable to sync states!`);
             }
         }
+
     }
 
     subscribe(habItem, callback) {

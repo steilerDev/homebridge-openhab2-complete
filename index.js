@@ -71,7 +71,8 @@ const OpenHABComplete = class {
             online = this._platform.openHAB.isOnline();
         }
         sleep.sleep(10);
-        this._log.info(`openHAB host (${config.host}) is online!`);
+        this._log.info(`openHAB host (${config.host}) is online, now syncing...`);
+        this._platform.openHAB.syncItemTypes();
 
         this._log.info(`'OpenHAB2 - Complete Edition' plugin loaded - Version ${version}`);
         this._log.info(`---`);
