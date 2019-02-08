@@ -64,7 +64,7 @@ class Cache extends EventEmitter {
     }
 
     _isExpired(data) {
-        return !data.expires || data.expires <= this._now();
+        return data.expires && data.expires <= this._now();
     }
 
     _now() {
