@@ -65,11 +65,11 @@ class Accessory {
         } else {
             let item = this._config[key];
             let type = this._openHAB.getItemType(item);
-            if (type instanceof Error) {
+            if (!type || type instanceof Error) {
                 if(optional) {
-                    this._log.debug(`Not adding ${key} to ${this.name}: ${type.message}`);
+                    this._log.debug(`Not adding ${key} to ${this.name}: ${type ? type.message : 'Item type was not synced initially and is therefore not available'}`);
                 } else {
-                    throw type;
+                    throw type ? type : new Error('Item type was not synced initially and is therefore not available');
                 }
             } else if (expectedItems.indexOf(type) === -1) {
                 if(optional) {
