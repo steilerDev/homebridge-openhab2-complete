@@ -5,6 +5,7 @@ const request = require('request');
 const syncRequest = require('sync-request');
 const EventSource = require('eventsource');
 const clone = require('clone');
+const {Cache} = require('./Cache');
 const cache = require('nano-cache');
 
 // 30 mins ttl for cached item states
@@ -23,33 +24,23 @@ class OpenHAB {
         if (port !== undefined) {
             this._url.port = port
         }
-        this._valueCache = new cache({
-            ttl: valueCacheTTL,
-            compress: false
-        });
 
-        this._valueCache.on('del', function (habItem) {
-            if(this._valueCache.isTTLExpired(habItem)) {
-                this._log.warn(`Item ${habItem}'s state was cleared from the cache, getting the current value`);
-                this._getStateWithoutCache(habItem, function (error, value) {
-                    if (error) {
-                        this._log.error(`Unable to get ${habItem}'s new state: ${error.message}`);
-                    } else {
-                        this._log.debug(`Updating cache entry for ${habItem} with new value ${value}`);
-                        this._valueCache.set(habItem, value);
-                    }
-                }.bind(this))
-            }
+        this._valueCache = new Cache(log, valueCacheTTL, monitorInterval);
+
+        this._valueCache.on('expired', function (habItem) {
+            this._log.warn(`Item ${habItem}'s state was cleared from the cache, getting the current value`);
+            this._getStateWithoutCache(habItem, function (error, value) {
+                if (error) {
+                    this._log.error(`Unable to get ${habItem}'s new state: ${error.message}`);
+                } else {
+                    this._log.debug(`Updating cache entry for ${habItem} with new value ${value}`);
+                    this._valueCache.set(habItem, value);
+                }
+            }.bind(this))
         }.bind(this));
 
-        this._monitorCache = setInterval(function() {
-            this._log.warn(`Clearing expired values from cache`);
-            this._valueCache.clearExpired()
-        }.bind(this), monitorInterval);
+        this._typeCache = new Cache(log);
 
-        this._typeCache = new cache({
-            compress: false
-        });
         this._subscriptions = {};
         this._log = log;
     }
@@ -63,9 +54,10 @@ class OpenHAB {
     }
 
     getState(habItem, callback) {
-        if(this._valueCache.get(habItem)) {
+        let cachedValue = this._valueCache.get(habItem);
+        if(cachedValue) {
             this._log.debug(`Getting value for ${habItem} from the cache`);
-            callback(null, this._valueCache.get(habItem));
+            callback(null, cachedValue);
         } else {
             this._log.warn(`Getting value for ${habItem} from openHAB, because no cached state exists`);
             this._getStateWithoutCache(habItem, callback);
@@ -116,11 +108,9 @@ class OpenHAB {
     }
 
     sendCommand(habItem, command, callback) {
-        if(this._valueCache.get(habItem)) {
-            setTimeout(function() {
-                this._log.debug(`Invalidating cache for ${habItem}`);
-                this._valueCache.del(habItem);
-            }.bind(this), 1000);
+        if(this._valueCache.exists(habItem)) {
+            this._log.debug(`Invalidating cache for ${habItem}`);
+            this._valueCache.del(habItem);
         }
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items/${habItem}`;
@@ -143,11 +133,9 @@ class OpenHAB {
     }
 
     updateState(habItem, state, callback) {
-        if(this._valueCache.get(habItem)) {
-            setTimeout(function() {
-                this._log.debug(`Invalidating cache for ${habItem}`);
-                this._valueCache.del(habItem);
-            }.bind(this), 1000);
+        if(this._valueCache.exists(habItem)) {
+            this._log.debug(`Invalidating cache for ${habItem}`);
+            this._valueCache.del(habItem);
         }
         let myURL = clone(this._url);
         myURL.pathname = `/rest/items/${habItem}/state`;
