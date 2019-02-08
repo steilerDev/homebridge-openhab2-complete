@@ -16,8 +16,11 @@
     
 
 ## Changelog
-### V0.9.0
-* Improvements to caching mechanism
+### V0.9.0 (unreleased)
+
+### V0.8.1
+* Created own caching mechanism, supporting this use case & improving UX performance & stress to openHAB.
+* Improved startup performance due to bulk sync of item states
 
 ### V0.8.0
 * Added optional `multiplier` and `stateMultiplier` to `WindowCovering`, `Door` and `Window`, in order to multiply openHAB's item state and show it differently in HomeKit
