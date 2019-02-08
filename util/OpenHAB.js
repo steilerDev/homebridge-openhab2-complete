@@ -9,9 +9,9 @@ const {Cache} = require('./Cache');
 const cache = require('nano-cache');
 
 // 30 mins ttl for cached item states
-const valueCacheTTL = 0.5 * 60 * 1000;
+const valueCacheTTL = 30 * 60 * 1000;
 // Checking every 10 minutes, if item states from the cache need to be cleared
-const monitorInterval = 1 * 60 * 1000;
+const monitorInterval = 10 * 60 * 1000;
 
 class OpenHAB {
 
