@@ -10,6 +10,7 @@ const CURRENT_TARGET_CLIMATE_CONFIG = {
     targetHumidityItem: "targetHumidityItem",
     heatingItem: "heatingItem", //State mutual Exclusive with coolingItem, 'Switch' type
     coolingItem: "coolingItem", //State mutual Exclusive with heatingItem, 'Switch' type
+    heatingCoolingItem: "heatingCoolingItem",
     tempUnit: "tempUnit" // 'Celsius' (default), 'Fahrenheit'
 };
 
@@ -116,10 +117,30 @@ function addTemperatureDisplayUnitsCharacteristic(service) {
 function addHeatingCoolingStateCharacteristic(service) {
     let [heatingItem] = this._getAndCheckItemType(CURRENT_TARGET_CLIMATE_CONFIG.heatingItem, ['Switch', 'Contact'], true);
     let [coolingItem] = this._getAndCheckItemType(CURRENT_TARGET_CLIMATE_CONFIG.coolingItem, ['Switch', 'Contact'], true);
+    let [heatingCoolingItem, heatingCoolingItemType] = this._getAndCheckItemType(CURRENT_TARGET_CLIMATE_CONFIG.heatingCoolingItem, ['Number'], true);
     let mode;
 
-    if(!(heatingItem || coolingItem)) {
+    if(!(heatingItem || coolingItem || heatingCoolingItem)) {
         throw new Error(`heatingItem and/or coolingItem needs to be set: ${JSON.stringify(this._config)}`);
+    } else if(heatingCoolingItem) {
+        addCurrentStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState),
+            heatingCoolingItem,
+            heatingCoolingItemType,
+            false,
+            dummyTransformation
+        );
+
+        addTargetStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState),
+            heatingCoolingItem,
+            heatingCoolingItemType,
+            false,
+            heatingCoolingItem,
+            heatingCoolingItemType,
+            false,
+            dummyTransformation,
+            dummyTransformation
+        );
+
     } else {
         if(heatingItem) {
             mode = 'Heating';
@@ -143,14 +164,15 @@ function addHeatingCoolingStateCharacteristic(service) {
                 )
             );
         }
+
+        service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState)
+            .on('get', _getHeatingCoolingState.bind(this, mode, heatingItem, coolingItem));
+
+        service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState)
+            .on('get', _getHeatingCoolingState.bind(this, mode, heatingItem, coolingItem))
+            .on('set', _setHeatingCoolingState.bind(this, heatingItem, coolingItem));
     }
 
-    service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState)
-        .on('get', _getHeatingCoolingState.bind(this, mode, heatingItem, coolingItem));
-
-    service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState)
-        .on('get', _getHeatingCoolingState.bind(this, mode, heatingItem, coolingItem))
-        .on('set', _setHeatingCoolingState.bind(this, heatingItem, coolingItem));
 }
 
 function _transformHeatingCoolingState(thisItemMode, characteristic, value) {
