@@ -4,9 +4,7 @@ const {URL} = require('url');
 const request = require('request');
 const syncRequest = require('sync-request');
 const EventSource = require('eventsource');
-const clone = require('clone');
 const {Cache} = require('./Cache');
-const cache = require('nano-cache');
 
 // 30 mins ttl for cached item states
 const valueCacheTTL = 30 * 60 * 1000;
@@ -19,13 +17,11 @@ class OpenHAB {
         this._log = log;
 
         if(hostname.startsWith("http://") || hostname.startsWith("https://")) {
-            this._url = new URL(hostname);
+            this._hostname = hostname;
         } else {
-            this._url = new URL(`http://${hostname}`);
+            this._hostname = `http://${hostname}`;
         }
-        if (port !== undefined) {
-            this._url.port = port
-        }
+        this._port = port;
 
         this._valueCache = new Cache(log, valueCacheTTL, monitorInterval);
 
@@ -46,11 +42,24 @@ class OpenHAB {
         this._subscriptions = {};
     }
 
+    _getURL(pathname, search) {
+        let newURL = new URL(this._hostname);
+        if(this._port !== undefined) {
+            newURL.port = this._port;
+        }
+        if(pathname) {
+            newURL.pathname = pathname;
+        }
+        if(search) {
+            newURL.search = search;
+        }
+       return newURL.href;
+    }
+
     isOnline() {
-        let myURL = clone(this._url);
-        myURL.pathname = `/rest/items`;
-        const response = syncRequest('GET', myURL.href);
-        this._log.debug(`Online request for openHAB (${myURL.href}) resulted in status code ${response.statusCode}`);
+        let myURL = this._getURL(`/rest/items`);
+        const response = syncRequest('GET', myURL);
+        this._log.debug(`Online request for openHAB (${myURL}) resulted in status code ${response.statusCode}`);
         return response.statusCode === 200;
     }
 
@@ -66,11 +75,10 @@ class OpenHAB {
     }
 
     _getStateWithoutCache(habItem, callback) {
-        let myURL = clone(this._url);
+        let myURL = this._getURL(`/rest/items/${habItem}/state`);
         this._log.debug(`Getting value for ${habItem} from openHAB`);
-        myURL.pathname = `/rest/items/${habItem}/state`;
         request({
-                url: myURL.href,
+                url: myURL,
                 method: 'GET'
             },
             function (error, response, body) {
@@ -93,9 +101,8 @@ class OpenHAB {
             return this._valueCache.get(habItem);
         } else {
             this._log.warn(`Getting value for ${habItem} from openHAB, because no cached state exists`);
-            let myURL = clone(this._url);
-            myURL.pathname = `/rest/items/${habItem}/state`;
-            const response = syncRequest('GET', myURL.href);
+            let myURL = this._getURL(`/rest/items/${habItem}/state`);
+            const response = syncRequest('GET', myURL);
             if (response.statusCode === 404) {
                 return new Error(`Item does not exist!`);
             } else if (!(response.body)) {
@@ -113,10 +120,9 @@ class OpenHAB {
             this._log.debug(`Invalidating cache for ${habItem}`);
             this._valueCache.del(habItem);
         }
-        let myURL = clone(this._url);
-        myURL.pathname = `/rest/items/${habItem}`;
+        let myURL = this._getURL(`/rest/items/${habItem}`);
         request({
-            url: myURL.href,
+            url: myURL,
             method: 'POST',
             body: command
         },
@@ -138,10 +144,9 @@ class OpenHAB {
             this._log.debug(`Invalidating cache for ${habItem}`);
             this._valueCache.del(habItem);
         }
-        let myURL = clone(this._url);
-        myURL.pathname = `/rest/items/${habItem}/state`;
+        let myURL = this._getURL(`/rest/items/${habItem}/state`);
         request({
-                url: myURL.href,
+                url: myURL,
                 method: 'PUT',
                 body: state
         },
@@ -165,10 +170,8 @@ class OpenHAB {
 
     syncItemTypes() {
         this._log.info(`Syncing all items & types from openHAB`);
-        let myURL = clone(this._url);
-        myURL.pathname = `/rest/items`;
-        myURL.search = `recursive=false&fields=name%2Ctype`;
-        const response = syncRequest('GET', myURL.href);
+        let myURL = this._getURL(`/rest/items`, `recursive=false&fields=name%2Ctype`);
+        const response = syncRequest('GET', myURL);
         if (response.statusCode !== 200) {
             return new Error(`Unable to get items: HTTP code ${response.statusCode}!`);
         } else {
@@ -195,12 +198,9 @@ class OpenHAB {
     }
 
     startSubscription() {
-        let myURL = clone(this._url);
-        myURL.pathname = '/rest/events';
-
         for(var key in this._subscriptions) {
-            myURL.search = `topics=smarthome/items/${key}/statechanged`;
-            this.startSubscriptionForItem(myURL.href, key, this._subscriptions[key]);
+            let myURL = this._getURL('/rest/events',`topics=smarthome/items/${key}/statechanged`);
+            this.startSubscriptionForItem(myURL, key, this._subscriptions[key]);
         }
     }
 

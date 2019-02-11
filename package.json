@@ -27,7 +27,6 @@
     "homebridge": ">=0.4.45"
   },
   "dependencies": {
-    "clone": "^2.1.2",
     "eventsource": "^1.0.7",
     "request": "^2.88.0",
     "sleep": "^6.0.0",
