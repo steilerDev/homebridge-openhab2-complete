@@ -26,6 +26,7 @@ function addHueCharacteristic(service) {
 
 function addSaturationCharacteristic(service) {
     addSetAndCommitCharacteristic.bind(this)(
+        service,
         service.getCharacteristic(this.Characteristic.Saturation),
         'saturation',
         ['Color'],
@@ -37,6 +38,7 @@ function addSaturationCharacteristic(service) {
 
 function addBrightnessCharacteristic(service) {
     addSetAndCommitCharacteristic.bind(this)(
+        service,
         service.getCharacteristic(this.Characteristic.Brightness),
         'brightness',
         ['Dimmer', 'Color'],
