@@ -11,8 +11,7 @@ function addSetAndCommitCharacteristic(service, characteristic, characteristicTy
         let [item, type] = this._getAndCheckItemType(SET_AND_COMMIT_CONFIG.item, expectedItems);
 
         // Synchronisation helper
-        _releaseLocks();
-        console.log(JSON.stringify(this));
+        _releaseLocks.bind(this)();
         this._log.debug(`Creating ${characteristicType} characteristic for ${this.name} with item ${item}`);
 
         characteristic.on('set', _setState.bind(this, characteristicType))

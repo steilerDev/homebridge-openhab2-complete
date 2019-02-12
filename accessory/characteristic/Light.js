@@ -17,9 +17,10 @@ function addHueCharacteristic(service) {
         service,
         service.getCharacteristic(this.Characteristic.Hue),
         'hue',
-        ['Switch', 'Dimmer', 'Color'],
+        ['Color'],
         _transformation,
-        _commitFunction
+        _commitFunction,
+        true
     );
 }
 
@@ -27,9 +28,10 @@ function addSaturationCharacteristic(service) {
     addSetAndCommitCharacteristic.bind(this)(
         service.getCharacteristic(this.Characteristic.Saturation),
         'saturation',
-        ['Switch', 'Dimmer', 'Color'],
+        ['Color'],
         _transformation,
-        _commitFunction
+        _commitFunction,
+        true
     );
 }
 
@@ -37,9 +39,10 @@ function addBrightnessCharacteristic(service) {
     addSetAndCommitCharacteristic.bind(this)(
         service.getCharacteristic(this.Characteristic.Brightness),
         'brightness',
-        ['Switch', 'Dimmer', 'Color'],
+        ['Dimmer', 'Color'],
         _transformation,
-        _commitFunction
+        _commitFunction,
+        true
     );
 }
 
