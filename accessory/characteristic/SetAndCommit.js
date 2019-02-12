@@ -83,7 +83,7 @@ function _commitState(commitFunction, value, callback, context, connectionID) {
                 callback(new Error("Command was not set"));
             }
 
-        }, 125);
+        }.bind(this), 125);
     }
 }
 
