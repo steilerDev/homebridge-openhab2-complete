@@ -1,137 +1,79 @@
 
-const {getState} = require('../../util/Accessory');
-
-const LIGHT_CONFIG = {
-    item: "item"
-};
+const {addSetAndCommitCharacteristic} = require('./SetAndCommit');
 
 function addLightOnCharacteristic(service) {
-    _addLightCharacteristic.bind(this)(service, this.Characteristic.On, 'binary', ['Switch', 'Dimmer', 'Color']);
+    addSetAndCommitCharacteristic.bind(this)(
+        service.getCharacteristic(this.Characteristic.On),
+        'binary',
+        ['Switch', 'Dimmer', 'Color'],
+        _transformation,
+        _commitFunction
+    )
 }
 
 function addHueCharacteristic(service) {
-    _addLightCharacteristic.bind(this)(service, this.Characteristic.Hue, 'hue', ['Color'], true);
+    addSetAndCommitCharacteristic.bind(this)(
+        service.getCharacteristic(this.Characteristic.Hue),
+        'hue',
+        ['Switch', 'Dimmer', 'Color'],
+        _transformation,
+        _commitFunction
+    )
 }
 
 function addSaturationCharacteristic(service) {
-    _addLightCharacteristic.bind(this)(service, this.Characteristic.Saturation, 'saturation', ['Color'], true);
+    addSetAndCommitCharacteristic.bind(this)(
+        service.getCharacteristic(this.Characteristic.Saturation),
+        'saturation',
+        ['Switch', 'Dimmer', 'Color'],
+        _transformation,
+        _commitFunction
+    )
 }
 
 function addBrightnessCharacteristic(service) {
-    _addLightCharacteristic.bind(this)(service, this.Characteristic.Brightness, 'brightness', ['Color', 'Dimmer'], true);
+    addSetAndCommitCharacteristic.bind(this)(
+        service.getCharacteristic(this.Characteristic.Brightness),
+        'brightness',
+        ['Switch', 'Dimmer', 'Color'],
+        _transformation,
+        _commitFunction
+    )
 }
 
-// characteristicType: either `binary`, `hue`, `saturation` or `brightness`
-function _addLightCharacteristic(service, characteristic, characteristicType, expectedItems, optional) {
-    try {
-        let [item, type] = this._getAndCheckItemType(LIGHT_CONFIG.item, expectedItems);
-
-        this._log.debug(`Creating ${characteristicType} characteristic for ${this.name} with item ${item}`);
-
-        service.getCharacteristic(characteristic)
-            .on('set', _setState.bind(this, characteristicType))
-            .on('set', _commitState.bind(this, item))
-            .on('get', getState.bind(this,
-                item,
-                _transformation.bind(this, characteristicType, type)
-            ));
-
-        this._subscribeCharacteristic(service.getCharacteristic(characteristic),
-            item,
-            _transformation.bind(this, characteristicType, type)
-        );
-
-    } catch(e) {
-        let msg = `Not configuring ${characteristicType} characteristic for ${this.name}: ${e.message}`;
-        if (optional) {
-            this._log.debug(msg);
+function _commitFunction(item) {
+    this._stateLock = true;
+    let command;
+    if(this._newState["brightness"] === undefined && this._newState["hue"] === undefined && this._newState["saturation"] === undefined) {           // Only binary set
+        if(this._newState["binary"] === undefined) {
+            command = new Error("Race condition! Commit was called before set!")
         } else {
-            throw new Error(msg);
+            command = this._newState["binary"] ? "ON" : "OFF";
         }
-    }
-}
-
-// Set the state unless it's locked
-function _setState(stateType, value, callback, context, connectionID) {
-    if(context === "openHABIgnore") {
-        this._log.debug(`Not changing target state of ${this.name} due to ignore flag`);
-    } else {
-        this._log.debug(`Change ${stateType} target state of ${this.name} to ${value}`);
-        if (!(this._stateLock)) {
-            this._newState[stateType] = value;
+    } else if(this._newState["hue"] === undefined && this._newState["saturation"] === undefined) {                                                  // Only brightness set
+        if (this._newState["brightness"] === undefined) {
+            command = new Error("Race condition! Commit was called before set!");
+        } else {
+            command = `${this._newState["brightness"] === 100 ? 99 : this._newState["brightness"]}`;
         }
-    }
-}
-
-
-// Wait for all states to be set (250ms should be sufficient) and then commit once
-function _commitState(item, value, callback, context, connectionID) {
-    if(this._commitLock) {
-        this._log.debug(`Not executing commit due to commit lock`);
-        callback();
-    } else if(context === "openHABIgnore") {
-        this._log.debug(`Not executing commit due to ignore flag`);
-        callback();
-    } else {
-        this._commitLock = true;
-        setTimeout(function () {
-            this._stateLock = true;
-            let command;
-            if(this._newState["brightness"] === undefined && this._newState["hue"] === undefined && this._newState["saturation"] === undefined) {           // Only binary set
-                if(this._newState["binary"] === undefined) {
-                    command = new Error("Race condition! Commit was called before set!")
-                } else {
-                    command = this._newState["binary"] ? "ON" : "OFF";
-                }
-            } else if(this._newState["hue"] === undefined && this._newState["saturation"] === undefined) {                                                  // Only brightness set
-                if (this._newState["brightness"] === undefined) {
-                    command = new Error("Race condition! Commit was called before set!");
-                } else {
-                    command = `${this._newState["brightness"] === 100 ? 99 : this._newState["brightness"]}`;
-                }
-            } else {                                                                                                                                         // Either hue, brightness and/or saturation set, therefore we need to send a tuple
-                if(this._newState["hue"] !== undefined && this._newState["brightness"] !== undefined && this._newState["saturation"] !== undefined) {        // All states set, no need to get missing information
-                    command = `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`;
-                } else {                                                                                                                                     // Not all states set , therefore we need to get the current state, in order to get the complete tuple
-                    let state = this._openHAB.getStateSync(item);
-                    if (!(state)) {
-                        command = new Error("Unable to retrieve current state");
-                    } else if (state instanceof Error) {
-                        command = state;
-                    } else {
-                        let splitState = state.split(",");
-                        command = `${this._newState["hue"] === undefined ? splitState[0] : this._newState["hue"]},\
-                                ${this._newState["saturation"] === undefined ? splitState[1] : this._newState["saturation"]},\
-                                ${this._newState["brightness"] === undefined ? splitState[2] : this._newState["brightness"]}`.replace(/\s*/g, "");
-                    }
-                }
-            }
-            _releaseLocks.bind(this)();
-            if(command) {
-                if(command instanceof Error) {
-                    this._log.error(command.message);
-                    callback(command);
-                } else {
-                    this._log(`Updating state of ${this.name} with item ${item} to ${command}`);
-                    this._openHAB.sendCommand(item, command , callback);
-                }
+    } else {                                                                                                                                         // Either hue, brightness and/or saturation set, therefore we need to send a tuple
+        if(this._newState["hue"] !== undefined && this._newState["brightness"] !== undefined && this._newState["saturation"] !== undefined) {        // All states set, no need to get missing information
+            command = `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`;
+        } else {                                                                                                                                     // Not all states set , therefore we need to get the current state, in order to get the complete tuple
+            let state = this._openHAB.getStateSync(item);
+            if (!(state)) {
+                command = new Error("Unable to retrieve current state");
+            } else if (state instanceof Error) {
+                command = state;
             } else {
-                callback(new Error("Command was not set"));
+                let splitState = state.split(",");
+                command = `${this._newState["hue"] === undefined ? splitState[0] : this._newState["hue"]},\
+                        ${this._newState["saturation"] === undefined ? splitState[1] : this._newState["saturation"]},\
+                        ${this._newState["brightness"] === undefined ? splitState[2] : this._newState["brightness"]}`.replace(/\s*/g, "");
             }
-        }.bind(this), 250);
+        }
     }
-}
-
-function _releaseLocks() {
-    this._log.debug(`Cleaning up and releasing locks`);
-    this._newState = {
-        binary: undefined,
-        hue: undefined,
-        saturation: undefined,
-        brightness: undefined
-    };
-    this._commitLock = false;
-    this._stateLock = false;
+    return command;
 }
 
 // characteristic

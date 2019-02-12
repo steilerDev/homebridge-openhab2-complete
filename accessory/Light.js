@@ -8,17 +8,6 @@ class LightAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
 
-        // Synchronisation helper
-        this._stateLock = false; // This lock will guard the acceptance of new states
-        this._commitLock = false; // This lock will guard the commit process
-
-        this._newState = {
-            binary: undefined,
-            hue: undefined,
-            saturation: undefined,
-            brightness: undefined
-        };
-
         this._services = [
             this._getAccessoryInformationService('Light'),
             this._getPrimaryService()
