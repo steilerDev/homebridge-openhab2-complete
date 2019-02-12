@@ -92,7 +92,8 @@ class OpenHAB {
                     returnedError = new Error(`Unable to retrieve state`);
                 } else {
                     returnedValue = body;
-                    this._valueCache.set(habItem, body);
+                    this._log.warn(`Caching value ${returnedValue} for ${habItem}`);
+                    this._valueCache.set(habItem, returnedValue);
                 }
 
                 if(callback !== null && callback !== undefined && typeof (callback) === "function") {

@@ -16,7 +16,8 @@ function addSetAndCommitCharacteristic(service, characteristic, characteristicTy
 
         characteristic.on('set', _setState.bind(this, characteristicType))
             .on('set', _commitState.bind(this,
-                commitFunction.bind(this, service)
+                commitFunction.bind(this, service),
+                item
             ))
             .on('get', getState.bind(this,
                 item,
@@ -59,7 +60,7 @@ function _setState(stateType, value, callback, context, connectionID) {
 
 
 // Wait for all states to be set (250ms should be sufficient) and then commit once
-function _commitState(commitFunction, value, callback, context, connectionID) {
+function _commitState(commitFunction, item, value, callback, context, connectionID) {
     if(this._commitLock) {
         this._log.debug(`Not executing commit due to commit lock`);
         callback();
