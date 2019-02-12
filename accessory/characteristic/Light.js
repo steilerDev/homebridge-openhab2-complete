@@ -3,6 +3,7 @@ const {addSetAndCommitCharacteristic} = require('./SetAndCommit');
 
 function addLightOnCharacteristic(service) {
     addSetAndCommitCharacteristic.bind(this)(
+        service,
         service.getCharacteristic(this.Characteristic.On),
         'binary',
         ['Switch', 'Dimmer', 'Color'],
@@ -13,6 +14,7 @@ function addLightOnCharacteristic(service) {
 
 function addHueCharacteristic(service) {
     addSetAndCommitCharacteristic.bind(this)(
+        service,
         service.getCharacteristic(this.Characteristic.Hue),
         'hue',
         ['Switch', 'Dimmer', 'Color'],
@@ -41,7 +43,7 @@ function addBrightnessCharacteristic(service) {
     )
 }
 
-function _commitFunction(item) {
+function _commitFunction(service, item) {
     this._stateLock = true;
     let command;
     if(this._newState["brightness"] === undefined && this._newState["hue"] === undefined && this._newState["saturation"] === undefined) {           // Only binary set
@@ -57,21 +59,19 @@ function _commitFunction(item) {
             command = `${this._newState["brightness"] === 100 ? 99 : this._newState["brightness"]}`;
         }
     } else {                                                                                                                                         // Either hue, brightness and/or saturation set, therefore we need to send a tuple
-        if(this._newState["hue"] !== undefined && this._newState["brightness"] !== undefined && this._newState["saturation"] !== undefined) {        // All states set, no need to get missing information
-            command = `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`;
-        } else {                                                                                                                                     // Not all states set , therefore we need to get the current state, in order to get the complete tuple
-            let state = this._openHAB.getStateSync(item);
-            if (!(state)) {
-                command = new Error("Unable to retrieve current state");
-            } else if (state instanceof Error) {
-                command = state;
-            } else {
-                let splitState = state.split(",");
-                command = `${this._newState["hue"] === undefined ? splitState[0] : this._newState["hue"]},\
-                        ${this._newState["saturation"] === undefined ? splitState[1] : this._newState["saturation"]},\
-                        ${this._newState["brightness"] === undefined ? splitState[2] : this._newState["brightness"]}`.replace(/\s*/g, "");
-            }
+        if(this._newState["hue"] === undefined) {
+            this._newState["hue"] = service.getCharacteristic(this.Characteristic.Hue).value;
+            this._log.error(`Got existing hue value of ${this._newState["hue"]}`);
         }
+        if(this._newState["brightness"] === undefined) {
+            this._newState["brightness"] = service.getCharacteristic(this.Characteristic.Brightness).value;
+            this._log.error(`Got existing brightness value of ${this._newState["brightness"]}`);
+        }
+        if(this._newState["saturation"] === undefined) {
+            this._newState["saturation"] = service.getCharacteristic(this.Characteristic.Saturation).value;
+            this._log.error(`Got existing saturation value of ${this._newState["saturation"]}`)
+        }
+        command = `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`;
     }
     return command;
 }

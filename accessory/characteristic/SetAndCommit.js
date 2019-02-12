@@ -6,22 +6,20 @@ const SET_AND_COMMIT_CONFIG = {
 };
 
 // characteristicType: either `binary`, `hue`, `saturation` or `brightness`
-function addSetAndCommitCharacteristic(characteristic, characteristicType, expectedItems, transformation, commitFunction, optional) {
+function addSetAndCommitCharacteristic(service, characteristic, characteristicType, expectedItems, transformation, commitFunction, optional) {
     try {
-        // Synchronisation helper
-        this._stateLock = false; // This lock will guard the acceptance of new states
-        this._commitLock = false; // This lock will guard the commit process
-
-        if(!this._newState) {
-            this._newState = {}
-        }
-
         let [item, type] = this._getAndCheckItemType(LIGHT_CONFIG.item, expectedItems);
+
+        // Synchronisation helper
+        _releaseLocks();
 
         this._log.debug(`Creating ${characteristicType} characteristic for ${this.name} with item ${item}`);
 
         characteristic.on('set', _setState.bind(this, characteristicType))
-            .on('set', _commitState.bind(this, item, commitFunction))
+            .on('set', _commitState.bind(this,
+                item,
+                commitFunction.bind(this, service)
+            ))
             .on('get', getState.bind(this,
                 item,
                 transformation.bind(this, characteristicType, type)
@@ -44,7 +42,7 @@ function addSetAndCommitCharacteristic(characteristic, characteristicType, expec
 
 function _releaseLocks() {
     this._log.debug(`Cleaning up and releasing locks`);
-    this._newState = { };
+    this._newState = {};
     this._commitLock = false;
     this._stateLock = false;
 }
@@ -73,7 +71,7 @@ function _commitState(item, commitFunction, value, callback, context, connection
     } else {
         this._commitLock = true;
         setTimeout(function() {
-            let command = commitFunction.bind(this, item);
+            let command = commitFunction(item);
             _releaseLocks.bind(this)();
             if(command) {
                 if(command instanceof Error) {
@@ -81,7 +79,7 @@ function _commitState(item, commitFunction, value, callback, context, connection
                     callback(command);
                 } else {
                     this._log(`Updating state of ${this.name} with item ${item} to ${command}`);
-                    this._openHAB.sendCommand(item, command , callback);
+                    this._openHAB.sendCommand(item, command, callback);
                 }
             } else {
                 callback(new Error("Command was not set"));
