@@ -82,15 +82,21 @@ class OpenHAB {
                 method: 'GET'
             },
             function (error, response, body) {
+                let returnedError = null;
+                let returnedValue = null;
                 if(error) {
-                    callback(error);
+                    returnedError = error;
                 } else if (response.statusCode === 404) {
-                    callback(new Error(`Item does not exist!`));
+                    returnedError = new Error(`Item does not exist!`);
                 } else if (!(body)) {
-                    callback(new Error(`Unable to retrieve state`));
+                    returnedError = new Error(`Unable to retrieve state`);
                 } else {
-                    callback(null, body);
+                    returnedValue = body;
                     this._valueCache.set(habItem, body);
+                }
+
+                if(callback !== null && callback !== undefined && typeof (callback) === "function") {
+                    callback(returnedError, returnedValue);
                 }
             }.bind(this))
     }
@@ -206,6 +212,8 @@ class OpenHAB {
 
     startSubscriptionForItem(url, habItem, callbacks) {
         const CLOSED = 2;
+
+        this._getStateWithoutCache(habItem);
 
         this._log.debug(`Starting subscription for ${habItem} with ${callbacks.length} subscribed characteristic(s)`);
         let source = new EventSource(url);

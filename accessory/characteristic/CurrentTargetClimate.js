@@ -1,7 +1,7 @@
 'use strict';
 
 const {addTargetStateCharacteristic, addCurrentStateCharacteristic} = require('./CurrentTarget');
-const {getState, setState} = require('../../util/Accessory');
+const {getState, setState, dummyTransformation} = require('../../util/Accessory');
 
 const CURRENT_TARGET_CLIMATE_CONFIG = {
     currentTempItem: "currentTempItem", //required
@@ -275,10 +275,6 @@ function _setHeatingCoolingState(heatingItem, coolingItem, state, callback) {
             break;
     }
     callback();
-}
-
-function dummyTransformation(itemType, inverted, value) {
-    return value;
 }
 
 module.exports = {

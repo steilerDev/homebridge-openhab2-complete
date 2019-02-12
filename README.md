@@ -12,6 +12,8 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](ht
 npm install -g homebridge-openhab2-complete
 ```
 
+Some people are experiencing dependency issues between homebridge's node version and the required node version for this project. My local setup is based on [oznu's homebridge docker container](https://github.com/oznu/docker-homebridge), where I never ran into any problems. In order to install the plugin in the docker, just add `npm install homebridge-openhab2-complete` to the `startup.sh` script inside the mapped docker volume.
+
 ## Configuration
 This is a platform plugin, that will register all accessories within the Bridge provided by homebridge. The following shows the general homebridge configuration (`config.json`), see the [Supported HAP Services below](#supported-hap-services), in order to get the detailed configuration for each service.
 

@@ -2,6 +2,7 @@
 
 const {Accessory} = require('../util/Accessory');
 const {addOnCharacteristic} = require('./characteristic/On');
+const {addRotationSpeedCharacteristic} = require('./characteristic/Rotation');
 
 class FanAccessory extends Accessory {
 
@@ -19,6 +20,7 @@ class FanAccessory extends Accessory {
         this._log.debug(`Creating fan service for ${this.name}`);
         let primaryService = new this.Service.Fan(this.name);
         addOnCharacteristic.bind(this)(primaryService);
+        addRotationSpeedCharacteristic.bind(this)(primaryService, true);
         return primaryService;
     }
 }
