@@ -9,7 +9,7 @@ function addLightOnCharacteristic(service) {
         ['Switch', 'Dimmer', 'Color'],
         _transformation,
         _commitFunction
-    )
+    );
 }
 
 function addHueCharacteristic(service) {
@@ -20,7 +20,7 @@ function addHueCharacteristic(service) {
         ['Switch', 'Dimmer', 'Color'],
         _transformation,
         _commitFunction
-    )
+    );
 }
 
 function addSaturationCharacteristic(service) {
@@ -30,7 +30,7 @@ function addSaturationCharacteristic(service) {
         ['Switch', 'Dimmer', 'Color'],
         _transformation,
         _commitFunction
-    )
+    );
 }
 
 function addBrightnessCharacteristic(service) {
@@ -40,10 +40,10 @@ function addBrightnessCharacteristic(service) {
         ['Switch', 'Dimmer', 'Color'],
         _transformation,
         _commitFunction
-    )
+    );
 }
 
-function _commitFunction(service, item) {
+function _commitFunction(service) {
     this._stateLock = true;
     let command;
     if(this._newState["brightness"] === undefined && this._newState["hue"] === undefined && this._newState["saturation"] === undefined) {           // Only binary set

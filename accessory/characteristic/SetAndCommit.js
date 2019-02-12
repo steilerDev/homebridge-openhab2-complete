@@ -12,12 +12,11 @@ function addSetAndCommitCharacteristic(service, characteristic, characteristicTy
 
         // Synchronisation helper
         _releaseLocks();
-
+        console.log(JSON.stringify(this));
         this._log.debug(`Creating ${characteristicType} characteristic for ${this.name} with item ${item}`);
 
         characteristic.on('set', _setState.bind(this, characteristicType))
             .on('set', _commitState.bind(this,
-                item,
                 commitFunction.bind(this, service)
             ))
             .on('get', getState.bind(this,
@@ -61,7 +60,7 @@ function _setState(stateType, value, callback, context, connectionID) {
 
 
 // Wait for all states to be set (250ms should be sufficient) and then commit once
-function _commitState(item, commitFunction, value, callback, context, connectionID) {
+function _commitState(commitFunction, value, callback, context, connectionID) {
     if(this._commitLock) {
         this._log.debug(`Not executing commit due to commit lock`);
         callback();
@@ -71,7 +70,7 @@ function _commitState(item, commitFunction, value, callback, context, connection
     } else {
         this._commitLock = true;
         setTimeout(function() {
-            let command = commitFunction(item);
+            let command = commitFunction();
             _releaseLocks.bind(this)();
             if(command) {
                 if(command instanceof Error) {
