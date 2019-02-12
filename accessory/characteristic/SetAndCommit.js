@@ -8,7 +8,7 @@ const SET_AND_COMMIT_CONFIG = {
 // characteristicType: either `binary`, `hue`, `saturation` or `brightness`
 function addSetAndCommitCharacteristic(service, characteristic, characteristicType, expectedItems, transformation, commitFunction, optional) {
     try {
-        let [item, type] = this._getAndCheckItemType(LIGHT_CONFIG.item, expectedItems);
+        let [item, type] = this._getAndCheckItemType(SET_AND_COMMIT_CONFIG.item, expectedItems);
 
         // Synchronisation helper
         _releaseLocks();
