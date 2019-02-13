@@ -193,8 +193,32 @@ class OpenHAB {
                 this._log.error(`Received no items from openHAB, unable to sync states!`);
             }
         }
-
     }
+
+    syncItemValues() {
+        this._log.info(`Syncing all item values from openHAB`);
+        let myURL = this._getURL(`/rest/items`, `recursive=false&fields=name%2Cstate`);
+        const response = syncRequest('GET', myURL);
+        if (response.statusCode !== 200) {
+            return new Error(`Unable to get item values: HTTP code ${response.statusCode}!`);
+        } else {
+            const items = JSON.parse(response.body);
+            if(items.length > 0) {
+                this._log.debug(`Got array with ${items.length} item/s`);
+                items.forEach(function(item) {
+                    if(this._subscriptions[item.name] !== undefined) {
+                        this._log.debug(`Got item ${item.name} with value ${item.state}, adding to value cache`);
+                        this._valueCache.set(item.name, item.state);
+                    } else {
+                        this._log.warn(`Got item ${item.name} with value ${item.state}, not adding to value cache, since it is not linked to homebridge!`);
+                    }
+                }.bind(this));
+            } else {
+                this._log.error(`Received no items from openHAB, unable to sync states!`);
+            }
+        }
+    }
+
 
     subscribe(habItem, callback) {
         if(!this._subscriptions[habItem]) {
@@ -213,8 +237,6 @@ class OpenHAB {
 
     startSubscriptionForItem(url, habItem, callbacks) {
         const CLOSED = 2;
-
-        this._getStateWithoutCache(habItem);
 
         this._log.debug(`Starting subscription for ${habItem} with ${callbacks.length} subscribed characteristic(s)`);
         let source = new EventSource(url);
