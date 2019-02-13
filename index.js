@@ -112,6 +112,7 @@ const OpenHABComplete = class {
             }
         });
         this._platform.openHAB.startSubscription();
+        this._platform.openHAB.syncItemValues();
         this._log.info(`Finished loading accessories from configuration`);
         this._log.info(`---`);
         callback(_accessories);
