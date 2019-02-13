@@ -187,7 +187,7 @@ This service describes a thermostat.
   * Needs to be of type `Number` within openHAB
 * `coolingThresholdTempItem`: *(optional)* The openHAB item describing the cooling threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'maximum temperature' that mus be reached before cooling is turned on.
   * Needs to be of type `Number` within openHAB
-* `modeItem`: *(optional)* If your thermostat can be set to heating, cooling or auto mode through an item, and/or reports back its current configuration use this item
+* `modeItem`: *(optional)* If your thermostat can be set to heating, cooling or auto mode through an item, and/or reports back its current configuration use this item, otherwise the heating/cooling capabilities are deferred from `heatingItem` and `coolingItem` and will not be changeable.
   * Needs to be of type `Number` within openHAB
   * Only discrete values are recognized:
     * 0 == OFF

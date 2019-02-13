@@ -109,6 +109,8 @@ function addTargetHeatingCoolingStateCharacteristic(service) {
         let COOL = 2;
         let AUTO = 3;
 
+        this._log.error(this._config);
+
         if(this._config[CURRENT_TARGET_CLIMATE_CONFIG.coolingItem] && this._config[CURRENT_TARGET_CLIMATE_CONFIG.heatingItem]) {
             mode = AUTO;
         } else if(this._config[CURRENT_TARGET_CLIMATE_CONFIG.coolingItem]) {
