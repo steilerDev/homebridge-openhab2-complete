@@ -112,7 +112,7 @@ function addTargetHeatingCoolingStateCharacteristic(service) {
             this._log.debug(`Creating 'TargetHeatingCoolingState' characteristic for ${this.name} with mode set to ${mode}`);
             service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState)
                 .on('get', function (callback) {
-                    callback(modeTransformation[mode]);
+                    callback(null, modeTransformation[mode]);
                 })
                 .on('set', function(_, callback) { callback() }.bind(this));
         } else {
@@ -156,9 +156,9 @@ function _transformHeatingCoolingState(thisItemMode, characteristic, value) {
 }
 
 function _getHeatingCoolingState(mode, heatingItem, coolingItem, callback) {
-    let OFF = 0;
-    let HEAT = 1;
-    let COOL = 2;
+    let OFF = 0;  // = Characteristic.CurrentHeatingCoolingState.OFF
+    let HEAT = 1; // = Characteristic.CurrentHeatingCoolingState.HEAT
+    let COOL = 2; // = Characteristic.CurrentHeatingCoolingState.COOL
 
     switch (mode) {
         case "Heating":
@@ -185,11 +185,11 @@ function _getHeatingCoolingState(mode, heatingItem, coolingItem, callback) {
             }
 
             if (heatingState === "OFF" && coolingState === "OFF") {
-                callback(null, this.Characteristic.CurrentHeatingCoolingState.OFF);
+                callback(null, OFF);
             } else if (heatingState === "ON" && coolingState === "OFF") {
-                callback(null, this.Characteristic.CurrentHeatingCoolingState.HEAT);
+                callback(null, HEAT);
             } else if (heatingState === "OFF" && coolingState === "ON") {
-                callback(null, this.Characteristic.CurrentHeatingCoolingState.COOL);
+                callback(null, COOL);
             } else {
                 let msg = `Combination of heating state (${heatingState}) and cooling state (${coolingState}) not allowed!`;
                 this._log.error(msg);
