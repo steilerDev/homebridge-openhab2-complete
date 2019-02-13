@@ -48,35 +48,45 @@ function addBrightnessCharacteristic(service) {
     );
 }
 
-function _commitFunction(service) {
-    this._stateLock = true;
+function _commitFunction(service, type) {
     let command;
-    if(this._newState["brightness"] === undefined && this._newState["hue"] === undefined && this._newState["saturation"] === undefined) {           // Only binary set
-        if(this._newState["binary"] === undefined) {
-            command = new Error("Race condition! Commit was called before set!")
+    this._stateLock = true;
+    if(binary === undefined &&                              // Checking if at least one of the required states was set
+        (type === "Switch" || brightness === undefined) &&
+        (type !== "Color" || hue === undefined) &&
+        (type !== "Color" || saturation === undefined)
+    ) {
+        command = new Error("Race condition! Commit was called before set!");
+    } else {
+        let hue, saturation, brightness;
+
+        let binary = this._newState["binary"] !== undefined ?
+            this._newState["binary"] :
+            service.getCharacteristic(this.Characteristic.On).value;
+        if (type !== "Switch") {
+            brightness = this._newState["brightness"] !== undefined ?
+                this._newState["brightness"] :
+                service.getCharacteristic(this.Characteristic.Brightness).value;
+            if (type === "Color") {
+                hue = this._newState["hue"] !== undefined ?
+                    this._newState["hue"] :
+                    service.getCharacteristic(this.Characteristic.Hue).value;
+
+                saturation = this._newState["saturation"] !== undefined ?
+                    this._newState["saturation"] :
+                    service.getCharacteristic(this.Characteristic.Saturation).value;
+            }
+        }
+
+        if(binary === undefined && hue === undefined && saturation === undefined && brightness === undefined) {
+            command = new Error("Unable to commit state, since necessary information are missing");
+        } else if (hue === undefined && saturation === undefined && brightness === undefined) {
+            command = binary ? "ON" : "OFF";
+        } else if (hue === undefined && saturation === undefined) {
+            command = `${brightness}`;
         } else {
-            command = this._newState["binary"] ? "ON" : "OFF";
+            command = `${hue},${saturation},${brightness}`;
         }
-    } else if(this._newState["hue"] === undefined && this._newState["saturation"] === undefined) {                                                  // Only brightness set
-        if (this._newState["brightness"] === undefined) {
-            command = new Error("Race condition! Commit was called before set!");
-        } else {
-            command = `${this._newState["brightness"] === 100 ? 99 : this._newState["brightness"]}`;
-        }
-    } else {                                                                                                                                         // Either hue, brightness and/or saturation set, therefore we need to send a tuple
-        if(this._newState["hue"] === undefined) {
-            this._newState["hue"] = service.getCharacteristic(this.Characteristic.Hue).value;
-            this._log.error(`Got existing hue value of ${this._newState["hue"]}`);
-        }
-        if(this._newState["brightness"] === undefined) {
-            this._newState["brightness"] = service.getCharacteristic(this.Characteristic.Brightness).value;
-            this._log.error(`Got existing brightness value of ${this._newState["brightness"]}`);
-        }
-        if(this._newState["saturation"] === undefined) {
-            this._newState["saturation"] = service.getCharacteristic(this.Characteristic.Saturation).value;
-            this._log.error(`Got existing saturation value of ${this._newState["saturation"]}`)
-        }
-        command = `${this._newState["hue"]},${this._newState["saturation"]},${this._newState["brightness"]}`;
     }
     return command;
 }

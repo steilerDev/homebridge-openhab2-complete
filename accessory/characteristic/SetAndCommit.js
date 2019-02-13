@@ -16,7 +16,7 @@ function addSetAndCommitCharacteristic(service, characteristic, characteristicTy
 
         characteristic.on('set', _setState.bind(this, characteristicType))
             .on('set', _commitState.bind(this,
-                commitFunction.bind(this, service),
+                commitFunction.bind(this, service, type),
                 item
             ))
             .on('get', getState.bind(this,

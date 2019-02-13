@@ -17,6 +17,8 @@
 
 ## Changelog
 ### V0.9.0 (unreleased)
+* Removed `clone` dependency, since it caused unexpected behaviour
+* Improved fan in order to support non-binary items to control the fan speed
 
 ### V0.8.1
 * Created own caching mechanism, supporting this use case & improving UX performance & stress to openHAB.
