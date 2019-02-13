@@ -2,6 +2,7 @@
 
 const {addTargetStateCharacteristic, addCurrentStateCharacteristic} = require('./CurrentTarget');
 const {getState, setState, dummyTransformation} = require('../../util/Accessory');
+const {addNumericSensorCharacteristic} = require('./NumericSensor');
 
 const CURRENT_TARGET_CLIMATE_CONFIG = {
     currentTempItem: "currentTempItem", //required
@@ -11,27 +12,22 @@ const CURRENT_TARGET_CLIMATE_CONFIG = {
     heatingItem: "heatingItem", //State mutual Exclusive with coolingItem, 'Switch' type
     coolingItem: "coolingItem", //State mutual Exclusive with heatingItem, 'Switch' type
     heatingCoolingItem: "heatingCoolingItem",
-    tempUnit: "tempUnit" // 'Celsius' (default), 'Fahrenheit'
+    tempUnit: "tempUnit", // 'Celsius' (default), 'Fahrenheit'
+    heatingThresholdTempItem: "heatingThresholdTempItem",
+    coolingThresholdTempItem: "coolingThresholdTempItem"
+
 };
 
+function addCoolingThresholdCharacteristic(service, optional) {
+    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CoolingThresholdTemperature), {item: CURRENT_TARGET_CLIMATE_CONFIG.coolingThresholdTempItem}, optional);
+}
+
+function addHeatingThresholdCharacteristic(service, optional) {
+    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.HeatingThresholdTemperature), {item: CURRENT_TARGET_CLIMATE_CONFIG.heatingThresholdTempItem}, optional);
+}
+
 function addCurrentTemperatureCharacteristic(service, optional) {
-    try {
-        let [currentTempItem, currentTempType] = this._getAndCheckItemType(CURRENT_TARGET_CLIMATE_CONFIG.currentTempItem, ['Number']);
-        addCurrentStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CurrentTemperature),
-            currentTempItem,
-            currentTempType,
-            false,
-            dummyTransformation
-        );
-    } catch(e) {
-        let msg = `Not configuring 'CurrentTemperature' characteristic for ${this.name}: ${e.message}`;
-        service.removeCharacteristic(this.Characteristic.CurrentTemperature);
-        if(optional) {
-            this._log.debug(msg);
-        } else {
-            throw new Error(msg);
-        }
-    }
+    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentTemperature), {item: CURRENT_TARGET_CLIMATE_CONFIG.currentTempItem}, optional);
 }
 
 function addTargetTemperatureCharacteristic(service, optional) {
@@ -59,23 +55,7 @@ function addTargetTemperatureCharacteristic(service, optional) {
 }
 
 function addCurrentRelativeHumidityCharacteristic(service, optional) {
-    try {
-        let [currentHumidityItem, currentHumidityType] = this._getAndCheckItemType(CURRENT_TARGET_CLIMATE_CONFIG.currentHumidityItem, ['Number']);
-        addCurrentStateCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity),
-            currentHumidityItem,
-            currentHumidityType,
-            false,
-            dummyTransformation
-        );
-    } catch(e) {
-        let msg = `Not configuring 'CurrentRelativeHumidity' characteristic for ${this.name}: ${e.message}`;
-        service.removeCharacteristic(this.Characteristic.CurrentRelativeHumidity);
-        if(optional) {
-            this._log.debug(msg);
-        } else {
-            throw new Error(msg);
-        }
-    }
+    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity), {item: CURRENT_TARGET_CLIMATE_CONFIG.currentHumidityItem}, optional);
 }
 
 function addTargetRelativeHumidityCharacteristic(service, optional) {
@@ -287,5 +267,7 @@ module.exports = {
     addTargetRelativeHumidityCharacteristic,
     addCurrentRelativeHumidityCharacteristic,
     addTargetTemperatureCharacteristic,
-    addCurrentTemperatureCharacteristic
+    addCurrentTemperatureCharacteristic,
+    addHeatingThresholdCharacteristic,
+    addCoolingThresholdCharacteristic
 };

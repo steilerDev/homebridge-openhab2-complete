@@ -6,10 +6,10 @@ const NUMERIC_CONFIG = {
     item: "item"
 };
 
-function addNumericSensorCharacteristic(service, characteristic, optional) {
+function addNumericSensorCharacteristic(service, characteristic, CONF_MAP, optional) {
     try {
 
-        let [item] = this._getAndCheckItemType(NUMERIC_CONFIG.item, ['Number']);
+        let [item] = this._getAndCheckItemType(CONF_MAP.item, ['Number']);
 
         this._log.debug(`Creating numeric sensor characteristic for ${this.name} with ${item}`);
 
@@ -34,18 +34,21 @@ function addNumericSensorCharacteristic(service, characteristic, optional) {
 }
 
 function addCurrentRelativeHumidityCharacteristic(service) {
-    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity));
+    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity), NUMERIC_CONFIG);
 }
 
 function addCurrentAmbientLightLevelCharacteristic(service) {
-    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentAmbientLightLevel));
+    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentAmbientLightLevel), NUMERIC_CONFIG);
 }
 
 function addCurrentTemperatureCharacteristic(service) {
-    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentTemperature));
+    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentTemperature), NUMERIC_CONFIG);
 }
+
+
 module.exports = {
     addCurrentRelativeHumidityCharacteristic,
     addCurrentAmbientLightLevelCharacteristic,
-    addCurrentTemperatureCharacteristic
+    addCurrentTemperatureCharacteristic,
+    addNumericSensorCharacteristic
 };

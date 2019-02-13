@@ -162,7 +162,9 @@ This service describes a thermostat.
     "targetHumidityItem": "Itemname-within-OpenHAB",
     "heatingItem": "Itemname-within-OpenHAB",
     "coolingItem": "Itemname-within-OpenHAB",
-    "tempUnit": "Celsius"
+    "tempUnit": "Celsius",
+    "heatingThresholdTempItem": "Itemname-within-OpenHAB",
+    "coolingThresholdTempItem": "Itemname-within-OpenHAB",
 }
 ```
 * `currentTempItem`: The openHAB item representing the current temperature as measured by the thermostat
@@ -180,6 +182,10 @@ This service describes a thermostat.
 * `tempUnit` *(optional)*: Gives the measurement unit of the thermostat, currently does not change anything inside HomeKit
   * Default: `Celsius`
   * Allowed values: `Celsius` & `Fahrenheit`
+* `heatingThresholdTempItem`: The openHAB item describing the heating threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'minimum temperature' that mus be reached before heating is turned on.
+  * Needs to be of type `Number` within openHAB
+* `coolingThresholdTempItem`: The openHAB item describing the cooling threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'maximum temperature' that mus be reached before cooling is turned on.
+  * Needs to be of type `Number` within openHAB
 
 ### Security System
 ```

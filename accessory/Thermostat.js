@@ -7,7 +7,9 @@ const {
     addTargetRelativeHumidityCharacteristic,
     addCurrentRelativeHumidityCharacteristic,
     addTargetTemperatureCharacteristic,
-    addCurrentTemperatureCharacteristic
+    addCurrentTemperatureCharacteristic,
+    addHeatingThresholdCharacteristic,
+    addCoolingThresholdCharacteristic
 } = require('./characteristic/CurrentTargetClimate');
 
 class ThermostatAccessory extends Accessory {
@@ -31,6 +33,8 @@ class ThermostatAccessory extends Accessory {
         addTargetRelativeHumidityCharacteristic.bind(this)(primaryService, true);
         addHeatingCoolingStateCharacteristic.bind(this)(primaryService);
         addTemperatureDisplayUnitsCharacteristic.bind(this)(primaryService);
+        addCoolingThresholdCharacteristic.bind(this)(primaryService, true);
+        addHeatingThresholdCharacteristic.bind(this)(primaryService, true);
         return primaryService;
     }
 
