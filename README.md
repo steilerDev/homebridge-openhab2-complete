@@ -58,6 +58,8 @@ The following is a list of all services that are currently supported and which v
 * Complex Accessories:
   * [Lightbulb](#lightbulb) 
     * Homebridge configuration type: `light`
+  * [Fan](#fan)
+    * Homebridge configuration type: `fan`
   * [Thermostat](#thermostat)
     * Homebridge configuration type: `thermostat`
   * [Security System](#security-system)
@@ -81,8 +83,6 @@ The following is a list of all services that are currently supported and which v
 * Binary Actors:
   * [Switch](#switch)
     * Homebridge configuration type: `switch`
-  * [Fan](#fan)
-    * Homebridge configuration type: `fan`
   * [Outlet](#outlet)
     * Homebridge configuration type: `outlet`
 * Binary Sensors:
@@ -135,6 +135,19 @@ This service describes a lightbulb.
 ```
 * `item`: The openHAB item controlled by this accessory
   * Needs to be of type `Switch`, `Dimmer` or `Color` within openHAB (HomeKit will correctly display brightness *-in case of `Dimmer` or `Color`-* and color settings *-in case of `Color`-*)
+  
+### Fan
+This service describes a fan.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "fan",
+    "item": "Itemname-within-OpenHAB",
+}
+```
+* `item`: The openHAB item controlled by this accessory
+  * Needs to be of type `Switch`, `Number` or `Dimmer` within openHAB (HomeKit will correctly display fan speed control *-in case of `Number` or `Dimmer`-*)
 
 ### Thermostat
 This service describes a thermostat.
@@ -415,22 +428,6 @@ This service describes a binary switch.
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
-### Fan
-This service describes a fan.
-
-```
-{
-    "name": "An items name, as shown in Homekit later",
-    "type": "fan",
-    "item": "Itemname-within-OpenHAB",
-    "inverted": "false"
-}
-```
-* `item`: The openHAB item controlled by this accessory
-  * Needs to be of type `Switch` within openHAB
-* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Outlet
 This service describes an outlet.

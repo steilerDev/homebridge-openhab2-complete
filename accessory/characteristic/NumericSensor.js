@@ -34,15 +34,15 @@ function addNumericSensorCharacteristic(service, characteristic, optional) {
 }
 
 function addCurrentRelativeHumidityCharacteristic(service) {
-    addNumericSensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity));
+    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity));
 }
 
 function addCurrentAmbientLightLevelCharacteristic(service) {
-    addNumericSensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CurrentAmbientLightLevel));
+    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentAmbientLightLevel));
 }
 
 function addCurrentTemperatureCharacteristic(service) {
-    addNumericSensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CurrentTemperature));
+    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentTemperature));
 }
 module.exports = {
     addCurrentRelativeHumidityCharacteristic,

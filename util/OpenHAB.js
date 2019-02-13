@@ -210,7 +210,7 @@ class OpenHAB {
                         this._log.debug(`Got item ${item.name} with value ${item.state}, adding to value cache`);
                         this._valueCache.set(item.name, item.state);
                     } else {
-                        this._log.warn(`Got item ${item.name} with value ${item.state}, not adding to value cache, since it is not linked to homebridge!`);
+                        this._log.debug(`Got item ${item.name} with value ${item.state}, not adding to value cache, since it is not linked to homebridge!`);
                     }
                 }.bind(this));
             } else {

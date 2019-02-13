@@ -19,8 +19,9 @@
 ### V0.9.0 (unreleased)
 * Removed `clone` dependency, since it caused unexpected behaviour
 * Improved fan in order to support non-binary items to control the fan speed
+* Fixed an issue, where not supported characteristics were still being exposed to HomeKit
 
-### V0.8.1
+### V0.8.2
 * Created own caching mechanism, supporting this use case & improving UX performance & stress to openHAB.
 * Improved startup performance due to bulk sync of item states
 
