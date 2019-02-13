@@ -10,12 +10,10 @@ const CURRENT_TARGET_CLIMATE_CONFIG = {
     targetHumidityItem: "targetHumidityItem",
     heatingItem: "heatingItem", //State mutual Exclusive with coolingItem, 'Switch' type
     coolingItem: "coolingItem", //State mutual Exclusive with heatingItem, 'Switch' type
-    mode: "mode",
     modeItem: "modeItem",
     tempUnit: "tempUnit", // 'Celsius' (default), 'Fahrenheit'
     heatingThresholdTempItem: "heatingThresholdTempItem",
     coolingThresholdTempItem: "coolingThresholdTempItem"
-
 };
 
 function addCoolingThresholdCharacteristic(service, optional) {
@@ -100,28 +98,34 @@ function addCurrentHeatingCoolingStateCharacteristic(service) {
 }
 
 function addTargetHeatingCoolingStateCharacteristic(service) {
-    let mode = this._config[CURRENT_TARGET_CLIMATE_CONFIG.mode];
     let modeItem = this._config[CURRENT_TARGET_CLIMATE_CONFIG.modeItem];
-    if(mode !== undefined) {
-        let modeTransformation = {
-            heating: 1,
-            cooling: 2,
-            heatingCooling: 3
-        };
-        if (modeTransformation[mode] !== undefined) {
-            this._log.debug(`Creating 'TargetHeatingCoolingState' characteristic for ${this.name} with mode set to ${mode}`);
-            service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState)
-                .on('get', function (callback) {
-                    callback(null, modeTransformation[mode]);
-                })
-                .on('set', function(_, callback) { callback() }.bind(this));
-        } else {
-            throw new Error(`Target HeatingCooling State mode ${mode} unknown!`);
-        }
-    } else if (modeItem !== undefined) {
+    if (modeItem !== undefined) {
         this._log.debug(`Creating 'TargetHeatingCoolingState' characteristic for ${this.name} with ${modeItem}`);
         addNumericSensorCharacteristic(service, service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState), {item: CURRENT_TARGET_CLIMATE_CONFIG.modeItem});
         addNumericActorCharacteristic(service, service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState), {item: CURRENT_TARGET_CLIMATE_CONFIG.modeItem});
+    } else {
+        let mode;
+        let HEAT = 1;
+        let COOL = 2;
+        let AUTO = 3;
+
+        if(this._config[CURRENT_TARGET_CLIMATE_CONFIG.coolingItem] && this._config[CURRENT_TARGET_CLIMATE_CONFIG.heatingItem]) {
+            mode = AUTO;
+        } else if(this._config[CURRENT_TARGET_CLIMATE_CONFIG.coolingItem]) {
+            mode = COOL;
+        } else if (this.config[CURRENT_TARGET_CLIMATE_CONFIG.heatingItem]) {
+            mode = HEAT;
+        } else {
+            throw new Error(`Unable to set HeatingCoolingState mode, because neither heating nor cooling item is defined!`);
+        }
+
+        this._log.debug(`Creating 'TargetHeatingCoolingState' characteristic for ${this.name} with mode set to ${mode}`);
+        service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState)
+            .on('get', function (callback) {
+                callback(null, mode);
+            })
+            .on('set', function(_, callback) { callback() }.bind(this));
+
     }
 }
 
@@ -201,30 +205,6 @@ function _getHeatingCoolingState(mode, heatingItem, coolingItem, callback) {
             this._log.error(msg);
             callback(new Error(msg));
     }
-}
-
-function _setHeatingCoolingState(heatingItem, coolingItem, state, callback) {
-    let OFF = 0;
-    let HEAT = 1;
-    let COOL = 2;
-
-    this._log(`Setting heating cooling state for ${this.name} [Heating Item: ${heatingItem}/Cooling Item: ${coolingItem}] to ${state}`);
-    switch(state) {
-        default:
-        case OFF:
-            if(heatingItem) setState.bind(this)(heatingItem, null, "OFF", function(){});
-            if(coolingItem) setState.bind(this)(coolingItem, null, "OFF", function(){});
-            break;
-        case HEAT:
-            if(heatingItem) setState.bind(this)(heatingItem, null, "ON", function(){});
-            if(coolingItem) setState.bind(this)(coolingItem, null, "OFF", function(){});
-            break;
-        case COOL:
-            if(heatingItem) setState.bind(this)(heatingItem, null, "OFF", function(){});
-            if(coolingItem) setState.bind(this)(coolingItem, null, "ON", function(){});
-            break;
-    }
-    callback();
 }
 
 module.exports = {

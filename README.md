@@ -165,6 +165,7 @@ This service describes a thermostat.
     "tempUnit": "Celsius",
     "heatingThresholdTempItem": "Itemname-within-OpenHAB",
     "coolingThresholdTempItem": "Itemname-within-OpenHAB",
+    "modeItem": "Itemname-within-OpenHAB",
 }
 ```
 * `currentTempItem`: The openHAB item representing the current temperature as measured by the thermostat
@@ -182,10 +183,17 @@ This service describes a thermostat.
 * `tempUnit` *(optional)*: Gives the measurement unit of the thermostat, currently does not change anything inside HomeKit
   * Default: `Celsius`
   * Allowed values: `Celsius` & `Fahrenheit`
-* `heatingThresholdTempItem`: The openHAB item describing the heating threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'minimum temperature' that mus be reached before heating is turned on.
+* `heatingThresholdTempItem`: *(optional)* The openHAB item describing the heating threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'minimum temperature' that mus be reached before heating is turned on.
   * Needs to be of type `Number` within openHAB
-* `coolingThresholdTempItem`: The openHAB item describing the cooling threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'maximum temperature' that mus be reached before cooling is turned on.
+* `coolingThresholdTempItem`: *(optional)* The openHAB item describing the cooling threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'maximum temperature' that mus be reached before cooling is turned on.
   * Needs to be of type `Number` within openHAB
+* `modeItem`: *(optional)* If your thermostat can be set to heating, cooling or auto mode through an item, and/or reports back its current configuration use this item
+  * Needs to be of type `Number` within openHAB
+  * Only discrete values are recognized:
+    * 0 == OFF
+    * 1 == Heating
+    * 2 == Cooling
+    * 3 == Auto
 
 ### Security System
 ```
