@@ -1,8 +1,7 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addOnCharacteristic} = require('./characteristic/On');
-const {addRotationSpeedCharacteristic} = require('./characteristic/Rotation');
+const {addRotationSpeedCharacteristic, addFanOnCharacteristic} = require('./characteristic/SetAndCommitFan');
 
 class FanAccessory extends Accessory {
 
@@ -19,8 +18,8 @@ class FanAccessory extends Accessory {
     _getPrimaryService() {
         this._log.debug(`Creating fan service for ${this.name}`);
         let primaryService = new this.Service.Fan(this.name);
-        addOnCharacteristic.bind(this)(primaryService);
-        addRotationSpeedCharacteristic.bind(this)(primaryService, true);
+        addFanOnCharacteristic.bind(this)(primaryService);
+        addRotationSpeedCharacteristic.bind(this)(primaryService);
         return primaryService;
     }
 }

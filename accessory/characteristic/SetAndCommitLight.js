@@ -1,3 +1,4 @@
+'use strict';
 
 const {addSetAndCommitCharacteristic} = require('./SetAndCommit');
 
@@ -83,17 +84,9 @@ function _commitFunction(service, type) {
         } else if (hue === undefined && saturation === undefined && brightness === undefined) {
             command = binary ? "ON" : "OFF";
         } else if (hue === undefined && saturation === undefined) {
-            if(binary) {
-                command = `${brightness}`;
-            } else {
-                command = "OFF";
-            }
+            command = binary ? `${brightness}` : "OFF";
         } else {
-            if(binary) {
-                command = `${hue},${saturation},${brightness}`;
-            } else {
-                command = "OFF";
-            }
+            command = binary ? `${hue},${saturation},${brightness}` : "OFF";
         }
     }
     return command;
