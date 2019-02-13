@@ -25,6 +25,7 @@ function addCurrentTemperatureCharacteristic(service, optional) {
         );
     } catch(e) {
         let msg = `Not configuring 'CurrentTemperature' characteristic for ${this.name}: ${e.message}`;
+        service.removeCharacteristic(this.Characteristic.CurrentTemperature);
         if(optional) {
             this._log.debug(msg);
         } else {
@@ -48,6 +49,7 @@ function addTargetTemperatureCharacteristic(service, optional) {
         );
     } catch(e) {
         let msg = `Not configuring 'TargetTemperature' characteristic for ${this.name}: ${e.message}`;
+        service.removeCharacteristic(this.Characteristic.TargetTemperature);
         if(optional) {
             this._log.debug(msg);
         } else {
@@ -67,6 +69,7 @@ function addCurrentRelativeHumidityCharacteristic(service, optional) {
         );
     } catch(e) {
         let msg = `Not configuring 'CurrentRelativeHumidity' characteristic for ${this.name}: ${e.message}`;
+        service.removeCharacteristic(this.Characteristic.CurrentRelativeHumidity);
         if(optional) {
             this._log.debug(msg);
         } else {
@@ -90,6 +93,7 @@ function addTargetRelativeHumidityCharacteristic(service, optional) {
         );
     } catch(e) {
         let msg = `Not configuring 'TargetRelativeHumidity' characteristic for ${this.name}: ${e.message}`;
+        service.removeCharacteristic(this.Characteristic.TargetRelativeHumidity);
         if(optional) {
             this._log.debug(msg);
         } else {

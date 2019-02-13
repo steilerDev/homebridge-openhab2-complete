@@ -32,6 +32,7 @@ function addSetAndCommitCharacteristic(service, characteristic, characteristicTy
 
     } catch(e) {
         let msg = `Not configuring ${characteristicType} characteristic for ${this.name}: ${e.message}`;
+        service.removeCharacteristic(characteristic);
         if (optional) {
             this._log.debug(msg);
         } else {

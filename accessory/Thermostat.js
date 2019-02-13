@@ -24,14 +24,14 @@ class ThermostatAccessory extends Accessory {
 
     _getPrimaryService() {
         this._log.debug(`Creating thermostat service for ${this.name}`);
-        let thermostatService = new this.Service.Thermostat(this.name);
-        addCurrentTemperatureCharacteristic.bind(this)(thermostatService);
-        addTargetTemperatureCharacteristic.bind(this)(thermostatService);
-        addCurrentRelativeHumidityCharacteristic.bind(this)(thermostatService, true);
-        addTargetRelativeHumidityCharacteristic.bind(this)(thermostatService, true);
-        addHeatingCoolingStateCharacteristic.bind(this)(thermostatService);
-        addTemperatureDisplayUnitsCharacteristic.bind(this)(thermostatService);
-        return thermostatService;
+        let primaryService = new this.Service.Thermostat(this.name);
+        addCurrentTemperatureCharacteristic.bind(this)(primaryService);
+        addTargetTemperatureCharacteristic.bind(this)(primaryService);
+        addCurrentRelativeHumidityCharacteristic.bind(this)(primaryService, true);
+        addTargetRelativeHumidityCharacteristic.bind(this)(primaryService, true);
+        addHeatingCoolingStateCharacteristic.bind(this)(primaryService);
+        addTemperatureDisplayUnitsCharacteristic.bind(this)(primaryService);
+        return primaryService;
     }
 
 }

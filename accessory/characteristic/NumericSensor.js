@@ -6,20 +6,31 @@ const NUMERIC_CONFIG = {
     item: "item"
 };
 
-function addNumericSensorCharacteristic(characteristic) {
-    let [item] = this._getAndCheckItemType(NUMERIC_CONFIG.item, ['Number']);
+function addNumericSensorCharacteristic(service, characteristic, optional) {
+    try {
 
-    this._log.debug(`Creating numeric sensor characteristic for ${this.name} with ${item}`);
+        let [item] = this._getAndCheckItemType(NUMERIC_CONFIG.item, ['Number']);
 
-    characteristic.on('get', getState.bind(this,
+        this._log.debug(`Creating numeric sensor characteristic for ${this.name} with ${item}`);
+
+        characteristic.on('get', getState.bind(this,
             item,
             parseFloat
         ));
 
-    this._subscribeCharacteristic(characteristic,
-        item,
-        parseFloat
-    );
+        this._subscribeCharacteristic(characteristic,
+            item,
+            parseFloat
+        );
+    } catch(e) {
+        let msg = `Not configuring numeric sensor characteristic for ${this.name}: ${e.message}`;
+        service.removeCharacteristic(characteristic);
+        if(optional) {
+            this._log.debug(msg);
+        } else {
+            throw new Error(msg);
+        }
+    }
 }
 
 function addCurrentRelativeHumidityCharacteristic(service) {

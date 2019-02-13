@@ -8,7 +8,7 @@ const BINARY_CONFIG = {
 };
 
 // This function will try and add a battery warning characteristic to the provided service
-function addBinarySensorCharacteristic(characteristic, optional) {
+function addBinarySensorCharacteristic(service, characteristic, optional) {
     try {
         let [item] = this._getAndCheckItemType(BINARY_CONFIG.item, ['Contact', 'Switch']);
         let inverted = this._checkInvertedConf(BINARY_CONFIG.inverted);
@@ -33,6 +33,7 @@ function addBinarySensorCharacteristic(characteristic, optional) {
         );
     } catch (e) {
         let msg = `Not configuring binary sensor characteristic for ${this.name}: ${e.message}`;
+        service.removeCharacteristic(characteristic);
         if(optional) {
             this._log.debug(msg);
         } else {
@@ -42,35 +43,35 @@ function addBinarySensorCharacteristic(characteristic, optional) {
 }
 
 function addCarbonDioxideDetectedCharacteristic(service) {
-    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CarbonDioxideDetected));
+    addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CarbonDioxideDetected));
 }
 
 function addContactSensorCharacteristic(service) {
-    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.ContactSensorState));
+    addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.ContactSensorState));
 }
 
 function addCarbonMonoxideDetectedCharacteristic(service) {
-    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.CarbonMonoxideDetected));
+    addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CarbonMonoxideDetected));
 }
 
 function addFilterChangeIndicationCharacteristic(service) {
-    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.FilterChangeIndication));
+    addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.FilterChangeIndication));
 }
 
 function addLeakDetectedCharacteristic(service) {
-    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.LeakDetected));
+    addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.LeakDetected));
 }
 
 function addMotionDetectedCharacteristic(service) {
-    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.MotionDetected));
+    addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.MotionDetected));
 }
 
 function addOccupancyDetectedCharacteristic(service) {
-    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.OccupancyDetected));
+    addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.OccupancyDetected));
 }
 
 function addSmokeDetectedCharacteristic(service) {
-    addBinarySensorCharacteristic.bind(this)(service.getCharacteristic(this.Characteristic.SmokeDetected));
+    addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.SmokeDetected));
 }
 
 module.exports = {
