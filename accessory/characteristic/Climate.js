@@ -113,7 +113,8 @@ function addTargetHeatingCoolingStateCharacteristic(service) {
             service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState)
                 .on('get', function (callback) {
                     callback(modeTransformation[mode]);
-                });
+                })
+                .on('set', function(_, callback) { callback() }.bind(this));
         } else {
             throw new Error(`Target HeatingCooling State mode ${mode} unknown!`);
         }
