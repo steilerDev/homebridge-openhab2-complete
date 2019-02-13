@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory}  = require('../util/Accessory');
-const {addCurrentRelativeHumidityCharacteristic} = require('./characteristic/NumericSensor');
+const {addCurrentRelativeHumidityCharacteristic} = require('./characteristic/Numeric');
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class HumiditySensorAccessory extends Accessory {
