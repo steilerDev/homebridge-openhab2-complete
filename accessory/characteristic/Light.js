@@ -51,16 +51,16 @@ function addBrightnessCharacteristic(service) {
 function _commitFunction(service, type) {
     let command;
     this._stateLock = true;
-    if(binary === undefined &&                              // Checking if at least one of the required states was set
-        (type === "Switch" || brightness === undefined) &&
-        (type !== "Color" || hue === undefined) &&
-        (type !== "Color" || saturation === undefined)
+    if(this._newState["binary"] === undefined &&                              // Checking if at least one of the required states was set
+        (type === "Switch" || this._newState["brightness"] === undefined) &&
+        (type !== "Color" || this._newState["hue"] === undefined) &&
+        (type !== "Color" || this._newState["saturation"] === undefined)
     ) {
         command = new Error("Race condition! Commit was called before set!");
     } else {
-        let hue, saturation, brightness;
+        let binary, hue, saturation, brightness;
 
-        let binary = this._newState["binary"] !== undefined ?
+        binary = this._newState["binary"] !== undefined ?
             this._newState["binary"] :
             service.getCharacteristic(this.Characteristic.On).value;
         if (type !== "Switch") {
