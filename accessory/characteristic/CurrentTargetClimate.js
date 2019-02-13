@@ -79,6 +79,12 @@ function addHeatingCoolingStateCharacteristic(service) {
             dummyTransformation,
             dummyTransformation
         );
+
+        this._subscribeCharacteristic(service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState),
+            heatingCoolingItem,
+            dummyTransformation
+        );
+
     }
 
     if(!(heatingItem || coolingItem || heatingCoolingItem)) {
