@@ -1,6 +1,6 @@
 # Changelog of homebridge-openhab2-complete
 ## Roadmap
-### V0.9.0 (planned)
+### V0.10.0 (planned)
 * Implement remaining Services:
   * Water Service Class with
     * Valve
@@ -16,11 +16,13 @@
     
 
 ## Changelog
-### V0.9.0 (unreleased)
+### V0.9.0
 * Removed `clone` dependency, since it caused unexpected behaviour
 * Improved fan in order to support non-binary items to control the fan speed
 * Fixed an issue, where not supported characteristics were still being exposed to HomeKit
 * Reworked thermostat to extend usage for AUTO mode and mode item
+Issues:
+* Closes #2, #4, #5, #7
 
 ### V0.8.2
 * Created own caching mechanism, supporting this use case & improving UX performance & stress to openHAB.
