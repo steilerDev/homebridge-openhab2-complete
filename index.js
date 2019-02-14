@@ -104,7 +104,7 @@ const OpenHABComplete = class {
             }
 
             if(configuration.items && configuration.items instanceof Array) {
-                add.items.forEach(function(acc) {
+                configuration.items.forEach(function(acc) {
                     acc.type = configuration.type;
                     this.parseAccessoryConfiguration(acc, accessories);
                 }.bind(this));
