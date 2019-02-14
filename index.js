@@ -80,41 +80,50 @@ const OpenHABComplete = class {
 
     accessories(callback) {
         let _accessories = [];
-        const { accessories } = this._config;
+        const configuration = this._config.accessories;
         this._log.info(`Loading accessories from configuration, this might take a while...`);
-        accessories.forEach(acc => {
-            try {
-                if (!(acc.type)) {
-                    throw new Error(`Invalid configuration: Accessory type is undefined: ${JSON.stringify(acc)}`);
-                }
-
-                const factory = this._factories[acc.type];
-                if (factory === undefined) {
-                    throw new Error(`Invalid configuration: Accessory type is unknown: ${acc.type}`);
-                }
-
-                if (acc.name) {
-                    acc.serialNumber = SerialNumberGenerator.generate(acc.name, acc.type);
-                } else {
-                    throw new Error(`Invalid configuration: Accessory name is undefined: ${JSON.stringify(acc)}`);
-                }
-
-                this._log.debug(`Found accessory in config: '${acc.name}' (${acc.type})`);
-
-                acc.version = version;
-
-                // Checked that: 'serialNumber' 'version' 'name' exists and 'type' is valid
-                const accessory = factory(this._platform, acc);
-                _accessories.push(accessory);
-                this._log(`Added accessory ${acc.name} (Type: ${acc.type})`);
-            } catch (e) {
-                this._log.warn(`Unable to add accessory ${acc.name}: ${e}, skipping`);
-            }
-        });
+        configuration.forEach(function(acc) {
+            this.parseAccessoryConfiguration(acc, _accessories);
+        }.bind(this));
         this._platform.openHAB.startSubscription();
         this._platform.openHAB.syncItemValues();
         this._log.info(`Finished loading accessories from configuration`);
         this._log.info(`---`);
         callback(_accessories);
+    }
+
+    parseAccessoryConfiguration(configuration, accessories) {
+        try {
+            if (!(configuration.type)) {
+                throw new Error(`Invalid configuration: Accessory type is undefined: ${JSON.stringify(configuration)}`);
+            }
+
+            const factory = this._factories[configuration.type];
+            if (factory === undefined) {
+                throw new Error(`Invalid configuration: Accessory type is unknown: ${configuratioconfigurationn.type}`);
+            }
+
+            if(configuration.items && configuration.items instanceof Array) {
+                add.items.forEach(function(acc) {
+                    acc.type = configuration.type;
+                    this.parseAccessoryConfiguration(acc, accessories);
+                }.bind(this));
+            } else {
+                if (configuration.name) {
+                    configuration.serialNumber = SerialNumberGenerator.generate(configuration.name, configuration.type);
+                } else {
+                    throw new Error(`Invalid configuration: Accessory name is undefined: ${JSON.stringify(configuration)}`);
+                }
+
+                this._log.debug(`Found accessory in config: '${configuration.name}' (${configuration.type})`);
+                configuration.version = version;
+                // Checked that: 'serialNumber' 'version' 'name' exists and 'type' is valid
+                const accessory = factory(this._platform, configuration);
+                accessories.push(accessory);
+                this._log(`Added accessory ${configuration.name} (Type: ${configuration.type})`);
+            }
+        } catch (e) {
+            this._log.warn(`Unable to add accessory ${configuration.name}: ${e}, skipping`);
+        }
     }
 };

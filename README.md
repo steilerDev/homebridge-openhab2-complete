@@ -50,6 +50,33 @@ This is a platform plugin, that will register all accessories within the Bridge 
 * `port`: *(optional)* If not specified the default port of the specified `host` protocol is used.
 * `accessory`: An array of accessories exposed to HomeKit, see the next chapter for available services and their configurations.
 
+Alternatively you can group accessories of the same `type` in a sub-array:
+```
+...
+    "platforms": [
+        {
+            ...
+            "accessories": [
+                {
+                    "type": "switch",
+                    "items": [
+                        {
+                            "name": "An items name, as shown in Homekit later",
+                            "item": "Itemname-within-OpenHAB"
+                        },
+                        {
+                            "name": "An items name, as shown in Homekit later",
+                            "item": "Itemname-within-OpenHAB"
+                        },
+                        ...
+                    ]
+                },
+                ...
+            ]
+        },
+...
+```
+
 ## Supported HAP Services
 The following is a list of all services that are currently supported and which values are required within the accessory configuration. Every accessory needs a `name` (as shown in HomeKit later) and a `type`. 
 

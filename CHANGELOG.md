@@ -1,5 +1,8 @@
 # Changelog of homebridge-openhab2-complete
 ## Roadmap
+### V1.0.0 (planned)
+* Code audit & documentation
+
 ### V0.10.0 (planned)
 * Implement remaining Services:
   * Water Service Class with
@@ -7,15 +10,14 @@
     * Faucet
     * Irrigation
   * Climate Service Class with [Active, Current, Target]
-    * Thermostat rework
     * HeaterCooler
     * Humidifier/Dehumidifier
     * Air Purifier
-* More efficient configuration layout
-* Code audit & documentation
-    
 
 ## Changelog
+### V0.10.0 (unreleased)
+* Allowing grouping of same type accessory inside configuration
+
 ### V0.9.0
 * Removed `clone` dependency, since it caused unexpected behaviour
 * Improved fan in order to support non-binary items to control the fan speed
