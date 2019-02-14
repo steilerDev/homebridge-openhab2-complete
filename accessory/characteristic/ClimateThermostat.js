@@ -4,57 +4,10 @@ const {getState} = require('../../util/Accessory');
 const {addNumericSensorCharacteristic, addNumericSensorActorCharacteristic} = require('./Numeric');
 
 const CLIMATE_THERMOSTAT_CONFIG = {
-    currentTempItem: "currentTempItem", //required
-    targetTempItem: "targetTempItem", //required
-    currentHumidityItem: "currentHumidityItem",
-    targetHumidityItem: "targetHumidityItem",
     heatingItem: "heatingItem", //State mutual Exclusive with coolingItem, 'Switch' type
     coolingItem: "coolingItem", //State mutual Exclusive with heatingItem, 'Switch' type
     modeItem: "modeItem",
-    tempUnit: "tempUnit", // 'Celsius' (default), 'Fahrenheit'
-    heatingThresholdTempItem: "heatingThresholdTempItem",
-    coolingThresholdTempItem: "coolingThresholdTempItem"
 };
-
-function addCoolingThresholdCharacteristic(service, optional) {
-    addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CoolingThresholdTemperature), {item: CLIMATE_THERMOSTAT_CONFIG.coolingThresholdTempItem}, optional);
-}
-
-function addHeatingThresholdCharacteristic(service, optional) {
-    addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.HeatingThresholdTemperature), {item: CLIMATE_THERMOSTAT_CONFIG.heatingThresholdTempItem}, optional);
-}
-
-function addCurrentTemperatureCharacteristic(service, optional) {
-    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentTemperature), {item: CLIMATE_THERMOSTAT_CONFIG.currentTempItem}, optional);
-}
-
-function addTargetTemperatureCharacteristic(service, optional) {
-    addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.TargetTemperature), {item: CLIMATE_THERMOSTAT_CONFIG.targetTempItem}, optional);
-}
-
-function addCurrentRelativeHumidityCharacteristic(service, optional) {
-    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity), {item: CLIMATE_THERMOSTAT_CONFIG.currentHumidityItem}, optional);
-}
-
-function addTargetRelativeHumidityCharacteristic(service, optional) {
-    addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.TargetRelativeHumidity), {item: CLIMATE_THERMOSTAT_CONFIG.targetHumidityItem}, optional);
-}
-
-function addTemperatureDisplayUnitsCharacteristic(service) {
-    switch(this._config[CLIMATE_THERMOSTAT_CONFIG.tempUnit]) {
-        default:
-        case 'Celsius':
-            this._tempUnit = this.Characteristic.TemperatureDisplayUnits.CELSIUS;
-            break;
-        case 'Fahrenheit':
-            this._tempUnit = this.Characteristic.TemperatureDisplayUnits.FAHRENHEIT;
-            break;
-    }
-
-    service.getCharacteristic(this.Characteristic.TemperatureDisplayUnits)
-        .on('get', function(callback) { callback(null, this._tempUnit) }.bind(this))
-        .on('set', function(_, callback) { callback() }.bind(this));
-}
 
 function addCurrentHeatingCoolingStateCharacteristic(service) {
     let [heatingItem] = this._getAndCheckItemType(CLIMATE_THERMOSTAT_CONFIG.heatingItem, ['Switch', 'Contact'], true);
@@ -91,7 +44,6 @@ function addCurrentHeatingCoolingStateCharacteristic(service) {
         service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState)
             .on('get', _getHeatingCoolingState.bind(this, mode, heatingItem, coolingItem));
     }
-
 }
 
 function addTargetHeatingCoolingStateCharacteristic(service) {
@@ -112,7 +64,7 @@ function addTargetHeatingCoolingStateCharacteristic(service) {
         } else if (this._config[CLIMATE_THERMOSTAT_CONFIG.heatingItem]) {
             mode = HEAT;
         } else {
-            throw new Error(`Unable to set HeatingCoolingState mode, because neither heating nor cooling item is defined!`);
+            throw new Error(`Unable to set 'TargetHeatingCoolingState' mode, because neither heating nor cooling item is defined!`);
         }
 
         this._log.debug(`Creating 'TargetHeatingCoolingState' characteristic for ${this.name} with mode set to ${mode}`);
@@ -204,13 +156,6 @@ function _getHeatingCoolingState(mode, heatingItem, coolingItem, callback) {
 }
 
 module.exports = {
-    addTemperatureDisplayUnitsCharacteristic,
-    addTargetRelativeHumidityCharacteristic,
-    addCurrentRelativeHumidityCharacteristic,
-    addTargetTemperatureCharacteristic,
-    addCurrentTemperatureCharacteristic,
-    addHeatingThresholdCharacteristic,
-    addCoolingThresholdCharacteristic,
     addCurrentHeatingCoolingStateCharacteristic,
     addTargetHeatingCoolingStateCharacteristic
 };

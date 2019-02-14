@@ -85,12 +85,15 @@ The following is a list of all services that are currently supported and which v
     * Homebridge configuration type: `light`
   * [Fan](#fan)
     * Homebridge configuration type: `fan`
+  * [Security System](#security-system)
+    * Homebridge configuration type: `security`
+* Climate Control Accessories:
   * [Thermostat](#thermostat)
     * Homebridge configuration type: `thermostat`
   * [Humidifier/Dehumidifier](#humidifierdehumidifier)
     * Homebridge configuration type: `humidifier`
-  * [Security System](#security-system)
-    * Homebridge configuration type: `security`
+  * [Heater/Cooler](#heatercooler)
+    * Homebridge configuration type: `heatercooler`
 * Position Based Actors:
   * [Window Covering](#window-covering)
     * Homebridge configuration type: `windowcovering`
@@ -138,8 +141,6 @@ The following services will be implemented in the near future:
   * Faucet
   * Irrigation
 * Climate service accessories
-  * HeaterCooler
-  * Humidifier/Dehumidifier
   * Air Purifier
 * Garage Door Opener
 
@@ -176,6 +177,46 @@ This service describes a fan.
 ```
 * `item`: The openHAB item controlled by this accessory
   * Needs to be of type `Switch`, `Number` or `Dimmer` within openHAB (HomeKit will correctly display fan speed control *-in case of `Number` or `Dimmer`-*)
+
+### Security System
+This service describes a security system.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "security"
+    "homeItem": "Itemname-within-OpenHAB",
+    "homeItemInverted": "false",
+    "awayItem": "Itemname-within-OpenHAB",
+    "awayItemInverted": "false",
+    "sleepItem": "Itemname-within-OpenHAB",
+    "sleepItemInverted": "false",
+    "alarmItem": "Itemname-within-OpenHAB",
+    "alarmItemInverted": "false"
+}
+```
+* `homeItem` *(optional)*: The openHAB item representing if the system is in home mode
+  * Needs to be of type `Switch` within openHAB
+* `homeItemInverted` *(optional)*: If `homeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `awayItem` *(optional)*: The openHAB item representing if the system is in away mode
+  * Needs to be of type `Switch` within openHAB
+* `awayItemInverted` *(optional)*: If `awayItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `sleepItem` *(optional)*: The openHAB item representing if the system is in sleep mode
+  * Needs to be of type `Switch` within openHAB
+* `sleepItemInverted` *(optional)*: If `sleepItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `alarmItem` *(optional)*: The openHAB item representing if the system is currently sounding an alarm
+  * Needs to be of type `Switch` within openHAB
+* `alarmItemInverted` *(optional)*: If `alarmItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+
+Each item (`homeItem`, `awayItem`, `sleepItem`, `alarmItem`) is optional, only one of them needs to be defined. When switching between the states (`Home Armed`, `Away Armed`, `Sleep Armed` & `Off`) the respective item gets turned on and all other will be turned off. The state of the system is determined which item in the order `alarmItem` -> `homeItem` -> `awayItem` -> `sleepItem` is turned on first, if all items are off the state is `OFF`.
 
 ### Thermostat
 This service describes a thermostat.
@@ -225,7 +266,6 @@ This service describes a thermostat.
 
 ### Humidifier/Dehumidifier
 This service describes a humidifier and/or dehumidifier accessory.
-
 
 ```
 {
@@ -277,44 +317,59 @@ This service describes a humidifier and/or dehumidifier accessory.
 * `rotationSpeedItem`: *(optional)* The openHAB item representing the rotation speed
   * Needs to be of type `Number` within openHAB
 
+### Heater/Cooler 
+This service describes a heater and/or cooler accessory.
 
-### Security System
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "security"
-    "homeItem": "Itemname-within-OpenHAB",
-    "homeItemInverted": "false",
-    "awayItem": "Itemname-within-OpenHAB",
-    "awayItemInverted": "false",
-    "sleepItem": "Itemname-within-OpenHAB",
-    "sleepItemInverted": "false",
-    "alarmItem": "Itemname-within-OpenHAB",
-    "alarmItemInverted": "false"
+    "type": "heatercooler",
+    "currentTempItem": "Itemname-within-OpenHAB",
+    "activeItem": "Itemname-within-OpenHAB",
+    "activeItemInverted": "false",
+    "heatingItem": "Itemname-within-OpenHAB",
+    "coolingItem": "Itemname-within-OpenHAB",
+    "modeItem": "Itemname-within-OpenHAB",
+    "heatingThresholdItem": "Itemname-within-OpenHAB",
+    "coolingThresholdItem": "Itemname-within-OpenHAB",
+    "swingItem": "Itemname-within-OpenHAB",
+    "swingItemInverted": "false",
+    "rotationSpeedItem": "Itemname-within-OpenHAB"
+    "tempUnit": "Celsius",
 }
 ```
-* `homeItem` *(optional)*: The openHAB item representing if the system is in home mode
-  * Needs to be of type `Switch` within openHAB
-* `homeItemInverted` *(optional)*: If `homeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-* `awayItem` *(optional)*: The openHAB item representing if the system is in away mode
-  * Needs to be of type `Switch` within openHAB
-* `awayItemInverted` *(optional)*: If `awayItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-* `sleepItem` *(optional)*: The openHAB item representing if the system is in sleep mode
-  * Needs to be of type `Switch` within openHAB
-* `sleepItemInverted` *(optional)*: If `sleepItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-* `alarmItem` *(optional)*: The openHAB item representing if the system is currently sounding an alarm
-  * Needs to be of type `Switch` within openHAB
-* `alarmItemInverted` *(optional)*: If `alarmItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
-Each item (`homeItem`, `awayItem`, `sleepItem`, `alarmItem`) is optional, only one of them needs to be defined. When switching between the states (`Home Armed`, `Away Armed`, `Sleep Armed` & `Off`) the respective item gets turned on and all other will be turned off. The state of the system is determined which item in the order `alarmItem` -> `homeItem` -> `awayItem` -> `sleepItem` is turned on first, if all items are off the state is `OFF`.
+* `currentTempItem`: The openHAB item representing the current temperature
+  * Needs to be of type `Number` within openHAB
+* `activeItem`: The openHAB item showing, if the (de-)humidfier is currently active
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `activeItemInverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `heatingItem` *(optional, if `coolingItem` is present, otherwise required)*: The openHAB item showing, if the room is currently being heated
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `coolingItem` *(optional, if `heatingItem` is present, otherwise required)*: The openHAB item showing, if the room is currently being cooled
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `modeItem`: *(optional)* If your heater/cooler can be set to heating, cooling or auto mode through an item, and/or reports back its current configuration use this item, otherwise the heating/cooling capabilities are deferred from `heatingItem` and `coolingItem` and will not be changeable.
+  * Needs to be of type `Number` within openHAB
+  * Only discrete values are recognized:
+    * 0 ≙ `Auto`
+    * 1 ≙ `Heat`
+    * 2 ≙ `Cool`
+* `heatingThresholdTempItem`: *(optional)* The openHAB item describing the heating threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'minimum temperature' that mus be reached before heating is turned on.
+  * Needs to be of type `Number` within openHAB
+* `coolingThresholdTempItem`: *(optional)* The openHAB item describing the cooling threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'maximum temperature' that mus be reached before cooling is turned on.
+  * Needs to be of type `Number` within openHAB
+* `swingItem`: *(optional)* The openHAB item showing, if swing is active
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `swingItemInverted` *(optional)*: If `swingItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `rotationSpeedItem`: *(optional)* The openHAB item representing the rotation speed
+  * Needs to be of type `Number` within openHAB
+* `tempUnit` *(optional)*: Gives the measurement unit of the thermostat, currently does not change anything inside HomeKit
+  * Default: `Celsius`
+  * Allowed values: `Celsius` & `Fahrenheit`
 
 ### Window Covering
 This service describes motorized window coverings or shades - examples include shutters, blinds, awnings etc.

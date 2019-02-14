@@ -1,33 +1,15 @@
 'use strict';
 
 const {getState} = require('../../util/Accessory');
-const {addNumericSensorCharacteristic, addNumericSensorActorCharacteristic} = require('./Numeric');
+const {addNumericSensorActorCharacteristic} = require('./Numeric');
 
 const CLIMATE_HUMIDIFIER_DEHUMIDIFIER_CONFIG = {
-    waterLevelItem: "waterLevelItem",
-    rotationSpeedItem: "rotationSpeedItem",
     dehumidifierThresholdItem: "dehumidifierThresholdItem",
     humidifierThresholdItem: "humidifierThresholdItem",
     humidifierItem: "humidifierItem",
     dehumidifierItem: "dehumidifierItem",
     modeItem: "modeItem"
 };
-
-function addWaterLevelCharacteristic(service, optional) {
-    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.WaterLevel), {item: CLIMATE_HUMIDIFIER_DEHUMIDIFIER_CONFIG.waterLevelItem}, optional);
-}
-
-function addRotationSpeedCharacteristic(service, optional) {
-    addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.RotationSpeed), {item: CLIMATE_HUMIDIFIER_DEHUMIDIFIER_CONFIG.rotationSpeedItem}, optional);
-}
-
-function addRelativeHumidityDehumidifierThresholdCharacteristic(service, optional) {
-    addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.RelativeHumidityDehumidifierThreshold), {item: CLIMATE_HUMIDIFIER_DEHUMIDIFIER_CONFIG.dehumidifierThresholdItem}, optional);
-}
-
-function addRelativeHumidityHumidifierThresholdCharacteristic(service, optional) {
-    addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.RelativeHumidityHumidifierThreshold), {item: CLIMATE_HUMIDIFIER_DEHUMIDIFIER_CONFIG.humidifierThresholdItem}, optional);
-}
 
 function addCurrentHumidifierDehumidifierStateCharacteristic(service) {
     let [humidifierItem] = this._getAndCheckItemType(CLIMATE_HUMIDIFIER_DEHUMIDIFIER_CONFIG.humidifierItem, ['Switch', 'Contact'], true);
@@ -85,7 +67,7 @@ function addTargetHumidifierDehumidifierStateCharacteristic(service) {
         } else if (this._config[CLIMATE_HUMIDIFIER_DEHUMIDIFIER_CONFIG.humidifierItem]) {
             mode = HUMIDIFIER;
         } else {
-            throw new Error(`Unable to set HeatingCoolingState mode, because neither heating nor cooling item is defined!`);
+            throw new Error(`Unable to set TargetHumidifierDehumidifierState mode, because neither heating nor cooling item is defined!`);
         }
 
         this._log.debug(`Creating 'TargetHumidifierDehumidifierState' characteristic for ${this.name} with mode set to ${mode}`);
@@ -178,10 +160,6 @@ function _getHumidifierDehumidifierState(mode, humidifierItem, dehumidifierItem,
 }
 
 module.exports = {
-    addWaterLevelCharacteristic,
-    addRotationSpeedCharacteristic,
-    addRelativeHumidityHumidifierThresholdCharacteristic,
-    addRelativeHumidityDehumidifierThresholdCharacteristic,
     addCurrentHumidifierDehumidifierStateCharacteristic,
     addTargetHumidifierDehumidifierStateCharacteristic
 };

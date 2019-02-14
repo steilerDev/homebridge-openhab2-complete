@@ -10,7 +10,6 @@
     * Faucet
     * Irrigation
   * Climate Service Class with [Active, Current, Target]
-    * HeaterCooler
     * Air Purifier
   * Garage Door Opener
 
@@ -18,7 +17,9 @@
 ### V0.10.0 (unreleased)
 * Allowing grouping of same type accessory inside configuration
 * Added Air Quality Sensor
-* Added Humidifier/Dehumidifier
+* Added Climate Control Accessories:
+  * Humidifier/Dehumidifier
+  * Heater/Cooler
 * **Breaking changes**:
   * Renamed light sensor's accessory type from `lightSensor` to `lux`
 

@@ -2,13 +2,15 @@
 
 const {Accessory} = require('../util/Accessory');
 const {
-    addTemperatureDisplayUnitsCharacteristic,
-    addTargetRelativeHumidityCharacteristic,
     addCurrentRelativeHumidityCharacteristic,
-    addTargetTemperatureCharacteristic,
     addCurrentTemperatureCharacteristic,
     addHeatingThresholdCharacteristic,
     addCoolingThresholdCharacteristic,
+    addTemperatureDisplayUnitsCharacteristic,
+    addTargetRelativeHumidityCharacteristic,
+    addTargetTemperatureCharacteristic
+} = require('./characteristic/Climate');
+const {
     addCurrentHeatingCoolingStateCharacteristic,
     addTargetHeatingCoolingStateCharacteristic
 } = require('./characteristic/ClimateThermostat');
