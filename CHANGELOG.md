@@ -9,8 +9,6 @@
     * Valve
     * Faucet
     * Irrigation
-  * Climate Service Class with [Active, Current, Target]
-    * Air Purifier
   * Garage Door Opener
 
 ## Changelog
@@ -20,14 +18,17 @@
 * Added Climate Control Accessories:
   * Humidifier/Dehumidifier
   * Heater/Cooler
-* **Breaking changes**:
-  * Renamed light sensor's accessory type from `lightSensor` to `lux`
+  * Air Purifier
+  
+**Breaking changes**:
+* Renamed light sensor's accessory type from `lightSensor` to `lux`
 
 ### V0.9.0
 * Removed `clone` dependency, since it caused unexpected behaviour
 * Improved fan in order to support non-binary items to control the fan speed
 * Fixed an issue, where not supported characteristics were still being exposed to HomeKit
 * Reworked thermostat to extend usage for AUTO mode and mode item
+
 Issues:
 * Closes #2, #4, #5, #7
 
@@ -95,10 +96,8 @@ Breaking Changes:
 * Added Battery Warning Characteristic to Humidity & Temperature Sensor Services (Supported openHAB item: `Switch`)
 * Support for Thermostat Service (Supported openHAB item: Compound service of `Number` and `Switch`)
 
-Breaking changes:
-
+**Breaking changes:**
 * Renamed `habItem` key in configuration to `item`
-
 
 ### V0.1.0
 * Initial release

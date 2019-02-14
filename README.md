@@ -94,6 +94,8 @@ The following is a list of all services that are currently supported and which v
     * Homebridge configuration type: `humidifier`
   * [Heater/Cooler](#heatercooler)
     * Homebridge configuration type: `heatercooler`
+  * [Air Purifier](#air-purifier)
+    * Homebridge configuration type: `airpurifier`
 * Position Based Actors:
   * [Window Covering](#window-covering)
     * Homebridge configuration type: `windowcovering`
@@ -341,7 +343,7 @@ This service describes a heater and/or cooler accessory.
 
 * `currentTempItem`: The openHAB item representing the current temperature
   * Needs to be of type `Number` within openHAB
-* `activeItem`: The openHAB item showing, if the (de-)humidfier is currently active
+* `activeItem`: The openHAB item showing, if the heater/cooler is currently active
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `activeItemInverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
@@ -371,6 +373,39 @@ This service describes a heater and/or cooler accessory.
   * Default: `Celsius`
   * Allowed values: `Celsius` & `Fahrenheit`
 
+### Air Purifier
+This service describes an air purifier accessory.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "airpurifier",
+    "purifyingItem": "Itemname-within-OpenHAB",
+    "modeItem": "Itemname-within-OpenHAB",
+    "activeItem": "Itemname-within-OpenHAB",
+    "activeItemInverted": "false",
+    "swingItem": "Itemname-within-OpenHAB",
+    "swingItemInverted": "false",
+    "rotationSpeedItem": "Itemname-within-OpenHAB"
+}
+```
+* `purifyingItem`: The openHAB item showing, if the air purifier is currently purifying the air
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `modeItem`: The openHAB item showing, if the air purifier is currently in Manual (`OFF` or `CLOSED`) or Automatic Mode (`ON` or `OPEN`)
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `activeItem`: The openHAB item showing, if the air purifier is currently active
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `activeItemInverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `swingItem`: *(optional)* The openHAB item showing, if swing is active
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `swingItemInverted` *(optional)*: If `swingItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `rotationSpeedItem`: *(optional)* The openHAB item representing the rotation speed
+  * Needs to be of type `Number` within openHAB
+  
 ### Window Covering
 This service describes motorized window coverings or shades - examples include shutters, blinds, awnings etc.
 
