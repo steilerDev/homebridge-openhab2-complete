@@ -12,6 +12,8 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](ht
 npm install -g homebridge-openhab2-complete
 ```
 
+Some people are experiencing dependency issues between homebridge's node version and the required node version for this project. My local setup is based on [oznu's homebridge docker container](https://github.com/oznu/docker-homebridge), where I never ran into any problems. In order to install the plugin in the docker, just add `npm install homebridge-openhab2-complete` to the `startup.sh` script inside the mapped docker volume.
+
 ## Configuration
 This is a platform plugin, that will register all accessories within the Bridge provided by homebridge. The following shows the general homebridge configuration (`config.json`), see the [Supported HAP Services below](#supported-hap-services), in order to get the detailed configuration for each service.
 
@@ -56,6 +58,8 @@ The following is a list of all services that are currently supported and which v
 * Complex Accessories:
   * [Lightbulb](#lightbulb) 
     * Homebridge configuration type: `light`
+  * [Fan](#fan)
+    * Homebridge configuration type: `fan`
   * [Thermostat](#thermostat)
     * Homebridge configuration type: `thermostat`
   * [Security System](#security-system)
@@ -79,8 +83,6 @@ The following is a list of all services that are currently supported and which v
 * Binary Actors:
   * [Switch](#switch)
     * Homebridge configuration type: `switch`
-  * [Fan](#fan)
-    * Homebridge configuration type: `fan`
   * [Outlet](#outlet)
     * Homebridge configuration type: `outlet`
 * Binary Sensors:
@@ -133,6 +135,19 @@ This service describes a lightbulb.
 ```
 * `item`: The openHAB item controlled by this accessory
   * Needs to be of type `Switch`, `Dimmer` or `Color` within openHAB (HomeKit will correctly display brightness *-in case of `Dimmer` or `Color`-* and color settings *-in case of `Color`-*)
+  
+### Fan
+This service describes a fan.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "fan",
+    "item": "Itemname-within-OpenHAB",
+}
+```
+* `item`: The openHAB item controlled by this accessory
+  * Needs to be of type `Switch`, `Number` or `Dimmer` within openHAB (HomeKit will correctly display fan speed control *-in case of `Number` or `Dimmer`-*)
 
 ### Thermostat
 This service describes a thermostat.
@@ -147,7 +162,10 @@ This service describes a thermostat.
     "targetHumidityItem": "Itemname-within-OpenHAB",
     "heatingItem": "Itemname-within-OpenHAB",
     "coolingItem": "Itemname-within-OpenHAB",
-    "tempUnit": "Celsius"
+    "tempUnit": "Celsius",
+    "heatingThresholdTempItem": "Itemname-within-OpenHAB",
+    "coolingThresholdTempItem": "Itemname-within-OpenHAB",
+    "modeItem": "Itemname-within-OpenHAB",
 }
 ```
 * `currentTempItem`: The openHAB item representing the current temperature as measured by the thermostat
@@ -165,6 +183,17 @@ This service describes a thermostat.
 * `tempUnit` *(optional)*: Gives the measurement unit of the thermostat, currently does not change anything inside HomeKit
   * Default: `Celsius`
   * Allowed values: `Celsius` & `Fahrenheit`
+* `heatingThresholdTempItem`: *(optional)* The openHAB item describing the heating threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'minimum temperature' that mus be reached before heating is turned on.
+  * Needs to be of type `Number` within openHAB
+* `coolingThresholdTempItem`: *(optional)* The openHAB item describing the cooling threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'maximum temperature' that mus be reached before cooling is turned on.
+  * Needs to be of type `Number` within openHAB
+* `modeItem`: *(optional)* If your thermostat can be set to heating, cooling or auto mode through an item, and/or reports back its current configuration use this item, otherwise the heating/cooling capabilities are deferred from `heatingItem` and `coolingItem` and will not be changeable.
+  * Needs to be of type `Number` within openHAB
+  * Only discrete values are recognized:
+    * 0 == OFF
+    * 1 == Heating
+    * 2 == Cooling
+    * 3 == Auto
 
 ### Security System
 ```
@@ -413,22 +442,6 @@ This service describes a binary switch.
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
-### Fan
-This service describes a fan.
-
-```
-{
-    "name": "An items name, as shown in Homekit later",
-    "type": "fan",
-    "item": "Itemname-within-OpenHAB",
-    "inverted": "false"
-}
-```
-* `item`: The openHAB item controlled by this accessory
-  * Needs to be of type `Switch` within openHAB
-* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Outlet
 This service describes an outlet.

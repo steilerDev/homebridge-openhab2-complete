@@ -194,4 +194,8 @@ function setState(habItem, transformation, state, callback, context, connectionI
     }
 }
 
-module.exports = {Accessory, getState, setState};
+function dummyTransformation(itemType, inverted, value) {
+    return value;
+}
+
+module.exports = {Accessory, getState, setState, dummyTransformation};

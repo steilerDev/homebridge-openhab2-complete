@@ -102,6 +102,7 @@ function addHoldPositionCharacteristic(service) {
 
     } catch(e) {
         this._log.debug(`Not configuring hold position characteristic for ${this.name}: ${e.message}`);
+        service.removeCharacteristic(this.Characteristic.HoldPosition);
     }
 }
 

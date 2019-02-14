@@ -1,23 +1,12 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addLightOnCharacteristic, addHueCharacteristic, addSaturationCharacteristic, addBrightnessCharacteristic} = require('./characteristic/Light');
+const {addLightOnCharacteristic, addHueCharacteristic, addSaturationCharacteristic, addBrightnessCharacteristic} = require('./characteristic/SetAndCommitLight');
 
 class LightAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
-
-        // Synchronisation helper
-        this._stateLock = false; // This lock will guard the acceptance of new states
-        this._commitLock = false; // This lock will guard the commit process
-
-        this._newState = {
-            binary: undefined,
-            hue: undefined,
-            saturation: undefined,
-            brightness: undefined
-        };
 
         this._services = [
             this._getAccessoryInformationService('Light'),

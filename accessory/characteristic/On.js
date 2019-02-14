@@ -37,6 +37,7 @@ function addOnCharacteristic(service, optional) {
         );
     } catch(e) {
         let msg = `Not configuring 'ON' characteristic for ${this.name}: ${e.message}`;
+        service.removeCharacteristic(this.Characteristic.On);
         if(optional) {
             this._log.debug(msg);
         } else {

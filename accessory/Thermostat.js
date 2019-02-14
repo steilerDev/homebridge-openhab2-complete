@@ -2,13 +2,16 @@
 
 const {Accessory} = require('../util/Accessory');
 const {
-    addHeatingCoolingStateCharacteristic,
     addTemperatureDisplayUnitsCharacteristic,
     addTargetRelativeHumidityCharacteristic,
     addCurrentRelativeHumidityCharacteristic,
     addTargetTemperatureCharacteristic,
-    addCurrentTemperatureCharacteristic
-} = require('./characteristic/CurrentTargetClimate');
+    addCurrentTemperatureCharacteristic,
+    addHeatingThresholdCharacteristic,
+    addCoolingThresholdCharacteristic,
+    addCurrentHeatingCoolingStateCharacteristic,
+    addTargetHeatingCoolingStateCharacteristic
+} = require('./characteristic/Climate');
 
 class ThermostatAccessory extends Accessory {
 
@@ -24,14 +27,17 @@ class ThermostatAccessory extends Accessory {
 
     _getPrimaryService() {
         this._log.debug(`Creating thermostat service for ${this.name}`);
-        let thermostatService = new this.Service.Thermostat(this.name);
-        addCurrentTemperatureCharacteristic.bind(this)(thermostatService);
-        addTargetTemperatureCharacteristic.bind(this)(thermostatService);
-        addCurrentRelativeHumidityCharacteristic.bind(this)(thermostatService, true);
-        addTargetRelativeHumidityCharacteristic.bind(this)(thermostatService, true);
-        addHeatingCoolingStateCharacteristic.bind(this)(thermostatService);
-        addTemperatureDisplayUnitsCharacteristic.bind(this)(thermostatService);
-        return thermostatService;
+        let primaryService = new this.Service.Thermostat(this.name);
+        addCurrentTemperatureCharacteristic.bind(this)(primaryService);
+        addTargetTemperatureCharacteristic.bind(this)(primaryService);
+        addCurrentRelativeHumidityCharacteristic.bind(this)(primaryService, true);
+        addTargetRelativeHumidityCharacteristic.bind(this)(primaryService, true);
+        addTargetHeatingCoolingStateCharacteristic.bind(this)(primaryService);
+        addCurrentHeatingCoolingStateCharacteristic.bind(this)(primaryService);
+        addTemperatureDisplayUnitsCharacteristic.bind(this)(primaryService);
+        addCoolingThresholdCharacteristic.bind(this)(primaryService, true);
+        addHeatingThresholdCharacteristic.bind(this)(primaryService, true);
+        return primaryService;
     }
 
 }

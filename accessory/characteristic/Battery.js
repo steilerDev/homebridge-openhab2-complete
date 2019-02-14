@@ -36,6 +36,7 @@ function addBatteryWarningCharacteristic(service) {
         );
     } catch (e) {
         this._log.error(`Not configuring battery warning characteristic for ${this.name}: ${e.message}`);
+        service.removeCharacteristic(this.Characteristic.StatusLowBattery);
     }
 }
 
