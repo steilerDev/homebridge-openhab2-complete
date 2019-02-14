@@ -107,6 +107,8 @@ The following is a list of all services that are currently supported and which v
     * Homebridge configuration type: `humidity`
   * [Light Sensor](#light-sensor)
     * Homebridge configuration type: `lightSensor`
+  * [Air Quality Sensor](#air-quality-sensor)
+    * Homebridge configuration type: `air`
 * Binary Actors:
   * [Switch](#switch)
     * Homebridge configuration type: `switch`
@@ -139,10 +141,9 @@ The following services will be implemented in the near future:
   * HeaterCooler
   * Humidifier/Dehumidifier
   * Air Purifier
+* Garage Door Opener
 
 The following services are also defined by the HomeKit protocol, but since I don't know a good way to map them to openHAB items, I currently don't plan to implement them. Let me know if you have any ideas, by opening an issue!
-* Garage Door Opener
-* Air Quality Sensor
 * Slat
 * Microphone
 * Speaker
@@ -217,10 +218,10 @@ This service describes a thermostat.
 * `modeItem`: *(optional)* If your thermostat can be set to heating, cooling or auto mode through an item, and/or reports back its current configuration use this item, otherwise the heating/cooling capabilities are deferred from `heatingItem` and `coolingItem` and will not be changeable.
   * Needs to be of type `Number` within openHAB
   * Only discrete values are recognized:
-    * 0 == OFF
-    * 1 == Heating
-    * 2 == Cooling
-    * 3 == Auto
+    * 0 ≙ `Off`
+    * 1 ≙ `Heating`
+    * 2 ≙ `Cooling`
+    * 3 ≙ `Auto`
 
 ### Security System
 ```
@@ -452,6 +453,33 @@ This service describes a light sensor.
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
+### Air Quality Sensor
+This service describes an air quality sensor.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "air",
+    "item": "Itemname-within-OpenHAB",
+    "batteryItem": "Itemname-within-OpenHAB",
+    "batteryItemInverted": "false"
+}
+```
+* `item`: The openHAB item representing the current air quality, referring to the cumulative air quality recorded by the accessory, which may be based on multiple sensors present.
+  * Needs to be of type `Number` within openHAB
+  * Only discrete values are recognized:
+    * 0 ≙ `UNKNOWN`
+    * 1 ≙ `EXCELLENT`
+    * 2 ≙ `GOOD`
+    * 3 ≙ `FAIR`
+    * 4 ≙ `INFERIOR`
+    * 5 ≙ `POOR`
+* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+  
 ### Switch
 This service describes a binary switch.
 

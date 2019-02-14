@@ -17,6 +17,7 @@
 ## Changelog
 ### V0.10.0 (unreleased)
 * Allowing grouping of same type accessory inside configuration
+* Added Air Quality Sensor
 
 ### V0.9.0
 * Removed `clone` dependency, since it caused unexpected behaviour

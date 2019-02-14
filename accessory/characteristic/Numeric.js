@@ -72,11 +72,15 @@ function addCurrentTemperatureCharacteristic(service) {
     addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentTemperature), NUMERIC_CONFIG);
 }
 
+function addAirQualityCharacteristic(service) {
+    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.AirQuality), NUMERIC_CONFIG);
+}
 
 module.exports = {
     addCurrentRelativeHumidityCharacteristic,
     addCurrentAmbientLightLevelCharacteristic,
     addCurrentTemperatureCharacteristic,
     addNumericSensorCharacteristic,
-    addNumericActorCharacteristic
+    addNumericActorCharacteristic,
+    addAirQualityCharacteristic
 };
