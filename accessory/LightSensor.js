@@ -23,7 +23,7 @@ class LightSensorAccessory extends Accessory {
     }
 }
 
-const type = "lightSensor";
+const type = "lux";
 
 function createAccessory(platform, config) {
     return new LightSensorAccessory(platform, config);

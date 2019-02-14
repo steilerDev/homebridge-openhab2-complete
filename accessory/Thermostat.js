@@ -11,7 +11,7 @@ const {
     addCoolingThresholdCharacteristic,
     addCurrentHeatingCoolingStateCharacteristic,
     addTargetHeatingCoolingStateCharacteristic
-} = require('./characteristic/Climate');
+} = require('./characteristic/ClimateThermostat');
 
 class ThermostatAccessory extends Accessory {
 

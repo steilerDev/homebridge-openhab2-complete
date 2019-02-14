@@ -80,8 +80,6 @@ Alternatively you can group accessories of the same `type` in a sub-array:
 ## Supported HAP Services
 The following is a list of all services that are currently supported and which values are required within the accessory configuration. Every accessory needs a `name` (as shown in HomeKit later) and a `type`. 
 
-**Note: Due to the fact, that this is an early stage of development the configuration layout is not yet fixed and will change in the near future!**
-
 * Complex Accessories:
   * [Lightbulb](#lightbulb) 
     * Homebridge configuration type: `light`
@@ -89,6 +87,8 @@ The following is a list of all services that are currently supported and which v
     * Homebridge configuration type: `fan`
   * [Thermostat](#thermostat)
     * Homebridge configuration type: `thermostat`
+  * [Humidifier/Dehumidifier](#humidifierdehumidifier)
+    * Homebridge configuration type: `humidifier`
   * [Security System](#security-system)
     * Homebridge configuration type: `security`
 * Position Based Actors:
@@ -106,7 +106,7 @@ The following is a list of all services that are currently supported and which v
   * [Humidity Sensor](#humidity-sensor)
     * Homebridge configuration type: `humidity`
   * [Light Sensor](#light-sensor)
-    * Homebridge configuration type: `lightSensor`
+    * Homebridge configuration type: `lux`
   * [Air Quality Sensor](#air-quality-sensor)
     * Homebridge configuration type: `air`
 * Binary Actors:
@@ -222,6 +222,61 @@ This service describes a thermostat.
     * 1 ≙ `Heating`
     * 2 ≙ `Cooling`
     * 3 ≙ `Auto`
+
+### Humidifier/Dehumidifier
+This service describes a humidifier and/or dehumidifier accessory.
+
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "humidifier",
+    "currentHumidityItem": "Itemname-within-OpenHAB",
+    "activeItem": "Itemname-within-OpenHAB",
+    "activeItemInverted": "false", (optional)
+    "humidifierItem": "Itemname-within-OpenHAB",
+    "dehumidifierItem": "Itemname-within-OpenHAB",
+    "modeItem": "Itemname-within-OpenHAB",
+    "humidifierThresholdItem": "Itemname-within-OpenHAB", (optional)
+    "dehumidifierThresholdItem": "Itemname-within-OpenHAB", (optional)
+    "waterLevelItem": "Itemname-within-OpenHAB", (optional)
+    "swingItem": "Itemname-within-OpenHAB", (optional)
+    "swingItemInverted": "false", (optional)
+    "rotationSpeedItem": "Itemname-within-OpenHAB" (optional)
+}
+```
+
+* `currentHumidityItem`: The openHAB item representing the current humidity
+  * Needs to be of type `Number` within openHAB
+* `activeItem`: The openHAB item showing, if the (de-)humidfier is currently active
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `activeItemInverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `humidifierItem` *(optional, if `dehumidifierItem` is present, otherwise required)*: The openHAB item showing, if the room is currently humidified
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `dehumidifierItem` *(optional, if `humidifierItem` is present, otherwise required)*: The openHAB item showing, if the room is currently dehumidified
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `modeItem`: *(optional)* If your (de-)humidifier can be set to humidifying, dehumidifying or auto mode through an item, and/or reports back its current configuration use this item, otherwise the humidifying/dehumidifying capabilities are deferred from `humidifierItem` and `dehumidifierItem` and will not be changeable.
+  * Needs to be of type `Number` within openHAB
+  * Only discrete values are recognized:
+    * 0 ≙ `Humidifier or Dehumidifier`
+    * 1 ≙ `Humidifier`
+    * 2 ≙ `Dehumidifier`
+* `humidifierThresholdItem`: *(optional)* The openHAB item describing the humidifying threshold. The value of this characteristic represents the 'minimum relative humidity' that mus be reached before humidifying is turned on.
+  * Needs to be of type `Number` within openHAB
+* `dehumidifierThresholdItem`: *(optional)* The openHAB item describing the dehumidifying threshold. The value of this characteristic represents the 'maximum relative humidity' that mus be reached before dehumidifying is turned on.
+  * Needs to be of type `Number` within openHAB
+* `waterLevelItem`: *(optional)* The openHAB item representing the current water level 
+  * Needs to be of type `Number` within openHAB
+* `swingItem`: *(optional)* The openHAB item showing, if swing is active
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `swingItemInverted` *(optional)*: If `swingItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `rotationSpeedItem`: *(optional)* The openHAB item representing the rotation speed
+  * Needs to be of type `Number` within openHAB
+
 
 ### Security System
 ```

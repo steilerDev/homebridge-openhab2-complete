@@ -11,13 +11,16 @@
     * Irrigation
   * Climate Service Class with [Active, Current, Target]
     * HeaterCooler
-    * Humidifier/Dehumidifier
     * Air Purifier
+  * Garage Door Opener
 
 ## Changelog
 ### V0.10.0 (unreleased)
 * Allowing grouping of same type accessory inside configuration
 * Added Air Quality Sensor
+* Added Humidifier/Dehumidifier
+* **Breaking changes**:
+  * Renamed light sensor's accessory type from `lightSensor` to `lux`
 
 ### V0.9.0
 * Removed `clone` dependency, since it caused unexpected behaviour

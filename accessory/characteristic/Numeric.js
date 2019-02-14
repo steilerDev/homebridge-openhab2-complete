@@ -60,6 +60,37 @@ function addNumericActorCharacteristic(service, characteristic, CONF_MAP, option
     }
 }
 
+function addNumericSensorActorCharacteristic(service, characteristic, CONF_MAP, optional) {
+    try {
+
+        let [item] = this._getAndCheckItemType(CONF_MAP.item, ['Number']);
+
+        this._log.debug(`Creating numeric sensor/actor characteristic for ${this.name} with ${item}`);
+
+        characteristic.on('set', setState.bind(this,
+            item,
+            parseFloat
+        ))
+        .on('get', getState.bind(this,
+            item,
+            parseFloat
+        ));
+
+        this._subscribeCharacteristic(characteristic,
+            item,
+            parseFloat
+        );
+    } catch(e) {
+        let msg = `Not configuring numeric actor characteristic for ${this.name}: ${e.message}`;
+        service.removeCharacteristic(characteristic);
+        if(optional) {
+            this._log.debug(msg);
+        } else {
+            throw new Error(msg);
+        }
+    }
+}
+
 function addCurrentRelativeHumidityCharacteristic(service) {
     addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity), NUMERIC_CONFIG);
 }
@@ -76,11 +107,12 @@ function addAirQualityCharacteristic(service) {
     addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.AirQuality), NUMERIC_CONFIG);
 }
 
+
 module.exports = {
     addCurrentRelativeHumidityCharacteristic,
     addCurrentAmbientLightLevelCharacteristic,
     addCurrentTemperatureCharacteristic,
     addNumericSensorCharacteristic,
-    addNumericActorCharacteristic,
-    addAirQualityCharacteristic
+    addNumericSensorActorCharacteristic,
+    addAirQualityCharacteristic,
 };
