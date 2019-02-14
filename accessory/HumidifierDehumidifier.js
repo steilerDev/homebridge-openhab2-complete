@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addCurrentRelativeHumidityCharacteristic} = require('./characteristic/Climate');
+const {addCurrentRelativeHumidityCharacteristic} = require('./characteristic/ClimateThermostat');
 const {addSwingModeCharacteristic, addActiveCharacteristic} = require('./characteristic/BinarySensor');
 const {
     addWaterLevelCharacteristic,

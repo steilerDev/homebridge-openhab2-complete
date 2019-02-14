@@ -233,16 +233,16 @@ This service describes a humidifier and/or dehumidifier accessory.
     "type": "humidifier",
     "currentHumidityItem": "Itemname-within-OpenHAB",
     "activeItem": "Itemname-within-OpenHAB",
-    "activeItemInverted": "false", (optional)
+    "activeItemInverted": "false",
     "humidifierItem": "Itemname-within-OpenHAB",
     "dehumidifierItem": "Itemname-within-OpenHAB",
     "modeItem": "Itemname-within-OpenHAB",
-    "humidifierThresholdItem": "Itemname-within-OpenHAB", (optional)
-    "dehumidifierThresholdItem": "Itemname-within-OpenHAB", (optional)
-    "waterLevelItem": "Itemname-within-OpenHAB", (optional)
-    "swingItem": "Itemname-within-OpenHAB", (optional)
-    "swingItemInverted": "false", (optional)
-    "rotationSpeedItem": "Itemname-within-OpenHAB" (optional)
+    "humidifierThresholdItem": "Itemname-within-OpenHAB",
+    "dehumidifierThresholdItem": "Itemname-within-OpenHAB",
+    "waterLevelItem": "Itemname-within-OpenHAB",
+    "swingItem": "Itemname-within-OpenHAB",
+    "swingItemInverted": "false",
+    "rotationSpeedItem": "Itemname-within-OpenHAB"
 }
 ```
 
