@@ -82,6 +82,10 @@ function addActiveCharacteristic(service, optional) {
     addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.Active), {item: "activeItem", inverted: "activeItemInverted"}, optional);
 }
 
+function addActiveCharacteristicWithDefaultConf(service, optional) {
+    addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.Active), BINARY_CONFIG, optional);
+}
+
 module.exports = {
     addCarbonDioxideDetectedCharacteristic,
     addContactSensorCharacteristic,
@@ -92,5 +96,6 @@ module.exports = {
     addOccupancyDetectedCharacteristic,
     addSmokeDetectedCharacteristic,
     addSwingModeCharacteristic,
-    addActiveCharacteristic
+    addActiveCharacteristic,
+    addActiveCharacteristicWithDefaultConf
 };

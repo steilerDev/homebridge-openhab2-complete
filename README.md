@@ -96,6 +96,9 @@ The following is a list of all services that are currently supported and which v
     * Homebridge configuration type: `heatercooler`
   * [Air Purifier](#air-purifier)
     * Homebridge configuration type: `airpurifier`
+* Watering Accessories:
+  * [Faucet](#faucet)
+    * Homebridge configuration type: `faucet`
 * Position Based Actors:
   * [Window Covering](#window-covering)
     * Homebridge configuration type: `windowcovering`
@@ -140,7 +143,6 @@ The following is a list of all services that are currently supported and which v
 The following services will be implemented in the near future:
 * Water service accessories
   * Valve
-  * Faucet
   * Irrigation
 * Climate service accessories
   * Air Purifier
@@ -405,7 +407,24 @@ This service describes an air purifier accessory.
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `rotationSpeedItem`: *(optional)* The openHAB item representing the rotation speed
   * Needs to be of type `Number` within openHAB
-  
+
+### Faucet
+This service describes a faucet.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "faucet",
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "true"
+}
+```
+* `item`: The openHAB item showing, if the faucet is currently active 
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+ 
 ### Window Covering
 This service describes motorized window coverings or shades - examples include shutters, blinds, awnings etc.
 
@@ -884,7 +903,7 @@ Verly little configuration within homebridge/openHAB, only tags within `*.items`
 Support only 1:1 mappings between Items and HomeKit services | Supports composite items (e.g. Thermostat, Security System, Battery States, etc.)
 Uses `SSE` to receive push notifications from openHAB about state change and requires sitemap definitions | Pulling of states through REST interface & push notifications from openHAB through `SSE` *without*  the requirement of a sitemap
 Thermostats never really worked | Thermostats working as expected
-4 accessory types supported | 21 different accessory types supported
+4 accessory types supported | 25 different accessory types supported
 Light item in openHAB gets triggered multiple times from single user interaction | Light item in openHAB receives only one command per user interaction
 No support for items with notification capabilities | Many HomeKit services can notify the user about a state change. Those accessories are only supported in this plugin
 

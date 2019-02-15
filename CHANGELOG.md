@@ -7,7 +7,6 @@
 * Implement remaining Services:
   * Water Service Class with
     * Valve
-    * Faucet
     * Irrigation
   * Garage Door Opener
 
@@ -19,6 +18,8 @@
   * Humidifier/Dehumidifier
   * Heater/Cooler
   * Air Purifier
+* Added Watering Accessories:
+  * Faucet
   
 **Breaking changes**:
 * Renamed light sensor's accessory type from `lightSensor` to `lux`
