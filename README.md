@@ -99,6 +99,8 @@ The following is a list of all services that are currently supported and which v
 * Watering Accessories:
   * [Faucet](#faucet)
     * Homebridge configuration type: `faucet`
+  * [Valve](#valve)
+    * Homebridge configuration type: `valve`
 * Position Based Actors:
   * [Window Covering](#window-covering)
     * Homebridge configuration type: `windowcovering`
