@@ -9,7 +9,7 @@ const IN_USE_CONF = {
     inUseItemInverted: "inUseItemInverted"
 };
 
-function addInUseCharacteristic(service, characteristic, optional) {
+function addGenericInUseCharacteristic(service, characteristic, optional) {
     try {
         let item, itemType, inverted;
         if (this._config[IN_USE_CONF.inUseItem]) {
@@ -61,7 +61,11 @@ function addInUseCharacteristic(service, characteristic, optional) {
 }
 
 function addOutletInUseCharacteristic(service) {
-    addInUseCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.OutletInUse));
+    addGenericInUseCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.OutletInUse));
 }
 
-module.exports = {addOutletInUseCharacteristic};
+function addInUseCharacteristic(service) {
+    addGenericInUseCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.InUse))
+}
+
+module.exports = {addOutletInUseCharacteristic, addInUseCharacteristic};
