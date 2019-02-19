@@ -3,7 +3,7 @@
 
 [![NPM](https://nodei.co/npm/homebridge-openhab2-complete.png)](https://nodei.co/npm/homebridge-openhab2-complete/)
 
-This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](https://www.openhab.org) has the expectation to fully support all services offered by Apple's Homekit Accessory Protocol (HAP), as far as it is feasible based on the Item types offered by OpenHAB (see [below](#supported-hap-services) for the currently supported 21 accessories and `CHANGELOG.md` for my roadmap). In opposite to the existing [openHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) or the native [openHAB Homekit Plugin](https://www.openhab.org/addons/integrations/homekit/) this plugin requires explicit declaration of accessories in the homebridge configuration and does not use openHAB's tagging system, which leads to a little more effort during configuration, but should prove more reliable and functional in more complex installations. See [Comparisson](#comparison) below.
+This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](https://www.openhab.org) has the expectation to fully support all services offered by Apple's HomeKit Accessory Protocol (HAP), as far as it is feasible based on the Item types offered by OpenHAB (see [below](#supported-hap-services) for the currently supported 28 accessories and `CHANGELOG.md` for my roadmap). In opposite to the existing [openHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) or the native [openHAB Homekit Plugin](https://www.openhab.org/addons/integrations/homekit/) this plugin requires explicit declaration of accessories in the homebridge configuration and does not use openHAB's tagging system, which leads to a little more effort during configuration, but should prove more reliable and functional in more complex installations. See [Comparisson](#comparison) below.
 
 ## Installation
 *Note: Please install [homebridge](https://www.npmjs.com/package/homebridge) first.*
@@ -101,6 +101,8 @@ The following is a list of all services that are currently supported and which v
     * Homebridge configuration type: `faucet`
   * [Valve](#valve)
     * Homebridge configuration type: `valve`
+  * [Irrigation System](#irrigation-system)
+    * Homebridge configuration type: `irrigation`
 * Position Based Actors:
   * [Window Covering](#window-covering)
     * Homebridge configuration type: `windowcovering`
@@ -143,11 +145,6 @@ The following is a list of all services that are currently supported and which v
     * Homebridge configuration type: `filter`
   
 The following services will be implemented in the near future:
-* Water service accessories
-  * Valve
-  * Irrigation
-* Climate service accessories
-  * Air Purifier
 * Garage Door Opener
 
 The following services are also defined by the HomeKit protocol, but since I don't know a good way to map them to openHAB items, I currently don't plan to implement them. Let me know if you have any ideas, by opening an issue!
@@ -452,11 +449,50 @@ This service describes a valve.
 * `inUseItemInverted` *(optional)*: If `inUseItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-* `durationItem` *(optional)*: This item will be set by Homekit to show the duration for the watering. This item should also be decreased, to show the remaining watering time
+* `durationItem` *(optional)*: This item will be set by HomeKit to show the duration for the watering. This item should also be decreased, to show the remaining watering time
   * Needs to be of type `Number` within openHAB
 * `valveType` *(optional)*: The type of valve described by this service.
   * Default: `generic`
   * Allowed values: `generic`, `irrigation`, `showerhead`, `faucet`
+ 
+### Irrigation System
+This service describes an irrigation system.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "irrigation",
+    
+    "activeItem": "Itemname-within-OpenHAB",
+    "acitveItemInverted": "true",
+    "inUseItem": "Itemname-within-OpenHAB",
+    "inUseItemInverted": "true",
+    "durationItem": "Itemname-within-OpenHAB",
+    "programMode": "manual",
+    "programModeItem": "Itemname-within-OpenHAB"
+}
+```
+* `activeItem`: The openHAB item showing, if the valve is currently active
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `activeItemInverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `inUseItem` Representing, if the valve is currently in use (if `Switch` is `ON`, `Contact` is `OPEN` or `Number` is greater than 0)
+  * Needs to be of type `Switch`, `Contact` or `Number` within openHAB
+* `inUseItemInverted` *(optional)*: If `inUseItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `durationItem` *(optional)*: This item will be set by HomeKit to show the duration for the watering. This item should also be decreased, to show the remaining watering time
+  * Needs to be of type `Number` within openHAB
+* `programMode` *(optional)*: The current program mode of this accessory.
+  * Default: `noprogram`
+  * Allowed values: `noprogram`, `scheduled`, `manual`
+* `programModeItem` *(optional)*: If your accessory can dynamically report its program mode, use this item as an alternative to `programMode`.
+  * Needs to be of type `Number` within openHAB
+  * Only discrete values are recognized:
+    * 0 ≙ `No Program scheduled`
+    * 1 ≙ `Program scheduled`
+    * 2 ≙ `Manual Mode`
  
 ### Window Covering
 This service describes motorized window coverings or shades - examples include shutters, blinds, awnings etc.
@@ -936,7 +972,7 @@ Verly little configuration within homebridge/openHAB, only tags within `*.items`
 Support only 1:1 mappings between Items and HomeKit services | Supports composite items (e.g. Thermostat, Security System, Battery States, etc.)
 Uses `SSE` to receive push notifications from openHAB about state change and requires sitemap definitions | Pulling of states through REST interface & push notifications from openHAB through `SSE` *without*  the requirement of a sitemap
 Thermostats never really worked | Thermostats working as expected
-4 accessory types supported | 25 different accessory types supported
+4 accessory types supported | 28 different accessory types supported
 Light item in openHAB gets triggered multiple times from single user interaction | Light item in openHAB receives only one command per user interaction
 No support for items with notification capabilities | Many HomeKit services can notify the user about a state change. Those accessories are only supported in this plugin
 

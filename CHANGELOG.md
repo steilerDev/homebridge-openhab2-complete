@@ -5,8 +5,6 @@
 
 ### V0.10.0 (planned)
 * Implement remaining Services:
-  * Water Service Class with
-    * Irrigation
   * Garage Door Opener
 
 ## Changelog
@@ -20,6 +18,7 @@
 * Added Watering Accessories:
   * Faucet
   * Valve
+  * Irrigation
   
 **Breaking changes**:
 * Renamed light sensor's accessory type from `lightSensor` to `lux`
