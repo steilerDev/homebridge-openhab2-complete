@@ -229,48 +229,44 @@ class OpenHAB {
     }
 
     startSubscription() {
-        for(var key in this._subscriptions) {
-            let myURL = this._getURL('/rest/events',`topics=smarthome/items/${key}/statechanged`);
-            this.startSubscriptionForItem(myURL, key, this._subscriptions[key]);
-        }
-    }
-
-    startSubscriptionForItem(url, habItem, callbacks) {
+        let myURL = this._getURL('/rest/events',`topics=smarthome/items/`);
         const CLOSED = 2;
 
-        this._log.debug(`Starting subscription for ${habItem} with ${callbacks.length} subscribed characteristic(s)`);
-        let source = new EventSource(url);
-
+        let source = new EventSource(myURL);
         source.onmessage = function (eventPayload) {
             let eventData = JSON.parse(eventPayload.data);
             if (eventData.type === "ItemStateChangedEvent") {
                 let item = eventData.topic.replace("smarthome/items/", "").replace("/statechanged", "");
                 let value = JSON.parse(eventData.payload).value;
-                callbacks.forEach(function(callback){
-                    callback(value, item);
-                });
-                this._valueCache.set(item, value);
+
+                if(this._subscriptions[item]) {
+                    this._log.debug(`Received new state for item ${item}: ${value}`);
+                    this._valueCache.set(item, value);
+                    this._subscriptions[item].forEach(function(callback){
+                        callback(value, item);
+                    });
+                } else {
+                    this._log.debug(`Ignoring new state for item ${item} (${value}), because it is not registered with homebridge`);
+                }
             }
         }.bind(this);
         source.onerror = function (err) {
             if (err.message) {
                 let msg;
                 if (err.status) {
+                    msg = `${err.status}: ${err.message}`;
                 } else {
                     msg = err.message;
                 }
                 if (source.readyState === CLOSED || err.status === 404) {
-                    msg = `Subscription closed for ${habItem}, trying to reconnect in 1sec...`;
+                    msg = `Subscription service closed, trying to reconnect in 1sec...`;
                     setTimeout(function () {
-                        this._log.warn(`Trying to reconnect subscription for ${habItem}...`);
+                        this._log.warn(`Trying to reconnect subscription service...`);
                         source.close();
-                        this.startSubscriptionForItem(url, habItem, callbacks);
+                        this.startSubscription();
                     }.bind(this), 1000);
                 }
                 this._log.error(msg);
-                callbacks.forEach(function(callback){
-                    callback(new Error(msg));
-                });
             }
         }.bind(this);
     }
