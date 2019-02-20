@@ -29,7 +29,7 @@ function addCurrentRelativeHumidityCharacteristic(service, optional) {
 }
 
 function addTargetRelativeHumidityCharacteristic(service, optional) {
-    addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.TargetRelativeHumidity), {item: CLIMATE_THERMOSTAT_CONFIG.targetHumidityItem}, optional);
+    addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.TargetRelativeHumidity), {item: CLIMATE_CONFIG.targetHumidityItem}, optional);
 }
 
 function addCurrentTemperatureCharacteristic(service, optional) {
@@ -37,7 +37,7 @@ function addCurrentTemperatureCharacteristic(service, optional) {
 }
 
 function addTargetTemperatureCharacteristic(service, optional) {
-    addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.TargetTemperature), {item: CLIMATE_THERMOSTAT_CONFIG.targetTempItem}, optional);
+    addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.TargetTemperature), {item: CLIMATE_CONFIG.targetTempItem}, optional);
 }
 
 
