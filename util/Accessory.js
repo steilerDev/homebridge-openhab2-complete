@@ -32,7 +32,7 @@ class Accessory {
 
     // Called by homebridge
     getServices() {
-        this._log.debug("Getting services");
+        this._log.debug(`Getting services for ${this.name} (${this._services.length} service(s) registered for this accessory`);
         return this._services;
     }
 
