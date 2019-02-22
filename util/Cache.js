@@ -51,8 +51,7 @@ class Cache extends EventEmitter {
             let thisData = this._data[key];
             if(thisData && Object.keys(thisData).length > 0) {
                 if(Cache._isExpired(thisData)) {
-                    this._log.debug(`Value for key ${key} is expired, cleaning & emitting event`);
-                    this._data[key] = {};
+                    this._log.debug(`Value for key ${key} is expired, emitting event`);
                     this.emit('expired', key);
                 }
                 this._log.debug(`Returning value (${thisData.value}) for key ${key} `);
