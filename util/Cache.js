@@ -54,11 +54,9 @@ class Cache extends EventEmitter {
                     this._log.debug(`Value for key ${key} is expired, cleaning & emitting event`);
                     this._data[key] = {};
                     this.emit('expired', key);
-                    return null;
-                } else {
-                    this._log.debug(`Value for key ${key} is still valid, returning ${thisData.value}`);
-                    return thisData.value;
                 }
+                this._log.debug(`Returning value (${thisData.value}) for key ${key} `);
+                return thisData.value;
             } else {
                 this._log.debug(`No value stored for key ${key}`);
                 return null;

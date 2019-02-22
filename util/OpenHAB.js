@@ -9,7 +9,7 @@ const {Cache} = require('./Cache');
 // 30 mins ttl for cached item states
 const valueCacheTTL = 30 * 60 * 1000;
 // Checking every minute, if item states from the cache need to be cleared
-const monitorInterval = 60 * 1000;
+const monitorInterval = 5 * 60 * 1000;
 
 class OpenHAB {
 
@@ -27,7 +27,20 @@ class OpenHAB {
 
         this._valueCache.on('expired', function (habItem) {
             this._log.warn(`Item ${habItem}'s state was cleared from the cache, getting the current value`);
-            this._getStateWithoutCache(habItem);
+            this._getStateWithoutCache(habItem, function(error, value) {
+                if(error) {
+                   this._log.error(`Unable to set new value for ${habItem}: ${error.message}`);
+                } else {
+                    if(this._subscriptions[habItem] !== undefined) {
+                        this._log.debug(`Received new state for item ${habItem}: ${value}`);
+                        this._subscriptions[habItem].forEach(function (callback) {
+                            callback(value, habItem);
+                        });
+                    } else {
+                        this._log.debug(`Not pushing new value for ${habItem}, because it is not registered with homebridge`);
+                    }
+                }
+            }.bind(this));
         }.bind(this));
 
         this._typeCache = new Cache(log);
