@@ -20,7 +20,7 @@ class Cache extends EventEmitter {
 
     set(key, value) {
         if(this._ttl) {
-            let ttl = this._now() + this._ttl;
+            let ttl = Cache._now() + this._ttl;
             this._data[key] = {
                 expires: ttl,
                 value: value
@@ -46,28 +46,33 @@ class Cache extends EventEmitter {
     }
 
     _getValueAndCheckExpiration(key) {
-        let thisData = this._data[key];
-        if(thisData && Object.keys(thisData).length > 0) {
-            if(this._isExpired(thisData)) {
-                this._log.debug(`Value for key ${key} is expired, cleaning & emitting event`);
-                this._data[key] = {};
-                this.emit('expired', key);
-                return null;
+        if(key) {
+            this._log.debug(`Checking cache for ${key}`);
+            let thisData = this._data[key];
+            if(thisData && Object.keys(thisData).length > 0) {
+                if(Cache._isExpired(thisData)) {
+                    this._log.debug(`Value for key ${key} is expired, cleaning & emitting event`);
+                    this._data[key] = {};
+                    this.emit('expired', key);
+                    return null;
+                } else {
+                    this._log.debug(`Value for key ${key} is still valid, returning ${thisData.value}`);
+                    return thisData.value;
+                }
             } else {
-                this._log.debug(`Value for key ${key} is still valid, returning ${thisData.value}`);
-                return thisData.value;
+                this._log.debug(`No value stored for key ${key}`);
+                return null;
             }
         } else {
-            this._log.debug(`No value stored for key ${key}`);
-            return null;
+            this._log.warn(`Unable to get cache, no key specified!`);
         }
     }
 
-    _isExpired(data) {
-        return data.expires && data.expires <= this._now();
+    static _isExpired(data) {
+        return data.expires && data.expires <= Cache._now();
     }
 
-    _now() {
+    static _now() {
         return Date.now();
     }
 

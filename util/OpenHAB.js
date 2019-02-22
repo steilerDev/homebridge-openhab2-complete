@@ -8,8 +8,8 @@ const {Cache} = require('./Cache');
 
 // 30 mins ttl for cached item states
 const valueCacheTTL = 30 * 60 * 1000;
-// Checking every 10 minutes, if item states from the cache need to be cleared
-const monitorInterval = 10 * 60 * 1000;
+// Checking every minute, if item states from the cache need to be cleared
+const monitorInterval = 60 * 1000;
 
 class OpenHAB {
 
@@ -27,14 +27,7 @@ class OpenHAB {
 
         this._valueCache.on('expired', function (habItem) {
             this._log.warn(`Item ${habItem}'s state was cleared from the cache, getting the current value`);
-            this._getStateWithoutCache(habItem, function (error, value) {
-                if (error) {
-                    this._log.error(`Unable to get ${habItem}'s new state: ${error.message}`);
-                } else {
-                    this._log.debug(`Updating cache entry for ${habItem} with new value ${value}`);
-                    this._valueCache.set(habItem, value);
-                }
-            }.bind(this))
+            this._getStateWithoutCache(habItem);
         }.bind(this));
 
         this._typeCache = new Cache(log);
@@ -239,7 +232,7 @@ class OpenHAB {
                 let item = eventData.topic.replace("smarthome/items/", "").replace("/statechanged", "");
                 let value = JSON.parse(eventData.payload).value;
 
-                if(this._subscriptions[item]) {
+                if(this._subscriptions[item] !== undefined) {
                     this._log.debug(`Received new state for item ${item}: ${value}`);
                     this._valueCache.set(item, value);
                     this._subscriptions[item].forEach(function(callback){
