@@ -89,7 +89,14 @@ function addActiveCharacteristicWithDefaultConf(service, optional) {
 }
 
 function addObstructionDetectedCharacteristic(service, optional) {
-    addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.ObstructionDetected), {item: CURRENT_TARGET_DOOR_CONFIG.obstructionItem, inverted: CURRENT_TARGET_DOOR_CONFIG.obstructionItemInverted}, optional);
+    try {
+        addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.ObstructionDetected), {item: CURRENT_TARGET_DOOR_CONFIG.obstructionItem, inverted: CURRENT_TARGET_DOOR_CONFIG.obstructionItemInverted}, optional);
+    } catch(e) {
+        this._log.debug(`Unable to add obstruction detected characteristic: ${e}, adding default behaviour`);
+        service.getCharacteristic(this.Characteristic.ObstructionDetected).on('get', function(callback) {
+            callback(null, false);
+        });
+    }
 }
 
 module.exports = {

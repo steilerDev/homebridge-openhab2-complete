@@ -100,7 +100,7 @@ const OpenHABComplete = class {
 
             const factory = this._factories[configuration.type];
             if (factory === undefined) {
-                throw new Error(`Invalid configuration: Accessory type is unknown: ${configuratioconfigurationn.type}`);
+                throw new Error(`Invalid configuration: Accessory type is unknown: ${configuration.type}`);
             }
 
             if(configuration.items && configuration.items instanceof Array) {
