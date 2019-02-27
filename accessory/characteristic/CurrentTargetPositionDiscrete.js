@@ -117,9 +117,9 @@ function _doorTransformation(multiplier, targetStateCharacteristic, type, invert
                 }
             } else {
                 if(value >= 97) {
-                    transformedValue = OPEN;
+                    transformedValue = inverted ? CLOSED: OPEN;
                 } else if(value <= 3) {
-                    transformedValue = CLOSED;
+                    transformedValue = inverted ? OPEN : CLOSED;
                 } else if(targetStateCharacteristic) {
                     if(targetStateCharacteristic.value === OPEN) {
                         transformedValue = OPENING;
