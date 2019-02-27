@@ -4,7 +4,7 @@
 * Code audit & documentation
 
 ## Changelog
-### V0.10.0 (unreleased)
+### V0.10.0
 * Allowing grouping of same type accessory inside configuration
 * Added Air Quality Sensor
 * Added Climate Control Accessories:
