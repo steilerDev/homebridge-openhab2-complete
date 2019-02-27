@@ -3,10 +3,6 @@
 ### V1.0.0 (planned)
 * Code audit & documentation
 
-### V0.10.0 (planned)
-* Implement remaining Services:
-  * Garage Door Opener
-
 ## Changelog
 ### V0.10.0 (unreleased)
 * Allowing grouping of same type accessory inside configuration
@@ -19,9 +15,14 @@
   * Faucet
   * Valve
   * Irrigation
+* Added Garage Door Opener Accessory
+* Support for `Number` types with Unit of Measurement
   
 **Breaking changes**:
 * Renamed light sensor's accessory type from `lightSensor` to `lux`
+
+Issues:
+* Closes #8
 
 ### V0.9.0
 * Removed `clone` dependency, since it caused unexpected behaviour

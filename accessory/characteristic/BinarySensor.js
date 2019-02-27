@@ -7,6 +7,8 @@ const BINARY_CONFIG = {
     inverted: "inverted"
 };
 
+const {CURRENT_TARGET_DOOR_CONFIG} = require('./CurrentTargetPositionDiscrete');
+
 // This function will try and add a battery warning characteristic to the provided service
 function addBinarySensorCharacteristic(service, characteristic, CONFIG, optional) {
     try {
@@ -86,6 +88,10 @@ function addActiveCharacteristicWithDefaultConf(service, optional) {
     addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.Active), BINARY_CONFIG, optional);
 }
 
+function addObstructionDetectedCharacteristic(service, optional) {
+    addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.ObstructionDetected), {item: CURRENT_TARGET_DOOR_CONFIG.obstructionItem, inverted: CURRENT_TARGET_DOOR_CONFIG.obstructionItemInverted}, optional);
+}
+
 module.exports = {
     addCarbonDioxideDetectedCharacteristic,
     addContactSensorCharacteristic,
@@ -97,5 +103,6 @@ module.exports = {
     addSmokeDetectedCharacteristic,
     addSwingModeCharacteristic,
     addActiveCharacteristic,
-    addActiveCharacteristicWithDefaultConf
+    addActiveCharacteristicWithDefaultConf,
+    addObstructionDetectedCharacteristic
 };

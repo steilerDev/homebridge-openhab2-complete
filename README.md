@@ -3,7 +3,7 @@
 
 [![NPM](https://nodei.co/npm/homebridge-openhab2-complete.png)](https://nodei.co/npm/homebridge-openhab2-complete/)
 
-This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](https://www.openhab.org) has the expectation to fully support all services offered by Apple's HomeKit Accessory Protocol (HAP), as far as it is feasible based on the Item types offered by OpenHAB (see [below](#supported-hap-services) for the currently supported 28 accessories and `CHANGELOG.md` for my roadmap). In opposite to the existing [openHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) or the native [openHAB Homekit Plugin](https://www.openhab.org/addons/integrations/homekit/) this plugin requires explicit declaration of accessories in the homebridge configuration and does not use openHAB's tagging system, which leads to a little more effort during configuration, but should prove more reliable and functional in more complex installations. See [Comparisson](#comparison) below.
+This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](https://www.openhab.org) fully supports all services offered by Apple's HomeKit Accessory Protocol (HAP), as far as it is feasible based on the item types offered by OpenHAB (see [below](#supported-hap-services) for the currently supported 29 accessories). In opposite to the existing [openHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) or the native [openHAB Homekit Plugin](https://www.openhab.org/addons/integrations/homekit/), this plugin requires explicit declaration of accessories in the homebridge configuration and does not use openHAB's tagging system, which leads to a little more effort during configuration, but proves more reliable and functional in more complex installations. See [Comparisson](#comparison) below.
 
 ## Installation
 *Note: Please install [homebridge](https://www.npmjs.com/package/homebridge) first.*
@@ -112,6 +112,8 @@ The following is a list of all services that are currently supported and which v
     * Homebridge configuration type: `window`
   * [Lock Mechanism](#lock-mechanism)
     * Homebridge configuration type: `lock`
+  * [Garage Door Opener](#garage-door-opener)
+    * Homebridge configuration type: `garage`
 * Numeric Sensors:
   * [Temperature Sensor](#temperature-sensor)
     * Homebridge configuration type: `temp`
@@ -144,9 +146,6 @@ The following is a list of all services that are currently supported and which v
   * [Filter Maintenance Sensor](#filter-maintenance-sensor)
     * Homebridge configuration type: `filter`
   
-The following services will be implemented in the near future:
-* Garage Door Opener
-
 The following services are also defined by the HomeKit protocol, but since I don't know a good way to map them to openHAB items, I currently don't plan to implement them. Let me know if you have any ideas, by opening an issue!
 * Slat
 * Microphone
@@ -626,6 +625,45 @@ The HomeKit Lock Mechanism service is designed to expose and control the physica
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
   
+### Garage Door Opener 
+This service describes a garage door opener tat controls a single door. If a garage has more than one door, then each door should have its own Garage Door Opener Service.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "garage", 
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "false",
+    "multiplier": "1",
+    "stateItem": "Itemname-within-OpenHAB",
+    "stateItemInverted": "false",
+    "stateItemMultiplier": "1",
+    "obstructionItem": "Itemname-within-OpenHAB",
+    "obstructionItemInverted": "false"
+}
+```
+* `item`: The openHAB item representing the garage door, receiving commands about the target position and determining the current position (if `stateItem` is not set)
+  * Needs to be of type `Rollershutter`, `Number` or `Switch` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `multiplier` *(optional)*: If `item`'s state need to be multiplied by a fixed amount to make sense to HomeKit, set this to a number (e.g. if your device stores its state in a float range from 0 to 1, where HomeKit expects integer numbers from 0 to 100 use a multiplier of 100)
+  * Default: `"1"`
+  * Needs to be a number *don't forget the quotes*
+* `stateItem` *(optional)*: The openHAB item, used to determine the state of the garage door instead of `item`'s state
+  * Needs to be of type `Rollershutter`, `Number`, `Switch` or `Contact` within openHAB
+* `stateItemInverted` *(optional)*: If `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `stateItemMultiplier` *(optional)*: If `stateItem`'s state need to be multiplied by a fixed amount to make sense to HomeKit, set this to a number (e.g. if your device stores its state in a float range from 0 to 1, where HomeKit expects integer numbers from 0 to 100 use a multiplier of 100)
+  * Default: `"1"`
+  * Needs to be a number *don't forget the quotes*
+* `obstructionItem`: The openHAB item showing, if an obstruction is detected
+  * Needs to be of type `Switch` or `Contact` within openHAB
+* `obstructionItemInverted` *(optional)*: If `obstructionItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+  
 ### Temperature Sensor
 This service describes a temperature sensor.
 
@@ -972,7 +1010,7 @@ Verly little configuration within homebridge/openHAB, only tags within `*.items`
 Support only 1:1 mappings between Items and HomeKit services | Supports composite items (e.g. Thermostat, Security System, Battery States, etc.)
 Uses `SSE` to receive push notifications from openHAB about state change and requires sitemap definitions | Pulling of states through REST interface & push notifications from openHAB through `SSE` *without*  the requirement of a sitemap
 Thermostats never really worked | Thermostats working as expected
-4 accessory types supported | 28 different accessory types supported
+4 accessory types supported | 29 different accessory types supported
 Light item in openHAB gets triggered multiple times from single user interaction | Light item in openHAB receives only one command per user interaction
 No support for items with notification capabilities | Many HomeKit services can notify the user about a state change. Those accessories are only supported in this plugin
 

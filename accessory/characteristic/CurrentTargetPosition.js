@@ -135,11 +135,10 @@ function positionTransformation(multiplier, targetStateCharacteristic, type, inv
         case 'Rollershutter':
         case 'Number':
             //This part is only invoked if this is used in a setter context and the item is a rollershutter
-            // Not sure if `inverted` should matter here
             if(type === 'RollershutterSetter' && value === 100) {
-                transformedValue = `UP`;
+                transformedValue = inverted ? 'DOWN' : 'UP';
             } else if(type === 'RollershutterSetter' && value === 0) {
-                transformedValue = `DOWN`;
+                transformedValue = inverted ? 'UP' : 'DOWN';
             } else {
 
                 if (inverted) {
