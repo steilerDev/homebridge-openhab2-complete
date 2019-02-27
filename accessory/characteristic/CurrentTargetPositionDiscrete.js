@@ -107,19 +107,19 @@ function _doorTransformation(multiplier, targetStateCharacteristic, type, invert
                 if(type === 'Rollershutter') {
                     transformedValue = inverted ? "DOWN" : "UP";
                 } else {
-                    transformedValue = inverted ? 0 : 100;
+                    transformedValue = inverted ? 100 : 0;
                 }
             } else if(value === CLOSED) {
                 if(type === 'Rollershutter') {
                     transformedValue = inverted ? "UP" : "DOWN";
                 } else {
-                    transformedValue = inverted ? 100 : 0;
+                    transformedValue = inverted ? 0 : 100;
                 }
             } else {
                 if(value >= 97) {
-                    transformedValue = inverted ? CLOSED: OPEN;
-                } else if(value <= 3) {
                     transformedValue = inverted ? OPEN : CLOSED;
+                } else if(value <= 3) {
+                    transformedValue = inverted ? CLOSED : OPEN;
                 } else if(targetStateCharacteristic) {
                     if(targetStateCharacteristic.value === OPEN) {
                         transformedValue = OPENING;
