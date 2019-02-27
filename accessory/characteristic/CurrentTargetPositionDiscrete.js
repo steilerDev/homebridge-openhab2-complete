@@ -118,7 +118,7 @@ function _doorTransformation(multiplier, targetStateCharacteristic, type, invert
                     transformedValue = inverted ? 100 : 0;
                 }
             } else {
-                value = parseFloat(value) * multiplier;
+                value = Math.floor(parseFloat(value) * multiplier);
                 if(value >= 97) {
                     transformedValue = inverted ? CLOSED : OPEN;
                 } else if(value <= 3) {

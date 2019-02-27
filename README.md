@@ -644,6 +644,13 @@ This service describes a garage door opener tat controls a single door. If a gar
 ```
 * `item`: The openHAB item representing the garage door, receiving commands about the target position and determining the current position (if `stateItem` is not set)
   * Needs to be of type `Rollershutter`, `Number` or `Switch` within openHAB
+  * In case of a `Number` item:
+    * 100 ≙ OPEN
+    * 0 ≙ CLOSED
+  * In case of a `Rollershutter` item:
+    * For the current state, the accessory behaves like a `Number` item
+    * For the target state, the item will receive `UP` and `DOWN` commands
+    * If you have an inverted `Rollershutter` item, use the same item as `stateItem` with `stateItemInverted` set to `"true"` and `inverted` set to false
 * `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
