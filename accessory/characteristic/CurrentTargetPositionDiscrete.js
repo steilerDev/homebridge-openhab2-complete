@@ -70,6 +70,8 @@ function addTargetDoorStateCharacteristic(service) {
     );
 }
 
+// 100 = UP = OPEN = ON
+// 0 = DOWN = CLOSED = OFF
 function _doorTransformation(multiplier, targetStateCharacteristic, type, inverted, value) {
     let transformedValue;
 
@@ -107,19 +109,19 @@ function _doorTransformation(multiplier, targetStateCharacteristic, type, invert
                 if(type === 'Rollershutter') {
                     transformedValue = inverted ? "DOWN" : "UP";
                 } else {
-                    transformedValue = inverted ? 100 : 0;
+                    transformedValue = inverted ? 0 : 100;
                 }
             } else if(value === CLOSED) {
                 if(type === 'Rollershutter') {
                     transformedValue = inverted ? "UP" : "DOWN";
                 } else {
-                    transformedValue = inverted ? 0 : 100;
+                    transformedValue = inverted ? 100 : 0;
                 }
             } else {
                 if(value >= 97) {
-                    transformedValue = inverted ? OPEN : CLOSED;
-                } else if(value <= 3) {
                     transformedValue = inverted ? CLOSED : OPEN;
+                } else if(value <= 3) {
+                    transformedValue = inverted ? OPEN : CLOSED;
                 } else if(targetStateCharacteristic) {
                     if(targetStateCharacteristic.value === OPEN) {
                         transformedValue = OPENING;
