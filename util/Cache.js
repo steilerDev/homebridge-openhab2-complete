@@ -62,6 +62,7 @@ class Cache extends EventEmitter {
             }
         } else {
             this._log.warn(`Unable to get cache, no key specified!`);
+            return null;
         }
     }
 

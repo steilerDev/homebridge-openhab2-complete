@@ -40,7 +40,6 @@ function addTargetTemperatureCharacteristic(service, optional) {
     addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.TargetTemperature), {item: CLIMATE_CONFIG.targetTempItem}, optional);
 }
 
-
 function addCoolingThresholdCharacteristic(service, optional) {
     addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CoolingThresholdTemperature), {item: CLIMATE_CONFIG.coolingThresholdTempItem}, optional);
 }

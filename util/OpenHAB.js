@@ -97,7 +97,7 @@ class OpenHAB {
                 } else if (!(body)) {
                     returnedError = new Error(`Unable to retrieve state`);
                 } else {
-                    returnedValue = body;
+                    returnedValue = this._cleanOpenHABState(body);
                     this._log.warn(`Caching value ${returnedValue} for ${habItem}`);
                     this._valueCache.set(habItem, returnedValue);
                 }
@@ -121,7 +121,7 @@ class OpenHAB {
             } else if (!(response.body)) {
                 return new Error(`Unable to retrieve state`);
             } else {
-                let value = response.body.toString('ASCII');
+                let value = this._cleanOpenHABState(response.body.toString('ASCII'));
                 this._valueCache.set(habItem, value);
                 return value;
             }
@@ -192,8 +192,9 @@ class OpenHAB {
             if(items.length > 0) {
                 this._log.debug(`Got array with ${items.length} item/s`);
                 items.forEach(function(item) {
-                    this._log.debug(`Got item ${item.name} of type ${item.type}, adding to type cache`);
-                    this._typeCache.set(item.name, item.type);
+                    let type = this._cleanOpenHABType(item.type);
+                    this._log.debug(`Got item ${item.name} of type ${type}, adding to type cache`);
+                    this._typeCache.set(item.name, type);
                 }.bind(this));
             } else {
                 this._log.error(`Received no items from openHAB, unable to sync states!`);
@@ -213,8 +214,9 @@ class OpenHAB {
                 this._log.debug(`Got array with ${items.length} item/s`);
                 items.forEach(function(item) {
                     if(this._subscriptions[item.name] !== undefined) {
-                        this._log.debug(`Got item ${item.name} with value ${item.state}, adding to value cache`);
-                        this._valueCache.set(item.name, item.state);
+                        let state = this._cleanOpenHABState(item.state);
+                        this._log.debug(`Got item ${item.name} with value ${state}, adding to value cache`);
+                        this._valueCache.set(item.name, state);
                     } else {
                         this._log.debug(`Got item ${item.name} with value ${item.state}, not adding to value cache, since it is not linked to homebridge!`);
                     }
@@ -243,7 +245,7 @@ class OpenHAB {
             let eventData = JSON.parse(eventPayload.data);
             if (eventData.type === "ItemStateChangedEvent") {
                 let item = eventData.topic.replace("smarthome/items/", "").replace("/statechanged", "");
-                let value = JSON.parse(eventData.payload).value;
+                let value = this._cleanOpenHABState(JSON.parse(eventData.payload).value);
 
                 if(this._subscriptions[item] !== undefined) {
                     this._log.debug(`Received new state for item ${item}: ${value}`);
@@ -275,6 +277,28 @@ class OpenHAB {
                 this._log.error(msg);
             }
         }.bind(this);
+    }
+
+    // This function is called before a value received from openHAB was passed to the cache or homebridge application
+    _cleanOpenHABState(value) {
+        // This checks if the value is a number (eventually followed by a unit) and extracts only the number
+        let matchedValue =  value.match(/^\d+\.?\d*/i)
+        if (matchedValue) {
+            this._log.debug(`Recognized number with potential unit (${value}), extracting only the number: ${matchedValue[0]}`);
+            return matchedValue[0];
+        } else {
+            return value;
+        }
+    }
+
+    // This function is called before a type received from openHAB was passed to the cache or homebridge application
+    _cleanOpenHABType(type) {
+        if(type.startsWith("Number")) {
+            this._log.debug(`Received item type ${type}, transforming to 'Number'`);
+            return "Number";
+        } else {
+            return type;
+        }
     }
 }
 
