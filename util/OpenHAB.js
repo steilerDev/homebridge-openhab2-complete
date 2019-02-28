@@ -183,7 +183,7 @@ class OpenHAB {
 
     syncItemTypes() {
         this._log.info(`Syncing all items & types from openHAB`);
-        let myURL = this._getURL(`/rest/items`, `recursive=false&fields=name%2Ctype`);
+        let myURL = this._getURL(`/rest/items`, `recursive=false&fields=name%2Ctype%2Ceditable`);
         const response = syncRequest('GET', myURL);
         if (response.statusCode !== 200) {
             return new Error(`Unable to get items: HTTP code ${response.statusCode}!`);
@@ -204,7 +204,7 @@ class OpenHAB {
 
     syncItemValues() {
         this._log.info(`Syncing all item values from openHAB`);
-        let myURL = this._getURL(`/rest/items`, `recursive=false&fields=name%2Cstate`);
+        let myURL = this._getURL(`/rest/items`, `recursive=false&fields=name%2Cstate%2Ceditable`);
         const response = syncRequest('GET', myURL);
         if (response.statusCode !== 200) {
             return new Error(`Unable to get item values: HTTP code ${response.statusCode}!`);
