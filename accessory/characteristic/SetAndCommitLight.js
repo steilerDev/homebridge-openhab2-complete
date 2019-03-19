@@ -60,7 +60,7 @@ function _commitFunction(service, type) {
         command = new Error("Race condition! Commit was called before set!");
     } else {
         let binary, hue, saturation, brightness;
-        this._log.debug(`Received commit with object ${this._newState}`);
+        this._log.debug(`Received commit with object ${JSON.stringify(this._newState)}`);
 
         binary = this._newState["binary"] !== undefined ?
             this._newState["binary"] :
