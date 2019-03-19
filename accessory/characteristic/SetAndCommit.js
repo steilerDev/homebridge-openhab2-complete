@@ -85,7 +85,6 @@ function _commitState(commitFunction, item, value, callback, context, connection
             } else {
                 callback(new Error("Command was not set"));
             }
-            this._commitLock = false;
 
         }.bind(this), 125);
     }

@@ -69,6 +69,11 @@ function _commitFunction(service, type) {
             brightness = this._newState["brightness"] !== undefined ?
                 this._newState["brightness"] :
                 service.getCharacteristic(this.Characteristic.Brightness).value;
+            if(brightness >= 99) {
+                brightness = 99;
+            }
+
+
             if (type === "Color") {
                 hue = this._newState["hue"] !== undefined ?
                     this._newState["hue"] :
@@ -91,7 +96,6 @@ function _commitFunction(service, type) {
             command = binary ? `${hue},${saturation},${brightness}` : "0";
         }
     }
-    this._stateLock = false;
     return command;
 }
 
