@@ -4,6 +4,13 @@
 * Code audit & documentation
 
 ## Changelog
+### V0.10.1
+* Fixed a logic bug for inverted `Window Covering` Accessory using inverted `Rollershutter` items
+* Added support for `Numeric` item types in battery warning characteristics
+
+Issues:
+* Closes #9
+
 ### V0.10.0
 * Allowing grouping of same type accessory inside configuration
 * Added Air Quality Sensor

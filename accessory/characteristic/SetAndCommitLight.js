@@ -60,6 +60,7 @@ function _commitFunction(service, type) {
         command = new Error("Race condition! Commit was called before set!");
     } else {
         let binary, hue, saturation, brightness;
+        this._log.debug(`Received commit with object ${this._newState}`);
 
         binary = this._newState["binary"] !== undefined ?
             this._newState["binary"] :
@@ -79,16 +80,18 @@ function _commitFunction(service, type) {
             }
         }
 
+        this._log.debug(`Commiting light state with vectors (B,H,S,B): ${binary},${hue},${saturation},${brightness}`);
         if(binary === undefined && hue === undefined && saturation === undefined && brightness === undefined) {
             command = new Error("Unable to commit state, since necessary information are missing");
         } else if (hue === undefined && saturation === undefined && brightness === undefined) {
             command = binary ? "ON" : "OFF";
         } else if (hue === undefined && saturation === undefined) {
-            command = binary ? `${brightness}` : "OFF";
+            command = binary ? `${brightness}` : "0";
         } else {
-            command = binary ? `${hue},${saturation},${brightness}` : "OFF";
+            command = binary ? `${hue},${saturation},${brightness}` : "0";
         }
     }
+    this._stateLock = false;
     return command;
 }
 
