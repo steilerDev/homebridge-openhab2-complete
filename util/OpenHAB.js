@@ -282,7 +282,7 @@ class OpenHAB {
     // This function is called before a value received from openHAB was passed to the cache or homebridge application
     _cleanOpenHABState(value) {
         // This checks if the value is a number (eventually followed by a unit) and extracts only the number
-        let matchedValue =  value.match(/^\d+\.?\d*/i)
+        let matchedValue =  value.match(/^\d+((\.|,)\d*)*/i)
         if (matchedValue) {
             this._log.debug(`Recognized number with potential unit (${value}), extracting only the number: ${matchedValue[0]}`);
             return matchedValue[0];
