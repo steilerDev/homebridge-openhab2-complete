@@ -24,7 +24,8 @@ class Accessory {
 
         this._services = [
             this._getAccessoryInformationService(modelDescription),
-            this._getPrimaryService()
+            this._getPrimaryService(),
+            batteryService.bind(this)()
         ];
 
         let thisBatteryService = batteryService.bind(this)();
@@ -43,6 +44,12 @@ class Accessory {
     getServices() {
         this._log.debug(`Getting services for ${this.name} (${this._services.length} service(s) registered for this accessory`);
         return this._services;
+    }
+
+    _getPrimaryService() {
+        let msg = `Base class does not provide a binary service!`
+        this._log.error(msg);
+        throw new Error(msg);
     }
 
     _subscribeCharacteristic(characteristic, item, transformation, callback) {
