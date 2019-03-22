@@ -111,5 +111,6 @@ module.exports = {
     addSwingModeCharacteristic,
     addActiveCharacteristic,
     addActiveCharacteristicWithDefaultConf,
-    addObstructionDetectedCharacteristic
+    addObstructionDetectedCharacteristic,
+    addBinarySensorCharacteristic
 };
