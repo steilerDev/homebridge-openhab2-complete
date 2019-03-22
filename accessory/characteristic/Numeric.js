@@ -13,10 +13,12 @@ function addNumericSensorCharacteristic(service, characteristic, CONF_MAP, optio
 
         this._log.debug(`Creating numeric sensor characteristic for ${this.name} with ${item}`);
 
+        this._log.error(`Start`);
         characteristic.on('get', getState.bind(this,
             item,
             parseFloat
         ));
+        this._log.error(`Stop`);
 
         this._subscribeCharacteristic(characteristic,
             item,
