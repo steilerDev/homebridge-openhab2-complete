@@ -9,6 +9,11 @@ const {
 } = require('./characteristic/ClimateAirPurifier');
 
 class AirPurifierAccessory extends Accessory {
+
+    constructor(platform, config) {
+        super(platform, config, 'Air Purifier');
+    }
+
     _getPrimaryService() {
         this._log.debug(`Creating Air Purifier service for ${this.name}`);
         let primaryService = new this.Service.AirPurifier(this.name);
@@ -24,7 +29,7 @@ class AirPurifierAccessory extends Accessory {
 const type = "airpurifier";
 
 function createAccessory(platform, config) {
-    return new AirPurifierAccessory(platform, config, 'Air Purifier');
+    return new AirPurifierAccessory(platform, config);
 }
 
 module.exports = {createAccessory, type};

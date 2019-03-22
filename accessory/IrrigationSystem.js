@@ -6,6 +6,11 @@ const {addInUseCharacteristic} = require('./characteristic/InUse');
 const {addProgramModeCharacteristic, addDurationCharacteristic} = require('./characteristic/Watering');
 
 class IrrigationSystemAccessory extends Accessory {
+
+    constructor(platform, config) {
+        super(platform, config, 'Irrigation System');
+    }
+
     _getPrimaryService() {
         this._log.debug(`Creating irrigation system service for ${this.name}`);
         let primaryService = new this.Service.IrrigationSystem(this.name);
@@ -20,7 +25,7 @@ class IrrigationSystemAccessory extends Accessory {
 const type = "irrigation";
 
 function createAccessory(platform, config) {
-    return new IrrigationSystemAccessory(platform, config, 'Irrigation System');
+    return new IrrigationSystemAccessory(platform, config);
 }
 
 module.exports = {createAccessory, type};

@@ -4,6 +4,11 @@ const {Accessory} = require('../util/Accessory');
 const {addRotationSpeedCharacteristic, addFanOnCharacteristic} = require('./characteristic/SetAndCommitFan');
 
 class FanAccessory extends Accessory {
+
+    constructor(platform, config) {
+        super(platform, config, 'Fan');
+    }
+
     _getPrimaryService() {
         this._log.debug(`Creating fan service for ${this.name}`);
         let primaryService = new this.Service.Fan(this.name);
@@ -16,7 +21,7 @@ class FanAccessory extends Accessory {
 const type = "fan";
 
 function createAccessory(platform, config) {
-    return new FanAccessory(platform, config, 'Fan');
+    return new FanAccessory(platform, config);
 }
 
 module.exports = {createAccessory, type};

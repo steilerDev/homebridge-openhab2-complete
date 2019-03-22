@@ -5,6 +5,11 @@ const {addOnCharacteristic} = require('./characteristic/On');
 const {addOutletInUseCharacteristic} = require('./characteristic/InUse');
 
 class OutletAccessory extends Accessory {
+
+    constructor(platform, config) {
+        super(platform, config, 'Outlet');
+    }
+
     _getPrimaryService() {
         this._log.debug(`Creating outlet service for ${this.name}`);
         let primaryService = new this.Service.Outlet(this.name);
@@ -17,7 +22,7 @@ class OutletAccessory extends Accessory {
 const type = "outlet";
 
 function createAccessory(platform, config) {
-    return new OutletAccessory(platform, config, 'Outlet');
+    return new OutletAccessory(platform, config);
 }
 
 module.exports = {createAccessory, type};

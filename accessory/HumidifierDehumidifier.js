@@ -15,6 +15,11 @@ const {
 } = require('./characteristic/ClimateDeHumidifier');
 
 class HumidifierDehumidifierAccessory extends Accessory {
+
+    constructor(platform, config) {
+        super(platform, config, 'Humidifier/Dehumidifier');
+    }
+
     _getPrimaryService() {
         this._log.debug(`Creating Humidifier/Dehumidifier service for ${this.name}`);
         let primaryService = new this.Service.HumidifierDehumidifier(this.name);
@@ -34,7 +39,7 @@ class HumidifierDehumidifierAccessory extends Accessory {
 const type = "humidifier";
 
 function createAccessory(platform, config) {
-    return new HumidifierDehumidifierAccessory(platform, config, 'Humidifier/Dehumidifier');
+    return new HumidifierDehumidifierAccessory(platform, config);
 }
 
 module.exports = {createAccessory, type};

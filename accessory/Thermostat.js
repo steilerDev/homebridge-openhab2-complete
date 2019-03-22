@@ -16,6 +16,11 @@ const {
 } = require('./characteristic/ClimateThermostat');
 
 class ThermostatAccessory extends Accessory {
+
+    constructor(platform, config) {
+        super(platform, config, 'Thermostat');
+    }
+
     _getPrimaryService() {
         this._log.debug(`Creating thermostat service for ${this.name}`);
         let primaryService = new this.Service.Thermostat(this.name);
@@ -35,7 +40,7 @@ class ThermostatAccessory extends Accessory {
 const type = "thermostat";
 
 function createAccessory(platform, config) {
-    return new ThermostatAccessory(platform, config, 'Thermostat');
+    return new ThermostatAccessory(platform, config);
 }
 
 module.exports = {createAccessory, type};

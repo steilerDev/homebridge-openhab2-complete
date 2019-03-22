@@ -5,6 +5,11 @@ const {addMotionDetectedCharacteristic} = require('./characteristic/BinarySensor
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class MotionSensorAccessory extends Accessory {
+
+    constructor(platform, config) {
+        super(platform, config, 'Motion Sensor');
+    }
+
     _getPrimaryService() {
         this._log.debug(`Creating motion sensor service for ${this.name}`);
         let primaryService = new this.Service.MotionSensor(this.name);
@@ -17,7 +22,7 @@ class MotionSensorAccessory extends Accessory {
 const type = "motion";
 
 function createAccessory(platform, config) {
-    return new MotionSensorAccessory(platform, config, 'Motion Sensor');
+    return new MotionSensorAccessory(platform, config);
 }
 
 module.exports = {createAccessory, type};

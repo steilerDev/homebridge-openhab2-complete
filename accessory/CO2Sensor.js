@@ -6,6 +6,11 @@ const {addCarbonDioxideLevelCharacteristic} = require('./characteristic/Level');
 const {addCarbonDioxideDetectedCharacteristic} = require('./characteristic/BinarySensor');
 
 class CO2SensorAccessory extends Accessory {
+
+    constructor(platform, config) {
+        super(platform, config, 'Carbon Dioxide Sensor');
+    }
+
     _getPrimaryService() {
         this._log.debug(`Creating carbon dioxide sensor service for ${this.name}`);
         let primaryService = new this.Service.CarbonDioxideSensor(this.name);
@@ -19,7 +24,7 @@ class CO2SensorAccessory extends Accessory {
 const type = "co2";
 
 function createAccessory(platform, config) {
-    return new CO2SensorAccessory(platform, config, 'Carbon Dioxide Sensor');
+    return new CO2SensorAccessory(platform, config);
 }
 
 module.exports = {createAccessory, type};

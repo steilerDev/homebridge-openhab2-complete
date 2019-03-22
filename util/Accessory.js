@@ -22,15 +22,15 @@ class Accessory {
         this.name = config.name;
         this.uuid_base = config.serialNumber;
 
-        this._services = [
-            this._getAccessoryInformationService.bind(this)(modelDescription),
-            this._getPrimaryService.bind(this)()
-        ];
+        this._services = [];
+
+        this._services.push(this._getAccessoryInformationService(modelDescription));
 
         let thisBatteryService = batteryService.bind(this)();
         if(thisBatteryService !== null) {
             this._services.push(thisBatteryService);
         }
+        this._services.push(this._getPrimaryService());
     }
 
     // Called by homebridge

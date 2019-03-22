@@ -5,6 +5,11 @@ const {addOccupancyDetectedCharacteristic} = require('./characteristic/BinarySen
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class OccupancySensorAccessory extends Accessory {
+
+    constructor(platform, config) {
+        super(platform, config, 'Occupancy Sensor');
+    }
+
     _getPrimaryService() {
         this._log.debug(`Creating occupancy sensor service for ${this.name}`);
         let primaryService = new this.Service.OccupancySensor(this.name);
@@ -17,7 +22,7 @@ class OccupancySensorAccessory extends Accessory {
 const type = "occupancy";
 
 function createAccessory(platform, config) {
-    return new OccupancySensorAccessory(platform, config, 'Occupancy Sensor');
+    return new OccupancySensorAccessory(platform, config);
 }
 
 module.exports = {createAccessory, type};

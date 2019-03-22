@@ -5,6 +5,11 @@ const {addFilterChangeIndicationCharacteristic} = require('./characteristic/Bina
 const {addFilterLifeLevelCharacteristic} = require('./characteristic/Level');
 
 class FilterMaintenanceSensorAccessory extends Accessory {
+
+    constructor(platform, config) {
+        super(platform, config, 'Filter Maintenance Sensor');
+    }
+
     _getPrimaryService() {
         this._log.debug(`Creating filter maintenance service for ${this.name}`);
         let primaryService = new this.Service.FilterMaintenance(this.name);
@@ -17,7 +22,7 @@ class FilterMaintenanceSensorAccessory extends Accessory {
 const type = "filter";
 
 function createAccessory(platform, config) {
-    return new FilterMaintenanceSensorAccessory(platform, config, 'Filter Maintenance Sensor');
+    return new FilterMaintenanceSensorAccessory(platform, config);
 }
 
 module.exports = {createAccessory, type};
