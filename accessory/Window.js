@@ -4,17 +4,6 @@ const {Accessory} = require('../util/Accessory');
 const {addCurrentPositionCharacteristic, addTargetPositionCharacteristic, addPositionStateCharacteristic, addHoldPositionCharacteristic} = require('./characteristic/CurrentTargetPosition');
 
 class WindowAccessory extends Accessory {
-
-    constructor(platform, config) {
-        super(platform, config);
-
-        // Services will be retrieved by homebridge
-        this._services = [
-            this._getAccessoryInformationService('Window'),
-            this._getPrimaryService()
-        ]
-    }
-
     _getPrimaryService() {
         this._log.debug(`Creating window service for ${this.name}`);
         let primaryService = new this.Service.Window(this.name);
@@ -29,7 +18,7 @@ class WindowAccessory extends Accessory {
 const type = "window";
 
 function createAccessory(platform, config) {
-    return new WindowAccessory(platform, config);
+    return new WindowAccessory(platform, config, 'Window');
 }
 
 module.exports = {createAccessory, type};

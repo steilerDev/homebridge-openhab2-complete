@@ -1,20 +1,9 @@
 'use strict';
 
-const Accessory = require('../util/Accessory');
+const {Accessory} = require('../util/Accessory');
 const {addSecuritySystemStateCharacteristic} = require('./characteristic/CurrentTargetSecuritySystem');
 
-class SecuritySystemAccessory extends Accessory.Accessory {
-
-    constructor(platform, config) {
-        super(platform, config);
-
-        // Services will be retrieved by homebridge
-        this._services = [
-            this._getAccessoryInformationService('Security System'),
-            this._getPrimaryService()
-        ]
-    }
-
+class SecuritySystemAccessory extends Accessory {
     _getPrimaryService() {
         this._log.debug(`Creating security system service for ${this.name}`);
         let primaryService = new this.Service.SecuritySystem(this.name);
@@ -26,7 +15,7 @@ class SecuritySystemAccessory extends Accessory.Accessory {
 const type = "security";
 
 function createAccessory(platform, config) {
-    return new SecuritySystemAccessory(platform, config);
+    return new SecuritySystemAccessory(platform, config, 'Security System');
 }
 
 module.exports = {createAccessory, type};

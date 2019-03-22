@@ -1,5 +1,7 @@
 'use strict';
 
+const {batteryService} = require('../accessory/characteristic/Battery');
+
 let PLATFORM = {
     log: "log",
     api: "api",
@@ -8,9 +10,9 @@ let PLATFORM = {
 };
 
 class Accessory {
-    constructor(platform, config) {
+    constructor(platform, config, modelDescription) {
         this._log = platform[PLATFORM.log];
-        this._log.debug(`Creating new accessory: ${config.name}`);
+        this._log.debug(`Creating new ${modelDescription} accessory: ${config.name}`);
 
         this.Characteristic = platform[PLATFORM.api][PLATFORM.hap].Characteristic;
         this.Service = platform[PLATFORM.api][PLATFORM.hap].Service;
@@ -20,8 +22,15 @@ class Accessory {
         this.name = config.name;
         this.uuid_base = config.serialNumber;
 
-        this._services = [];
+        this._services = [
+            this._getAccessoryInformationService(modelDescription),
+            this._getPrimaryService()
+        ];
 
+        let thisBatteryService = batteryService.bind(this)();
+        if(thisBatteryService !== null) {
+            this._services.push(thisBatteryService);
+        }
     }
 
     // Called by homebridge

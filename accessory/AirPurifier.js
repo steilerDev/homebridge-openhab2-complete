@@ -8,18 +8,7 @@ const {
     addTargetAirPurifierStateCharacteristic
 } = require('./characteristic/ClimateAirPurifier');
 
-
-
 class AirPurifierAccessory extends Accessory {
-    constructor(platform, config) {
-        super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Air Purifier'),
-            this._getPrimaryService()
-        ]
-    }
-
     _getPrimaryService() {
         this._log.debug(`Creating Air Purifier service for ${this.name}`);
         let primaryService = new this.Service.AirPurifier(this.name);
@@ -35,7 +24,7 @@ class AirPurifierAccessory extends Accessory {
 const type = "airpurifier";
 
 function createAccessory(platform, config) {
-    return new AirPurifierAccessory(platform, config);
+    return new AirPurifierAccessory(platform, config, 'Air Purifier');
 }
 
 module.exports = {createAccessory, type};

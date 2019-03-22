@@ -17,15 +17,6 @@ const {
 
 
 class HeaterCoolerAccessory extends Accessory {
-    constructor(platform, config) {
-        super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Heater/Cooler'),
-            this._getPrimaryService()
-        ]
-    }
-
     _getPrimaryService() {
         this._log.debug(`Creating Heater/Cooler service for ${this.name}`);
         let primaryService = new this.Service.HeaterCooler(this.name);
@@ -45,7 +36,7 @@ class HeaterCoolerAccessory extends Accessory {
 const type = "heatercooler";
 
 function createAccessory(platform, config) {
-    return new HeaterCoolerAccessory(platform, config);
+    return new HeaterCoolerAccessory(platform, config, 'Heater/Cooler');
 }
 
 module.exports = {createAccessory, type};

@@ -16,17 +16,6 @@ const {
 } = require('./characteristic/ClimateThermostat');
 
 class ThermostatAccessory extends Accessory {
-
-    constructor(platform, config) {
-        super(platform, config);
-
-        // Services will be retrieved by homebridge
-        this._services = [
-            this._getAccessoryInformationService('Thermostat'),
-            this._getPrimaryService()
-        ]
-    }
-
     _getPrimaryService() {
         this._log.debug(`Creating thermostat service for ${this.name}`);
         let primaryService = new this.Service.Thermostat(this.name);
@@ -41,13 +30,12 @@ class ThermostatAccessory extends Accessory {
         addHeatingThresholdCharacteristic.bind(this)(primaryService, true);
         return primaryService;
     }
-
 }
 
 const type = "thermostat";
 
 function createAccessory(platform, config) {
-    return new ThermostatAccessory(platform, config);
+    return new ThermostatAccessory(platform, config, 'Thermostat');
 }
 
 module.exports = {createAccessory, type};

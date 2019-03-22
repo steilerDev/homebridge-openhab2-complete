@@ -5,15 +5,6 @@ const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 const {addContactSensorCharacteristic} = require('./characteristic/BinarySensor');
 
 class ContactSensorAccessory extends Accessory {
-    constructor(platform, config) {
-        super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Contact Sensor'),
-            this._getPrimaryService()
-        ]
-    }
-
     _getPrimaryService() {
         this._log.debug(`Creating contact sensor service for ${this.name}`);
         let primaryService = new this.Service.ContactSensor(this.name);
@@ -26,7 +17,7 @@ class ContactSensorAccessory extends Accessory {
 const type = "contact";
 
 function createAccessory(platform, config) {
-    return new ContactSensorAccessory(platform, config);
+    return new ContactSensorAccessory(platform, config, 'Contact Sensor');
 }
 
 module.exports = {createAccessory, type};

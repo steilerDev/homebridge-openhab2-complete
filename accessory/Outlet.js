@@ -5,17 +5,6 @@ const {addOnCharacteristic} = require('./characteristic/On');
 const {addOutletInUseCharacteristic} = require('./characteristic/InUse');
 
 class OutletAccessory extends Accessory {
-
-    constructor(platform, config) {
-        super(platform, config);
-
-        // Services will be retrieved by homebridge
-        this._services = [
-            this._getAccessoryInformationService('Outlet'),
-            this._getPrimaryService()
-        ]
-    }
-
     _getPrimaryService() {
         this._log.debug(`Creating outlet service for ${this.name}`);
         let primaryService = new this.Service.Outlet(this.name);
@@ -28,7 +17,7 @@ class OutletAccessory extends Accessory {
 const type = "outlet";
 
 function createAccessory(platform, config) {
-    return new OutletAccessory(platform, config);
+    return new OutletAccessory(platform, config, 'Outlet');
 }
 
 module.exports = {createAccessory, type};

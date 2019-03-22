@@ -4,17 +4,6 @@ const {Accessory} = require('../util/Accessory');
 const {addCurrentPositionCharacteristic, addTargetPositionCharacteristic, addPositionStateCharacteristic, addHoldPositionCharacteristic} = require('./characteristic/CurrentTargetPosition');
 
 class WindowCoveringAccessory extends Accessory {
-
-    constructor(platform, config) {
-        super(platform, config);
-
-        // Services will be retrieved by homebridge
-        this._services = [
-            this._getAccessoryInformationService('Window Covering'),
-            this._getPrimaryService()
-        ]
-    }
-
     _getPrimaryService() {
         this._log.debug(`Creating window covering service for ${this.name}`);
         let primaryService = new this.Service.WindowCovering(this.name);
@@ -29,7 +18,7 @@ class WindowCoveringAccessory extends Accessory {
 const type = "windowcovering";
 
 function createAccessory(platform, config) {
-    return new WindowCoveringAccessory(platform, config);
+    return new WindowCoveringAccessory(platform, config, 'WindowCovering');
 }
 
 module.exports = {createAccessory, type};

@@ -4,15 +4,6 @@ const {Accessory} = require('../util/Accessory');
 const {addActiveCharacteristicWithDefaultConf} = require('./characteristic/BinarySensor');
 
 class FaucetAccessory extends Accessory {
-    constructor(platform, config) {
-        super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Faucet'),
-            this._getPrimaryService()
-        ]
-    }
-
     _getPrimaryService() {
         this._log.debug(`Creating faucet service for ${this.name}`);
         let primaryService = new this.Service.Faucet(this.name);
@@ -24,7 +15,7 @@ class FaucetAccessory extends Accessory {
 const type = "faucet";
 
 function createAccessory(platform, config) {
-    return new FaucetAccessory(platform, config);
+    return new FaucetAccessory(platform, config, 'Faucet');
 }
 
 module.exports = {createAccessory, type};

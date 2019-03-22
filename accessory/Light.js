@@ -4,17 +4,6 @@ const {Accessory} = require('../util/Accessory');
 const {addLightOnCharacteristic, addHueCharacteristic, addSaturationCharacteristic, addBrightnessCharacteristic} = require('./characteristic/SetAndCommitLight');
 
 class LightAccessory extends Accessory {
-
-    constructor(platform, config) {
-        super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Light'),
-            this._getPrimaryService()
-        ];
-
-    }
-
     _getPrimaryService() {
         this._log.debug(`Creating lightbulb service for ${this.name}`);
         let primaryService = new this.Service.Lightbulb(this.name);
@@ -30,7 +19,7 @@ class LightAccessory extends Accessory {
 const type = "light";
 
 function createAccessory(platform, config) {
-    return new LightAccessory(platform, config);
+    return new LightAccessory(platform, config, 'Light');
 }
 
 module.exports = {createAccessory, type};

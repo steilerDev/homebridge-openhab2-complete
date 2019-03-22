@@ -6,15 +6,6 @@ const {addInUseCharacteristic} = require('./characteristic/InUse');
 const {addValveTypeCharacteristic, addDurationCharacteristic} = require('./characteristic/Watering');
 
 class ValveAccessory extends Accessory {
-    constructor(platform, config) {
-        super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Valve'),
-            this._getPrimaryService()
-        ]
-    }
-
     _getPrimaryService() {
         this._log.debug(`Creating valve service for ${this.name}`);
         let primaryService = new this.Service.Valve(this.name);
@@ -29,7 +20,7 @@ class ValveAccessory extends Accessory {
 const type = "valve";
 
 function createAccessory(platform, config) {
-    return new ValveAccessory(platform, config);
+    return new ValveAccessory(platform, config, 'Valve');
 }
 
 module.exports = {createAccessory, type};
