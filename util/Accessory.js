@@ -23,9 +23,8 @@ class Accessory {
         this.uuid_base = config.serialNumber;
 
         this._services = [
-            this._getAccessoryInformationService(modelDescription),
-            this._getPrimaryService(),
-            batteryService.bind(this)()
+            this._getAccessoryInformationService.bind(this)(modelDescription),
+            this._getPrimaryService.bind(this)()
         ];
 
         let thisBatteryService = batteryService.bind(this)();
