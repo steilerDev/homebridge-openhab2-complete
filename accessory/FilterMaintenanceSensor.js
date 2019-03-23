@@ -5,9 +5,13 @@ const {addFilterChangeIndicationCharacteristic} = require('./characteristic/Bina
 const {addFilterLifeLevelCharacteristic} = require('./characteristic/Level');
 
 class FilterMaintenanceSensorAccessory extends Accessory {
-
     constructor(platform, config) {
-        super(platform, config, 'Filter Maintenance Sensor');
+        super(platform, config);
+
+        this._services = [
+            this._getAccessoryInformationService('Filter Maintenance Sensor'),
+            this._getPrimaryService()
+        ]
     }
 
     _getPrimaryService() {

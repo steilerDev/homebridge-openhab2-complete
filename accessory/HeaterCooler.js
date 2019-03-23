@@ -17,9 +17,13 @@ const {
 
 
 class HeaterCoolerAccessory extends Accessory {
-
     constructor(platform, config) {
-        super(platform, config, 'Heater/Cooler');
+        super(platform, config);
+
+        this._services = [
+            this._getAccessoryInformationService('Heater/Cooler'),
+            this._getPrimaryService()
+        ]
     }
 
     _getPrimaryService() {

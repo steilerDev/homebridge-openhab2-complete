@@ -7,7 +7,13 @@ const {addCurrentDoorStateCharacteristic, addTargetDoorStateCharacteristic} = re
 class GarageDoorOpenerAccessory extends Accessory {
 
     constructor(platform, config) {
-        super(platform, config, 'Garage Door Opener');
+        super(platform, config);
+
+        // Services will be retrieved by homebridge
+        this._services = [
+            this._getAccessoryInformationService('Garage Door Opener'),
+            this._getPrimaryService()
+        ]
     }
 
     _getPrimaryService() {

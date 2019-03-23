@@ -6,7 +6,13 @@ const {addCurrentPositionCharacteristic, addTargetPositionCharacteristic, addPos
 class DoorAccessory extends Accessory {
 
     constructor(platform, config) {
-        super(platform, config, 'Door');
+        super(platform, config);
+
+        // Services will be retrieved by homebridge
+        this._services = [
+            this._getAccessoryInformationService('Door'),
+            this._getPrimaryService()
+        ]
     }
 
     _getPrimaryService() {

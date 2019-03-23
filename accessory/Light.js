@@ -6,7 +6,13 @@ const {addLightOnCharacteristic, addHueCharacteristic, addSaturationCharacterist
 class LightAccessory extends Accessory {
 
     constructor(platform, config) {
-        super(platform, config, 'Light');
+        super(platform, config);
+
+        this._services = [
+            this._getAccessoryInformationService('Light'),
+            this._getPrimaryService()
+        ];
+
     }
 
     _getPrimaryService() {

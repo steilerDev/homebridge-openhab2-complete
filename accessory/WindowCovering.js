@@ -6,7 +6,13 @@ const {addCurrentPositionCharacteristic, addTargetPositionCharacteristic, addPos
 class WindowCoveringAccessory extends Accessory {
 
     constructor(platform, config) {
-        super(platform, config, 'Window Covering');
+        super(platform, config);
+
+        // Services will be retrieved by homebridge
+        this._services = [
+            this._getAccessoryInformationService('Window Covering'),
+            this._getPrimaryService()
+        ]
     }
 
     _getPrimaryService() {

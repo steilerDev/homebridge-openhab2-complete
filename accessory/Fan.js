@@ -6,7 +6,13 @@ const {addRotationSpeedCharacteristic, addFanOnCharacteristic} = require('./char
 class FanAccessory extends Accessory {
 
     constructor(platform, config) {
-        super(platform, config, 'Fan');
+        super(platform, config);
+
+        // Services will be retrieved by homebridge
+        this._services = [
+            this._getAccessoryInformationService('Fan'),
+            this._getPrimaryService()
+        ]
     }
 
     _getPrimaryService() {

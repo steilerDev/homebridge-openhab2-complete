@@ -5,9 +5,13 @@ const {addMotionDetectedCharacteristic} = require('./characteristic/BinarySensor
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class MotionSensorAccessory extends Accessory {
-
     constructor(platform, config) {
-        super(platform, config, 'Motion Sensor');
+        super(platform, config);
+
+        this._services = [
+            this._getAccessoryInformationService('Motion Sensor'),
+            this._getPrimaryService()
+        ]
     }
 
     _getPrimaryService() {

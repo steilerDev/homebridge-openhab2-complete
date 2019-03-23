@@ -5,9 +5,13 @@ const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 const {addContactSensorCharacteristic} = require('./characteristic/BinarySensor');
 
 class ContactSensorAccessory extends Accessory {
-
     constructor(platform, config) {
-        super(platform, config, 'Contact Sensor');
+        super(platform, config);
+
+        this._services = [
+            this._getAccessoryInformationService('Contact Sensor'),
+            this._getPrimaryService()
+        ]
     }
 
     _getPrimaryService() {

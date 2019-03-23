@@ -1,7 +1,5 @@
 'use strict';
 
-const {batteryService} = require('../accessory/characteristic/Battery');
-
 let PLATFORM = {
     log: "log",
     api: "api",
@@ -10,9 +8,9 @@ let PLATFORM = {
 };
 
 class Accessory {
-    constructor(platform, config, modelDescription) {
+    constructor(platform, config) {
         this._log = platform[PLATFORM.log];
-        this._log.debug(`Creating new ${modelDescription} accessory: ${config.name}`);
+        this._log.debug(`Creating new accessory: ${config.name}`);
 
         this.Characteristic = platform[PLATFORM.api][PLATFORM.hap].Characteristic;
         this.Service = platform[PLATFORM.api][PLATFORM.hap].Service;
@@ -24,13 +22,6 @@ class Accessory {
 
         this._services = [];
 
-        this._services.push(this._getAccessoryInformationService(modelDescription));
-
-        let thisBatteryService = batteryService.bind(this)();
-        if(thisBatteryService !== null) {
-            this._services.push(thisBatteryService);
-        }
-        this._services.push(this._getPrimaryService());
     }
 
     // Called by homebridge
@@ -43,12 +34,6 @@ class Accessory {
     getServices() {
         this._log.debug(`Getting services for ${this.name} (${this._services.length} service(s) registered for this accessory`);
         return this._services;
-    }
-
-    _getPrimaryService() {
-        let msg = `Base class does not provide a binary service!`
-        this._log.error(msg);
-        throw new Error(msg);
     }
 
     _subscribeCharacteristic(characteristic, item, transformation, callback) {

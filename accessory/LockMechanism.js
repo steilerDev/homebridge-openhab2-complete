@@ -6,7 +6,13 @@ const {addCurrentLockStateCharacteristic, addTargetLockStateCharacteristic} = re
 class LockMechanismAccessory extends Accessory {
 
     constructor(platform, config) {
-        super(platform, config, 'Lock Mechanism');
+        super(platform, config);
+
+        // Services will be retrieved by homebridge
+        this._services = [
+            this._getAccessoryInformationService('Lock Mechanism'),
+            this._getPrimaryService()
+        ]
     }
 
     _getPrimaryService() {

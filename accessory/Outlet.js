@@ -7,7 +7,13 @@ const {addOutletInUseCharacteristic} = require('./characteristic/InUse');
 class OutletAccessory extends Accessory {
 
     constructor(platform, config) {
-        super(platform, config, 'Outlet');
+        super(platform, config);
+
+        // Services will be retrieved by homebridge
+        this._services = [
+            this._getAccessoryInformationService('Outlet'),
+            this._getPrimaryService()
+        ]
     }
 
     _getPrimaryService() {

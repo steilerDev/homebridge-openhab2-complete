@@ -18,7 +18,13 @@ const {
 class ThermostatAccessory extends Accessory {
 
     constructor(platform, config) {
-        super(platform, config, 'Thermostat');
+        super(platform, config);
+
+        // Services will be retrieved by homebridge
+        this._services = [
+            this._getAccessoryInformationService('Thermostat'),
+            this._getPrimaryService()
+        ]
     }
 
     _getPrimaryService() {
@@ -35,6 +41,7 @@ class ThermostatAccessory extends Accessory {
         addHeatingThresholdCharacteristic.bind(this)(primaryService, true);
         return primaryService;
     }
+
 }
 
 const type = "thermostat";

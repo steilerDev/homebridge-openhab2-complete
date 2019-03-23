@@ -5,9 +5,13 @@ const {addAirQualityCharacteristic} = require('./characteristic/Numeric');
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class AirQualitySensorAccessory extends Accessory {
-
     constructor(platform, config) {
-        super(platform, config, 'Air Quality Sensor');
+        super(platform, config);
+
+        this._services = [
+            this._getAccessoryInformationService('Air Quality Sensor'),
+            this._getPrimaryService()
+        ]
     }
 
     _getPrimaryService() {

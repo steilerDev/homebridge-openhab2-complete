@@ -4,9 +4,13 @@ const {Accessory} = require('../util/Accessory');
 const {addActiveCharacteristicWithDefaultConf} = require('./characteristic/BinarySensor');
 
 class FaucetAccessory extends Accessory {
-
     constructor(platform, config) {
-        super(platform, config, 'Faucet');
+        super(platform, config);
+
+        this._services = [
+            this._getAccessoryInformationService('Faucet'),
+            this._getPrimaryService()
+        ]
     }
 
     _getPrimaryService() {
