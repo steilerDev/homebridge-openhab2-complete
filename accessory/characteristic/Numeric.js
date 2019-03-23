@@ -1,5 +1,7 @@
 'use strict';
 
+var util = require('util')
+
 const {getState, setState} = require('../../util/Accessory');
 
 const NUMERIC_CONFIG = {
@@ -13,8 +15,8 @@ function addNumericSensorCharacteristic(service, characteristic, CONF_MAP, optio
 
         this._log.debug(`Creating numeric sensor characteristic for ${this.name} with ${item}`);
 
-        this._log.error(JSON.stringify(this));
-        this._log.error(JSON.stringify(getState));
+        this._log.error(util.inspect(this));
+        this._log.error(util.inspect(getState));
 
         characteristic.on('get', getState.bind(this,
             item,
