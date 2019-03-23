@@ -1,7 +1,5 @@
 'use strict';
 
-const {batteryService} = require('../accessory/characteristic/Battery');
-
 let PLATFORM = {
     log: "log",
     api: "api",
@@ -23,13 +21,6 @@ class Accessory {
         this.uuid_base = config.serialNumber;
 
         this._services = [];
-
-        try {
-            let accessoryBatteryService = batteryService.bind(this)();
-            this._services.push([accessoryBatteryService]);
-        } catch (e) {
-            this._log.debug(`Not adding battery service: ${e.message}`);
-        }
 
     }
 

@@ -92,12 +92,17 @@ function addBatteryLevelCharacteristic(service) {
     addNumericSensorCharacteristic(service, service.getCharacteristic(this.Characteristic.BatteryLevel),{item: BATTERY_CONFIG.batteryItem});
 }
 
-function batteryService() {
-    let batteryService = new this.Service.BatteryService('Battery');
-    addBatteryLevelCharacteristic.bind(this)(batteryService);
-    addBatteryWarningCharacteristic.bind(this)(batteryService);
-    addChargingStateCharacteristic.bind(this)(batteryService);
-    return batteryService;
+function getBatteryService() {
+    try {
+        let batteryService = new this.Service.BatteryService('Battery');
+        addBatteryLevelCharacteristic.bind(this)(batteryService);
+        addBatteryWarningCharacteristic.bind(this)(batteryService);
+        addChargingStateCharacteristic.bind(this)(batteryService);
+        return batteryService;
+    } catch (e) {
+        this._log.debug(`Not adding battery service: ${e.message}`);
+        return null;
+    }
 }
 
-module.exports = {addBatteryWarningCharacteristic, batteryService};
+module.exports = {addBatteryWarningCharacteristic, getBatteryService};
