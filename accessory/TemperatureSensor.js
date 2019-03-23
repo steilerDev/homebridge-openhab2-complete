@@ -5,13 +5,13 @@ const {addCurrentTemperatureCharacteristic} = require('./characteristic/Numeric'
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class TemperatureSensorAccessory extends Accessory {
+
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
+        this._services.push([
             this._getAccessoryInformationService('Temperature Sensor'),
             this._getPrimaryService()
-        ]
+        ]);
     }
 
     _getPrimaryService() {

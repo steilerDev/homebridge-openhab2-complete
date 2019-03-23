@@ -5,13 +5,13 @@ const {addOccupancyDetectedCharacteristic} = require('./characteristic/BinarySen
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class OccupancySensorAccessory extends Accessory {
+
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
+        this._services.push([
             this._getAccessoryInformationService('Occupancy Sensor'),
             this._getPrimaryService()
-        ]
+        ]);
     }
 
     _getPrimaryService() {

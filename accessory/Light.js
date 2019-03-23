@@ -1,18 +1,21 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addLightOnCharacteristic, addHueCharacteristic, addSaturationCharacteristic, addBrightnessCharacteristic} = require('./characteristic/SetAndCommitLight');
+const {
+    addLightOnCharacteristic,
+    addHueCharacteristic,
+    addSaturationCharacteristic,
+    addBrightnessCharacteristic
+} = require('./characteristic/SetAndCommitLight');
 
 class LightAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
+        this._services.push([
             this._getAccessoryInformationService('Light'),
             this._getPrimaryService()
-        ];
-
+        ]);
     }
 
     _getPrimaryService() {

@@ -5,13 +5,13 @@ const {addCurrentAmbientLightLevelCharacteristic} = require('./characteristic/Nu
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class LightSensorAccessory extends Accessory {
+
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
+        this._services.push([
             this._getAccessoryInformationService('Light Sensor'),
             this._getPrimaryService()
-        ]
+        ]);
     }
 
     _getPrimaryService() {

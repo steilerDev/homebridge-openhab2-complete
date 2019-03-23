@@ -5,13 +5,13 @@ const {addLeakDetectedCharacteristic} = require('./characteristic/BinarySensor')
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class LeakSensorAccessory extends Accessory {
+
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
+        this._services.push([
             this._getAccessoryInformationService('Leak Sensor'),
             this._getPrimaryService()
-        ]
+        ]);
     }
 
     _getPrimaryService() {

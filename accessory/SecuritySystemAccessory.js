@@ -7,12 +7,10 @@ class SecuritySystemAccessory extends Accessory.Accessory {
 
     constructor(platform, config) {
         super(platform, config);
-
-        // Services will be retrieved by homebridge
-        this._services = [
+        this._services.push([
             this._getAccessoryInformationService('Security System'),
             this._getPrimaryService()
-        ]
+        ]);
     }
 
     _getPrimaryService() {
