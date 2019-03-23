@@ -91,9 +91,9 @@ function _commitFunction(service, type) {
         } else if (hue === undefined && saturation === undefined && brightness === undefined) {
             command = binary ? "ON" : "OFF";
         } else if (hue === undefined && saturation === undefined) {
-            command = binary ? `${brightness}` : "OFF";
+            command = binary ? `${brightness}` : "0";
         } else {
-            command = binary ? `${hue},${saturation},${brightness}` : "OFF";
+            command = binary ? `${hue},${saturation},${brightness}` : "0";
         }
     }
     return command;
