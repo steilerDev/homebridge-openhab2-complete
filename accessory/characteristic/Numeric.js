@@ -15,9 +15,6 @@ function addNumericSensorCharacteristic(service, characteristic, CONF_MAP, optio
 
         this._log.debug(`Creating numeric sensor characteristic for ${this.name} with ${item}`);
 
-        this._log.error(util.inspect(this));
-        this._log.error(util.inspect(getState));
-
         characteristic.on('get', getState.bind(this,
             item,
             parseFloat
