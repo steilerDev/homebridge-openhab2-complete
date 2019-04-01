@@ -1,19 +1,18 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {
-    addCurrentLockStateCharacteristic,
-    addTargetLockStateCharacteristic
-} = require('./characteristic/CurrentTargetLock');
+const {addCurrentLockStateCharacteristic, addTargetLockStateCharacteristic} = require('./characteristic/CurrentTargetLock');
 
 class LockMechanismAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
-        this._services.push([
+
+        // Services will be retrieved by homebridge
+        this._services = [
             this._getAccessoryInformationService('Lock Mechanism'),
             this._getPrimaryService()
-        ]);
+        ]
     }
 
     _getPrimaryService() {

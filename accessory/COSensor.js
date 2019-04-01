@@ -6,13 +6,13 @@ const {addCarbonMonoxideLevelCharacteristic} = require('./characteristic/Level')
 const {addCarbonMonoxideDetectedCharacteristic} = require('./characteristic/BinarySensor');
 
 class COSensorAccessory extends Accessory {
-
     constructor(platform, config) {
         super(platform, config);
-        this._services.push([
+
+        this._services = [
             this._getAccessoryInformationService('Carbon Monoxide Sensor'),
             this._getPrimaryService()
-        ]);
+        ]
     }
 
     _getPrimaryService() {

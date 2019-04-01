@@ -5,13 +5,13 @@ const {addSmokeDetectedCharacteristic} = require('./characteristic/BinarySensor'
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class SmokeSensorAccessory extends Accessory {
-
     constructor(platform, config) {
         super(platform, config);
-        this._services.push([
+
+        this._services = [
             this._getAccessoryInformationService('Smoke Sensor'),
             this._getPrimaryService()
-        ]);
+        ]
     }
 
     _getPrimaryService() {

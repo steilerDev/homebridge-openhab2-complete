@@ -1,21 +1,18 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {
-    addCurrentPositionCharacteristic,
-    addTargetPositionCharacteristic,
-    addPositionStateCharacteristic,
-    addHoldPositionCharacteristic
-} = require('./characteristic/CurrentTargetPosition');
+const {addCurrentPositionCharacteristic, addTargetPositionCharacteristic, addPositionStateCharacteristic, addHoldPositionCharacteristic} = require('./characteristic/CurrentTargetPosition');
 
 class DoorAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
-        this._services.push([
+
+        // Services will be retrieved by homebridge
+        this._services = [
             this._getAccessoryInformationService('Door'),
             this._getPrimaryService()
-        ]);
+        ]
     }
 
     _getPrimaryService() {

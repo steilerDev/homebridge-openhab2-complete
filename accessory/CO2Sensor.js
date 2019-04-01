@@ -8,10 +8,11 @@ const {addCarbonDioxideDetectedCharacteristic} = require('./characteristic/Binar
 class CO2SensorAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
-        this._services.push([
+
+        this._services = [
             this._getAccessoryInformationService('Carbon Dioxide Sensor'),
             this._getPrimaryService()
-        ]);
+        ]
     }
 
     _getPrimaryService() {

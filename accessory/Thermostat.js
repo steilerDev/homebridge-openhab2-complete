@@ -15,21 +15,16 @@ const {
     addTargetHeatingCoolingStateCharacteristic
 } = require('./characteristic/ClimateThermostat');
 
-const {getBatteryService} = require('./characteristic/Battery');
-
 class ThermostatAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
+
+        // Services will be retrieved by homebridge
         this._services = [
             this._getAccessoryInformationService('Thermostat'),
             this._getPrimaryService()
-        ];
-
-        let batteryService = getBatteryService.bind(this)();
-        if(batteryService !== null) {
-            this._services.push(batteryService);
-        }
+        ]
     }
 
     _getPrimaryService() {

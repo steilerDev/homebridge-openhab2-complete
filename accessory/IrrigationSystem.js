@@ -6,13 +6,13 @@ const {addInUseCharacteristic} = require('./characteristic/InUse');
 const {addProgramModeCharacteristic, addDurationCharacteristic} = require('./characteristic/Watering');
 
 class IrrigationSystemAccessory extends Accessory {
-
     constructor(platform, config) {
         super(platform, config);
-        this._services.push([
+
+        this._services = [
             this._getAccessoryInformationService('Irrigation System'),
             this._getPrimaryService()
-        ]);
+        ]
     }
 
     _getPrimaryService() {

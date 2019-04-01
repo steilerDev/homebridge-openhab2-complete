@@ -1,7 +1,5 @@
 'use strict';
 
-var util = require('util')
-
 const {getState, setState} = require('../../util/Accessory');
 
 const NUMERIC_CONFIG = {

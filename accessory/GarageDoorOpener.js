@@ -2,19 +2,18 @@
 
 const {Accessory} = require('../util/Accessory');
 const {addObstructionDetectedCharacteristic} = require('./characteristic/BinarySensor');
-const {
-    addCurrentDoorStateCharacteristic,
-    addTargetDoorStateCharacteristic
-} = require('./characteristic/CurrentTargetPositionDiscrete');
+const {addCurrentDoorStateCharacteristic, addTargetDoorStateCharacteristic} = require('./characteristic/CurrentTargetPositionDiscrete');
 
 class GarageDoorOpenerAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
-        this._services.push([
+
+        // Services will be retrieved by homebridge
+        this._services = [
             this._getAccessoryInformationService('Garage Door Opener'),
             this._getPrimaryService()
-        ]);
+        ]
     }
 
     _getPrimaryService() {

@@ -7,10 +7,12 @@ class SwitchAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
-        this._services.push([
+
+        // Services will be retrieved by homebridge
+        this._services = [
             this._getAccessoryInformationService('Switch'),
             this._getPrimaryService()
-        ]);
+        ]
     }
 
     _getPrimaryService() {

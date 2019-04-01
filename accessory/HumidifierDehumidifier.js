@@ -15,13 +15,13 @@ const {
 } = require('./characteristic/ClimateDeHumidifier');
 
 class HumidifierDehumidifierAccessory extends Accessory {
-
     constructor(platform, config) {
         super(platform, config);
-        this._services.push([
+
+        this._services = [
             this._getAccessoryInformationService('Humidifier/Dehumidifier'),
             this._getPrimaryService()
-        ]);
+        ]
     }
 
     _getPrimaryService() {
