@@ -3,13 +3,17 @@
 ### V1.0.0 (planned)
 * Code audit & documentation
 
+### V0.11.0
+* Add support for `Numeric` item types in battery warning characteristics
+* Add support for [Community Types](https://github.com/homespun/hap-nodejs-community-types)
+
 ## Changelog
 ### V0.10.1
 * Fixed a logic bug for inverted `Window Covering` Accessory using inverted `Rollershutter` items
-* Added support for `Numeric` item types in battery warning characteristics
+* Fixed light off bug
 
 Issues:
-* Closes #9
+* Closes #11, #12, #13
 
 ### V0.10.0
 * Allowing grouping of same type accessory inside configuration
