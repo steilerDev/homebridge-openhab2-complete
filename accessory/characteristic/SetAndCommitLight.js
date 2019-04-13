@@ -126,7 +126,7 @@ function _transformation(stateType, itemType, state) {
             }
         case "brightness": // expects number and only called by dimmer or color types
             if (itemType === "Dimmer") {
-                return parseInt(state) === 99 ? 100 : state;                                              // For some reasons openHAB does not report 100
+                return parseInt(state) === 99 ? 100 : parseInt(state);                                    // For some reasons openHAB does not report 100
             } else if (itemType === "Color") {
                 return parseInt(state.split(",")[2]) === 99 ? 100 : parseInt(state.split(",")[2]);        // For some reasons openHAB does not report 100
             } else {

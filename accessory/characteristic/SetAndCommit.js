@@ -70,7 +70,7 @@ function _commitState(commitFunction, item, value, callback, context, connection
         this._log.debug(`Not executing commit due to ignore flag`);
         callback();
     } else {
-        this._log.debug(`Executing commit`);
+        this._log.debug(`Preparing commit`);
         this._commitLock = true;
         setTimeout(function() {
             let command = commitFunction();
