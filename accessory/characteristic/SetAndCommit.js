@@ -51,7 +51,7 @@ function _releaseLocks() {
 // Set the state unless it's locked
 function _setState(stateType, value, callback, context, connectionID) {
     if(context === "openHABIgnore") {
-        this._log.debug(`Not changing target state of ${this.name} due to ignore flag`);
+        this._log.debug(`Not changing target state for ${stateType} of ${this.name} due to ignore flag`);
     } else {
         this._log.debug(`Change ${stateType} target state of ${this.name} to ${value}`);
         if (!(this._stateLock)) {
@@ -70,6 +70,7 @@ function _commitState(commitFunction, item, value, callback, context, connection
         this._log.debug(`Not executing commit due to ignore flag`);
         callback();
     } else {
+        this._log.debug(`Executing commit`);
         this._commitLock = true;
         setTimeout(function() {
             let command = commitFunction();
