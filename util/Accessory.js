@@ -42,13 +42,17 @@ class Accessory {
             if(value instanceof Error) {
                 this._log.error(`Error subscribing for ${item}: ${value.message}`);
             } else {
-                this._log(`Received push with new state for item ${habItem}: ${value}`);
+                this._log.info(`Received push with new state for item ${habItem}: ${value}`);
                 let transformedValue = transformValue(transformation, value);
                 if(transformedValue !== null) {
                     // Setting value for the stored characteristic, but not executing it agains openHAB
+                    this._log.info(`Setting new transformed state for item ${habItem}: ${transformedValue}`);
                     characteristic.setValue(transformedValue, null, "openHABIgnore");
                     if(callback && typeof(callback) === "function") {
+                        this._log.debug(`Executing callback`);
                         callback(transformedValue);
+                    } else {
+                        this._log.debug(`No callback to execute`);
                     }
                 }
             }
