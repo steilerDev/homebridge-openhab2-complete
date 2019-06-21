@@ -8,6 +8,9 @@
 * Add support for [Community Types](https://github.com/homespun/hap-nodejs-community-types)
 
 ## Changelog
+### V0.10.2
+* Fixed minor issues from Github.
+
 ### V0.10.1
 * Fixed a logic bug for inverted `Window Covering` Accessory using inverted `Rollershutter` items
 * Fixed light off bug
