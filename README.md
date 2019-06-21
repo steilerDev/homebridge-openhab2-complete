@@ -717,7 +717,7 @@ This service describes a light sensor.
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "lightSensor",
+    "type": "lux",
     "item": "Itemname-within-OpenHAB",
     "batteryItem": "Itemname-within-OpenHAB",
     "batteryItemInverted": "false"

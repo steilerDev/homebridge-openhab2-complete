@@ -16,7 +16,7 @@ class AirQualitySensorAccessory extends Accessory {
 
     _getPrimaryService() {
         this._log.debug(`Creating air quality sensor service for ${this.name}`);
-        let primaryService = new this.Service.AirQuality(this.name);
+        let primaryService = new this.Service.AirQualitySensor(this.name);
         addAirQualityCharacteristic.bind(this)(primaryService);
         addBatteryWarningCharacteristic.bind(this)(primaryService);
         return primaryService;
