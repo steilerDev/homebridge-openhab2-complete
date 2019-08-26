@@ -69,9 +69,6 @@ function _commitFunction(service, type) {
             brightness = this._newState["brightness"] !== undefined ?
                 this._newState["brightness"] :
                 service.getCharacteristic(this.Characteristic.Brightness).value;
-            if(brightness >= 99) {
-                brightness = 99;
-            }
 
 
             if (type === "Color") {
@@ -90,7 +87,9 @@ function _commitFunction(service, type) {
             command = new Error("Unable to commit state, since necessary information are missing");
         } else if (hue === undefined && saturation === undefined && brightness === undefined) {
             command = binary ? "ON" : "OFF";
-        } else if (hue === undefined && saturation === undefined) {
+        } else if (hue === undefined && saturation === undefined && brightness === 0) {
+            command = binary ? "ON" : "OFF";
+        } else if (hue === undefined && saturation === undefined && brightness !== 0) {
             command = binary ? `${brightness}` : "OFF";
         } else {
             command = binary ? `${hue},${saturation},${brightness}` : "OFF";
@@ -126,9 +125,9 @@ function _transformation(stateType, itemType, state) {
             }
         case "brightness": // expects number and only called by dimmer or color types
             if (itemType === "Dimmer") {
-                return parseInt(state) === 99 ? 100 : parseInt(state);                                    // For some reasons openHAB does not report 100
+                return parseInt(state) === 100 ? 100 : parseInt(state);                
             } else if (itemType === "Color") {
-                return parseInt(state.split(",")[2]) === 99 ? 100 : parseInt(state.split(",")[2]);        // For some reasons openHAB does not report 100
+                return parseInt(state.split(",")[2]) === 100 ? 100 : parseInt(state.split(",")[2]);
             } else {
                 return new Error(`Unable to parse brightness state: ${state}`);
             }
