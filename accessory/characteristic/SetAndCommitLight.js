@@ -87,9 +87,9 @@ function _commitFunction(service, type) {
             command = new Error("Unable to commit state, since necessary information are missing");
         } else if (hue === undefined && saturation === undefined && brightness === undefined) {
             command = binary ? "ON" : "OFF";
-        } else if (hue === undefined && saturation === undefined && brightness === 0) {
+        } else if (hue === undefined && saturation === undefined && (brightness === 100 || brightness === 0)) {
             command = binary ? "ON" : "OFF";
-        } else if (hue === undefined && saturation === undefined && brightness !== 0) {
+        } else if (hue === undefined && saturation === undefined && (brightness !== 100 || brightness !== 0)) {
             command = binary ? `${brightness}` : "OFF";
         } else {
             command = binary ? `${hue},${saturation},${brightness}` : "OFF";
