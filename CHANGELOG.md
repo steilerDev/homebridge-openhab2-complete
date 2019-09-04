@@ -13,8 +13,11 @@
 * Valve and Faucet should now be able to change state of openHAB item (changed configuration and requirements for Valve and Faucet items, see README)
 * 'heatingItem' and 'coolingItem' of Thermostat now actually support 'Contact' type
 * Reworked 'Thermostat' and 'Temperature Sensor' to support a wider range of numbers (now from -100 to +200) and also support exotic temperature units (Fahrenheit :P). *Note* The configuration syntax for 'Temperature Sensor' changed and might break your configuration
+* Reworked light based on issues #13 and #43
 
 Issues:
+* (Hopefully finally) closes #13
+* Closes #43
 * Closes #24
 * Closes #33
 * Closes #38

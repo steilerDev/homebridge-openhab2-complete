@@ -69,10 +69,6 @@ function _commitFunction(service, type) {
             brightness = this._newState["brightness"] !== undefined ?
                 this._newState["brightness"] :
                 service.getCharacteristic(this.Characteristic.Brightness).value;
-            if(brightness >= 99) {
-                brightness = 99;
-            }
-
 
             if (type === "Color") {
                 hue = this._newState["hue"] !== undefined ?
@@ -85,15 +81,23 @@ function _commitFunction(service, type) {
             }
         }
 
-        this._log.debug(`Commiting light state with vectors (B,H,S,B): ${binary},${hue},${saturation},${brightness}`);
+        this._log.debug(`Committing light state with vectors (B,H,S,B): ${binary},${hue},${saturation},${brightness}`);
         if(binary === undefined && hue === undefined && saturation === undefined && brightness === undefined) {
             command = new Error("Unable to commit state, since necessary information are missing");
         } else if (hue === undefined && saturation === undefined && brightness === undefined) {
             command = binary ? "ON" : "OFF";
         } else if (hue === undefined && saturation === undefined) {
-            command = binary ? `${brightness}` : "OFF";
+            if(binary && brightness === 0) { // For some reaason when invoking Siri to turn on a light brightness is sometimes set to '0'
+                command = "ON";
+            } else {
+                command = binary ? `${brightness}` : "OFF";
+            }
         } else {
-            command = binary ? `${hue},${saturation},${brightness}` : "OFF";
+            if(binary && brightness === 0) { // For some reaason when invoking Siri to turn on a light brightness is sometimes set to '0'
+                command = "ON";
+            } else {
+                command = binary ? `${hue},${saturation},${brightness}` : "OFF";
+            }
         }
     }
     return command;
@@ -126,9 +130,9 @@ function _transformation(stateType, itemType, state) {
             }
         case "brightness": // expects number and only called by dimmer or color types
             if (itemType === "Dimmer") {
-                return parseInt(state) === 99 ? 100 : parseInt(state);                                    // For some reasons openHAB does not report 100
+                return parseInt(state);
             } else if (itemType === "Color") {
-                return parseInt(state.split(",")[2]) === 99 ? 100 : parseInt(state.split(",")[2]);        // For some reasons openHAB does not report 100
+                return parseInt(state.split(",")[2]);
             } else {
                 return new Error(`Unable to parse brightness state: ${state}`);
             }
