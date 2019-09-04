@@ -11,10 +11,12 @@
 ### V0.10.3
 * Updated Readme to fix typo's
 * Valve and Faucet should now be able to change state of openHAB item (changed configuration and requirements for Valve and Faucet items, see README)
+* 'heatingItem' and 'coolingItem' of Thermostat now actually support 'Contact' type
 
 Issues:
 * Closes #24
 * Closes #33
+* Closes #38
 
 ### V0.10.2
 * Fixed minor issues from Github.
