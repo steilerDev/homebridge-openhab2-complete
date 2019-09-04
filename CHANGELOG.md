@@ -8,6 +8,14 @@
 * Add support for [Community Types](https://github.com/homespun/hap-nodejs-community-types)
 
 ## Changelog
+### V0.10.3
+* Updated Readme to fix typo's
+* Valve and Faucet should now be able to change state of openHAB item (changed configuration and requirements for Valve and Faucet items, see README)
+
+Issues:
+* Closes #24
+* Closes #33
+
 ### V0.10.2
 * Fixed minor issues from Github.
 

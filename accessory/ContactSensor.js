@@ -2,7 +2,7 @@
 
 const {Accessory} = require('../util/Accessory');
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
-const {addContactSensorCharacteristic} = require('./characteristic/BinarySensor');
+const {addContactSensorCharacteristic} = require('./characteristic/Binary');
 
 class ContactSensorAccessory extends Accessory {
     constructor(platform, config) {

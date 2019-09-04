@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addSwingModeCharacteristic, addActiveCharacteristic} = require('./characteristic/BinarySensor');
+const {addSwingModeCharacteristic, addActiveCharacteristic} = require('./characteristic/Binary');
 const {addRotationSpeedCharacteristic} = require('./characteristic/Climate');
 const {
     addCurrentAirPurifierStateCharacteristic,

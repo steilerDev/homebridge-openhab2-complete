@@ -1,6 +1,6 @@
 'use strict';
 
-const {getState} = require('../../util/Accessory');
+const {getState, setState} = require('../../util/Accessory');
 
 const BINARY_CONFIG = {
     item: "item",
@@ -9,7 +9,6 @@ const BINARY_CONFIG = {
 
 const {CURRENT_TARGET_DOOR_CONFIG} = require('./CurrentTargetPositionDiscrete');
 
-// This function will try and add a battery warning characteristic to the provided service
 function addBinarySensorCharacteristic(service, characteristic, CONFIG, optional) {
     try {
         let [item] = this._getAndCheckItemType(CONFIG.item, ['Contact', 'Switch']);
@@ -25,6 +24,44 @@ function addBinarySensorCharacteristic(service, characteristic, CONFIG, optional
         };
 
         characteristic.on('get', getState.bind(this,
+            item,
+            transformation
+        ));
+
+        this._subscribeCharacteristic(characteristic,
+            item,
+            transformation
+        );
+    } catch (e) {
+        let msg = `Not configuring binary sensor characteristic for ${this.name}: ${e.message}`;
+        service.removeCharacteristic(characteristic);
+        if(optional) {
+            this._log.debug(msg);
+        } else {
+            throw new Error(msg);
+        }
+    }
+}
+
+function addBinaryActorCharacteristic(service, characteristic, CONFIG, optional) {
+    try {
+        let [item] = this._getAndCheckItemType(CONFIG.item, ['Switch']);
+        let inverted = this._checkInvertedConf(CONFIG.inverted);
+
+        this._log.debug(`Creating binary actor characteristic for ${this.name} with item ${item} and inverted set to ${inverted}`);
+
+        let transformation = {
+            "OFF": inverted,
+            "ON": !inverted,
+            [!inverted]: "ON",
+            [inverted]: "OFF"
+        };
+
+        characteristic.on('set', setState.bind(this,
+                item,
+                transformation
+            ))
+            .on('get', getState.bind(this,
                 item,
                 transformation
             ));
@@ -33,8 +70,8 @@ function addBinarySensorCharacteristic(service, characteristic, CONFIG, optional
             item,
             transformation
         );
-    } catch (e) {
-        let msg = `Not configuring binary sensor characteristic for ${this.name}: ${e.message}`;
+    } catch(e) {
+        let msg = `Not configuring binary actor characteristic for ${this.name}: ${e.message}`;
         service.removeCharacteristic(characteristic);
         if(optional) {
             this._log.debug(msg);
@@ -80,14 +117,6 @@ function addSwingModeCharacteristic(service, optional) {
     addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.SwingMode), {item: "swingItem", inverted: "swingItemInverted"}, optional);
 }
 
-function addActiveCharacteristic(service, optional) {
-    addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.Active), {item: "activeItem", inverted: "activeItemInverted"}, optional);
-}
-
-function addActiveCharacteristicWithDefaultConf(service, optional) {
-    addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.Active), BINARY_CONFIG, optional);
-}
-
 function addObstructionDetectedCharacteristic(service, optional) {
     try {
         addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.ObstructionDetected), {item: CURRENT_TARGET_DOOR_CONFIG.obstructionItem, inverted: CURRENT_TARGET_DOOR_CONFIG.obstructionItemInverted}, optional);
@@ -97,6 +126,14 @@ function addObstructionDetectedCharacteristic(service, optional) {
             callback(null, false);
         });
     }
+}
+
+function addOnCharacteristic(service, optional) {
+    addBinaryActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.On), BINARY_CONFIG, optional);
+}
+
+function addActiveCharacteristic(service, optional) {
+    addBinaryActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.Active), BINARY_CONFIG, optional);
 }
 
 module.exports = {
@@ -109,7 +146,7 @@ module.exports = {
     addOccupancyDetectedCharacteristic,
     addSmokeDetectedCharacteristic,
     addSwingModeCharacteristic,
-    addActiveCharacteristic,
-    addActiveCharacteristicWithDefaultConf,
-    addObstructionDetectedCharacteristic
+    addObstructionDetectedCharacteristic,
+    addOnCharacteristic,
+    addActiveCharacteristic
 };

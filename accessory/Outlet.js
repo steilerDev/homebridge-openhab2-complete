@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addOnCharacteristic} = require('./characteristic/On');
+const {addOnCharacteristic} = require('./characteristic/Binary');
 const {addOutletInUseCharacteristic} = require('./characteristic/InUse');
 
 class OutletAccessory extends Accessory {

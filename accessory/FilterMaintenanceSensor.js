@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addFilterChangeIndicationCharacteristic} = require('./characteristic/BinarySensor');
+const {addFilterChangeIndicationCharacteristic} = require('./characteristic/Binary');
 const {addFilterLifeLevelCharacteristic} = require('./characteristic/Level');
 
 class FilterMaintenanceSensorAccessory extends Accessory {

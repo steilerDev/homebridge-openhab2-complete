@@ -3,7 +3,7 @@
 const {Accessory} = require('../util/Accessory');
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 const {addCarbonDioxideLevelCharacteristic} = require('./characteristic/Level');
-const {addCarbonDioxideDetectedCharacteristic} = require('./characteristic/BinarySensor');
+const {addCarbonDioxideDetectedCharacteristic} = require('./characteristic/Binary');
 
 class CO2SensorAccessory extends Accessory {
     constructor(platform, config) {

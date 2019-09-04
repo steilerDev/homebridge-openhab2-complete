@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addSmokeDetectedCharacteristic} = require('./characteristic/BinarySensor');
+const {addSmokeDetectedCharacteristic} = require('./characteristic/Binary');
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class SmokeSensorAccessory extends Accessory {

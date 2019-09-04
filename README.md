@@ -332,8 +332,8 @@ This service describes a heater and/or cooler accessory.
     "heatingItem": "Itemname-within-OpenHAB",
     "coolingItem": "Itemname-within-OpenHAB",
     "modeItem": "Itemname-within-OpenHAB",
-    "heatingThresholdItem": "Itemname-within-OpenHAB",
-    "coolingThresholdItem": "Itemname-within-OpenHAB",
+    "heatingThresholdTempItem": "Itemname-within-OpenHAB",
+    "coolingThresholdTempItem": "Itemname-within-OpenHAB",
     "swingItem": "Itemname-within-OpenHAB",
     "swingItemInverted": "false",
     "rotationSpeedItem": "Itemname-within-OpenHAB"
@@ -418,7 +418,7 @@ This service describes a faucet.
 }
 ```
 * `item`: The openHAB item showing, if the faucet is currently active 
-  * Needs to be of type `Switch` or `Contact` within openHAB
+  * Needs to be of type `Switch` within openHAB
 * `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
@@ -430,17 +430,17 @@ This service describes a valve.
 {
     "name": "An items name, as shown in Homekit later",
     "type": "valve",
-    "activeItem": "Itemname-within-OpenHAB",
-    "acitveItemInverted": "true",
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "true",
     "inUseItem": "Itemname-within-OpenHAB",
     "inUseItemInverted": "true",
     "durationItem": "Itemname-within-OpenHAB",
     "valveType": "generic"
 }
 ```
-* `activeItem`: The openHAB item showing, if the valve is currently active
-  * Needs to be of type `Switch` or `Contact` within openHAB
-* `activeItemInverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `item`: The openHAB item showing, if the valve is currently active
+  * Needs to be of type `Switch` within openHAB
+* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `inUseItem` Representing, if the valve is currently in use (if `Switch` is `ON`, `Contact` is `OPEN` or `Number` is greater than 0)
@@ -784,6 +784,7 @@ This service describes an outlet.
     "name": "An items name, as shown in Homekit later",
     "type": "outlet",
     "item": "Itemname-within-OpenHAB",
+    "inverted": "true",
     "inUseItem": "Itemname-within-OpenHAB",
     "inUseItemInverted": "false"
 }

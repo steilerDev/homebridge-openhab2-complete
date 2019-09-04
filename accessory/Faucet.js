@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addActiveCharacteristicWithDefaultConf} = require('./characteristic/BinarySensor');
+const {addActiveCharacteristic} = require('./characteristic/Binary');
 
 class FaucetAccessory extends Accessory {
     constructor(platform, config) {
@@ -16,7 +16,7 @@ class FaucetAccessory extends Accessory {
     _getPrimaryService() {
         this._log.debug(`Creating faucet service for ${this.name}`);
         let primaryService = new this.Service.Faucet(this.name);
-        addActiveCharacteristicWithDefaultConf.bind(this)(primaryService);
+        addActiveCharacteristic.bind(this)(primaryService);
         return primaryService;
     }
 }

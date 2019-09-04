@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addObstructionDetectedCharacteristic} = require('./characteristic/BinarySensor');
+const {addObstructionDetectedCharacteristic} = require('./characteristic/Binary');
 const {addCurrentDoorStateCharacteristic, addTargetDoorStateCharacteristic} = require('./characteristic/CurrentTargetPositionDiscrete');
 
 class GarageDoorOpenerAccessory extends Accessory {

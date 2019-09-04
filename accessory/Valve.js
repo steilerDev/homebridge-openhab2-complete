@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addActiveCharacteristic} = require('./characteristic/BinarySensor');
+const {addActiveCharacteristic} = require('./characteristic/Binary');
 const {addInUseCharacteristic} = require('./characteristic/InUse');
 const {addValveTypeCharacteristic, addDurationCharacteristic} = require('./characteristic/Watering');
 

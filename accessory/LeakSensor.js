@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addLeakDetectedCharacteristic} = require('./characteristic/BinarySensor');
+const {addLeakDetectedCharacteristic} = require('./characteristic/Binary');
 const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class LeakSensorAccessory extends Accessory {
