@@ -70,7 +70,6 @@ function _commitFunction(service, type) {
                 this._newState["brightness"] :
                 service.getCharacteristic(this.Characteristic.Brightness).value;
 
-
             if (type === "Color") {
                 hue = this._newState["hue"] !== undefined ?
                     this._newState["hue"] :
@@ -82,19 +81,23 @@ function _commitFunction(service, type) {
             }
         }
 
-        this._log.debug(`Commiting light state with vectors (B,H,S,B): ${binary},${hue},${saturation},${brightness}`);
+        this._log.debug(`Committing light state with vectors (B,H,S,B): ${binary},${hue},${saturation},${brightness}`);
         if(binary === undefined && hue === undefined && saturation === undefined && brightness === undefined) {
             command = new Error("Unable to commit state, since necessary information are missing");
         } else if (hue === undefined && saturation === undefined && brightness === undefined) {
             command = binary ? "ON" : "OFF";
-        } else if (hue === undefined && saturation === undefined && (brightness === 100 || brightness === 0)) {
-            command = binary ? "ON" : "OFF";
-        } else if (hue === undefined && saturation === undefined && (brightness !== 100 || brightness !== 0)) {
-            command = binary ? `${brightness}` : "OFF";
-        } else if (hue !== undefined && saturation !== undefined && (brightness === 100 || brightness === 0)) {
-            command = binary ? "ON" : "OFF";
-        } else if (hue !== undefined && saturation !== undefined && (brightness !== 100 || brightness !== 0)) {
-            command = binary ? `${hue},${saturation},${brightness}` : "OFF";
+        } else if (hue === undefined && saturation === undefined) {
+            if(binary && (brightness === 0 || brightness === 100)) { // For some reaason when invoking Siri to turn on a light brightness is sometimes set to '0'
+                command = "ON";
+            } else {
+                command = binary ? `${brightness}` : "OFF";
+            }
+        } else {
+            if(binary && (brightness === 0 || brightness === 100)) { // For some reaason when invoking Siri to turn on a light brightness is sometimes set to '0'
+                command = "ON";
+            } else {
+                command = binary ? `${hue},${saturation},${brightness}` : "OFF";
+            }
         }
     }
     return command;
@@ -127,9 +130,9 @@ function _transformation(stateType, itemType, state) {
             }
         case "brightness": // expects number and only called by dimmer or color types
             if (itemType === "Dimmer") {
-                return parseInt(state) === 100 ? 100 : parseInt(state);                   
+                return parseInt(state);
             } else if (itemType === "Color") {
-                return parseInt(state.split(",")[2]) === 100 ? 100 : parseInt(state.split(",")[2]);
+                return parseInt(state.split(",")[2]);
             } else {
                 return new Error(`Unable to parse brightness state: ${state}`);
             }
