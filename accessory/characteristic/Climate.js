@@ -1,6 +1,6 @@
 'use strict';
 
-const {addNumericSensorCharacteristic, addNumericSensorActorCharacteristic} = require('./Numeric');
+const {addNumericSensorCharacteristic, addNumericSensorActorCharacteristic, addNumericSensorActorCharacteristicWithTransformation} = require('./Numeric');
 
 const CLIMATE_CONFIG = {
     waterLevelItem: "waterLevelItem",
@@ -33,7 +33,22 @@ function addTargetRelativeHumidityCharacteristic(service, optional) {
 }
 
 function addCurrentTemperatureCharacteristic(service, optional) {
-    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentTemperature), {item: CLIMATE_CONFIG.currentTempItem}, optional);
+    let currentTemperatureCharacteristic = service.getCharacteristic(this.Characteristic.CurrentTemperature);
+    currentTemperatureCharacteristic.setProps({
+        minValue: -100,
+        maxValue: 200
+    });
+    addNumericSensorActorCharacteristicWithTransformation.bind(this)(service,
+        {item: CLIMATE_CONFIG.currentTempItem},
+        function(val) {
+            if(this._config[CLIMATE_CONFIG.tempUnit] === "Fahrenheit") {
+                return (((parseFloat(val)-32)*5)/9);
+            } else {
+                return parseFloat(val);
+            }
+        }.bind(this),
+        optional
+    );
 }
 
 function addTargetTemperatureCharacteristic(service, optional) {

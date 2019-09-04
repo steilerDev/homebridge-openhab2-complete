@@ -61,6 +61,10 @@ function addNumericActorCharacteristic(service, characteristic, CONF_MAP, option
 }
 
 function addNumericSensorActorCharacteristic(service, characteristic, CONF_MAP, optional) {
+    addNumericSensorActorCharacteristicWithTransformation(service, characteristic, CONF_MAP, parseFloat, optional);
+}
+
+function addNumericSensorActorCharacteristicWithTransformation(service, characteristic, CONF_MAP, transformation, optional) {
     try {
 
         let [item] = this._getAndCheckItemType(CONF_MAP.item, ['Number']);
@@ -69,16 +73,16 @@ function addNumericSensorActorCharacteristic(service, characteristic, CONF_MAP, 
 
         characteristic.on('set', setState.bind(this,
             item,
-            parseFloat
+            transformation
         ))
-        .on('get', getState.bind(this,
-            item,
-            parseFloat
-        ));
+            .on('get', getState.bind(this,
+                item,
+                transformation
+            ));
 
         this._subscribeCharacteristic(characteristic,
             item,
-            parseFloat
+            transformation
         );
     } catch(e) {
         let msg = `Not configuring numeric actor characteristic for ${this.name}: ${e.message}`;
@@ -91,16 +95,13 @@ function addNumericSensorActorCharacteristic(service, characteristic, CONF_MAP, 
     }
 }
 
+
 function addCurrentRelativeHumidityCharacteristic(service) {
     addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity), NUMERIC_CONFIG);
 }
 
 function addCurrentAmbientLightLevelCharacteristic(service) {
     addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentAmbientLightLevel), NUMERIC_CONFIG);
-}
-
-function addCurrentTemperatureCharacteristic(service) {
-    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentTemperature), NUMERIC_CONFIG);
 }
 
 function addAirQualityCharacteristic(service) {
@@ -111,8 +112,8 @@ function addAirQualityCharacteristic(service) {
 module.exports = {
     addCurrentRelativeHumidityCharacteristic,
     addCurrentAmbientLightLevelCharacteristic,
-    addCurrentTemperatureCharacteristic,
     addNumericSensorCharacteristic,
     addNumericSensorActorCharacteristic,
+    addNumericSensorActorCharacteristicWithTransformation,
     addAirQualityCharacteristic,
 };

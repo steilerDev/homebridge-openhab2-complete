@@ -251,7 +251,7 @@ This service describes a thermostat.
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `coolingItem` *(optional, if `heatingItem` is present, otherwise required)*: The openHAB item showing, if the room is currently being cooled
   * Needs to be of type `Switch` or `Contact` within openHAB
-* `tempUnit` *(optional)*: Gives the measurement unit of the thermostat, currently does not change anything inside HomeKit
+* `tempUnit` *(optional)*: Gives the measurement unit of the thermostat. HomeKit always expects the input to be in degrees celsius, therefore specifying Fahrenheit as a unit, the plugin will convert the values to be shown correctly on the fly.
   * Default: `Celsius`
   * Allowed values: `Celsius` & `Fahrenheit`
 * `heatingThresholdTempItem`: *(optional)* The openHAB item describing the heating threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'minimum temperature' that mus be reached before heating is turned on.
@@ -678,13 +678,17 @@ This service describes a temperature sensor.
 {
     "name": "An items name, as shown in Homekit later",
     "type": "temp",
-    "item": "Itemname-within-OpenHAB",
+    "currentTempItem": "Itemname-within-OpenHAB",
+    "tempUnit": "Celsius",
     "batteryItem": "Itemname-within-OpenHAB",
     "batteryItemInverted": "false"
 }
 ```
-* `item`: The openHAB item representing the current temperature
+* `currentTempItem`: The openHAB item representing the current temperature
   * Needs to be of type `Number` within openHAB
+* `tempUnit` *(optional)*: Gives the measurement unit of the thermostat. HomeKit always expects the input to be in degrees celsius, therefore specifying Fahrenheit as a unit, the plugin will convert the values to be shown correctly on the fly.
+  * Default: `Celsius`
+  * Allowed values: `Celsius` & `Fahrenheit`
 * `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
