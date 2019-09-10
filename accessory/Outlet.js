@@ -10,10 +10,8 @@ class OutletAccessory extends Accessory {
         super(platform, config);
 
         // Services will be retrieved by homebridge
-        this._services = [
-            this._getAccessoryInformationService('Outlet'),
-            this._getPrimaryService()
-        ]
+        this._services.unshift(this._getAccessoryInformationService('Outlet'));
+        this._services.push(this._getPrimaryService());
     }
 
     _getPrimaryService() {
