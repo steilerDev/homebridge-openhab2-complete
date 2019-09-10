@@ -1,6 +1,6 @@
 'use strict';
 
-const {getState} = require('../../util/Accessory');
+const {getState} = require('../../util/Util');
 const {addNumericSensorCharacteristic} = require('./Numeric');
 const {addBinarySensorCharacteristicWithTransformation} = require('./Binary');
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const {getState} = require('../../util/Accessory');
+const {getState} = require('../../util/Util');
 const {addNumericSensorCharacteristic, addNumericSensorActorCharacteristic} = require('./Numeric');
 
 const CLIMATE_THERMOSTAT_CONFIG = {

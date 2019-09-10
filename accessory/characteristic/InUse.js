@@ -1,6 +1,6 @@
 'use strict';
 
-const {getState} = require('../../util/Accessory');
+const {getState} = require('../../util/Util');
 
 const IN_USE_CONF = {
     item: "item",

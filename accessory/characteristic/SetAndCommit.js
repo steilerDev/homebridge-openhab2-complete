@@ -1,6 +1,6 @@
 'use strict';
 
-const {getState} = require('../../util/Accessory');
+const {getState} = require('../../util/Util');
 
 const SET_AND_COMMIT_CONFIG = {
     item: "item"

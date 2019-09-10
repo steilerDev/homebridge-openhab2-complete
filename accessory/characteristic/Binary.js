@@ -1,6 +1,6 @@
 'use strict';
 
-const {getState, setState} = require('../../util/Accessory');
+const {getState, setState} = require('../../util/Util');
 
 const BINARY_CONFIG = {
     item: "item",
