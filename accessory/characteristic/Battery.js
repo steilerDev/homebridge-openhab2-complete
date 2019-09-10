@@ -22,7 +22,7 @@ function addBatteryWarningCharacteristic(service, optional) {
             if(!(this._config[BATTERY_CONFIG.batteryItemThreshold])) {
                 throw new Error(`Required ${BATTERY_CONFIG.batteryItemThreshold} for ${this.name} not defined: ${JSON.stringify(this._config)}`)
             } else {
-                let threshold = this._config[BATTERY_CONFIG.batteryItemThreshold];
+                let threshold = parseInt(this._config[BATTERY_CONFIG.batteryItemThreshold]);
                 this._log.debug(`Creating battery warning characteristic for ${this.name} with item ${batteryItem} and threshold set to ${threshold}`);
 
                batteryTransformation = function(val) {
