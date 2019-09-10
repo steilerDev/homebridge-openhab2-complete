@@ -8,10 +8,8 @@ class LightAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
 
-        this._services.unshift(
-            this._getAccessoryInformationService('Light'),
-            this._getPrimaryService()
-        );
+        this._services.unshift(this._getAccessoryInformationService('Light'));
+        this._services.push(this._getPrimaryService());
     }
 
     _getPrimaryService() {
