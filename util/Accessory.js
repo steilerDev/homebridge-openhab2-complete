@@ -25,6 +25,10 @@ class Accessory {
 
         this._services = [];
 
+        let batteryService = this._tryBatteryService();
+        if(batteryService !== null) {
+            this._services.push(batteryService);
+        }
     }
 
     // Called by homebridge
