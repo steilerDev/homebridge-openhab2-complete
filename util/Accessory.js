@@ -7,7 +7,7 @@ let PLATFORM = {
     openHAB: "openHAB"
 };
 
-const {addBatteryLevelCharacteristic, addChargingStateCharacterstic, addBatteryWarningCharacteristic} = require('../accessory/characteristic/Battery');
+//const {addBatteryLevelCharacteristic, addChargingStateCharacterstic, addBatteryWarningCharacteristic} = require('../accessory/characteristic/Battery');
 
 class Accessory {
     constructor(platform, config) {
@@ -125,7 +125,7 @@ class Accessory {
             .setCharacteristic(this.Characteristic.FirmwareRevision, this._config.version)
             .setCharacteristic(this.Characteristic.HardwareRevision, this._config.version);
     }
-
+/**
     _tryBatteryService() {
         this._log.debug(`Trying battery service for ${this.name}`);
         let batteryService = new this.Service.BatteryService(this.name);
@@ -139,7 +139,7 @@ class Accessory {
             return null;
         }
         return primaryService;
-    }
+    }**/
 }
 
 // transformation may be 'undefined', a map or a function [in case of a function the return value needs to be either a valid value or an Error()
@@ -215,8 +215,4 @@ function setState(habItem, transformation, state, callback, context, connectionI
     }
 }
 
-function dummyTransformation(itemType, inverted, value) {
-    return value;
-}
-
-module.exports = {Accessory, getState, setState, dummyTransformation};
+module.exports = {Accessory, getState, setState};
