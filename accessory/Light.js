@@ -10,6 +10,7 @@ class LightAccessory extends Accessory {
 
         this._services = [
             this._getAccessoryInformationService('Light'),
+            this._tryBatteryService(),
             this._getPrimaryService()
         ];
 
