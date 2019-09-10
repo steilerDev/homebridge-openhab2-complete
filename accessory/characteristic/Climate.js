@@ -39,6 +39,7 @@ function addCurrentTemperatureCharacteristic(service, optional) {
         maxValue: 200
     });
     addNumericSensorActorCharacteristicWithTransformation.bind(this)(service,
+        currentTemperatureCharacteristic,
         {item: CLIMATE_CONFIG.currentTempItem},
         function(val) {
             if(this._config[CLIMATE_CONFIG.tempUnit] === "Fahrenheit") {
