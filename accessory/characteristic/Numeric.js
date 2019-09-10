@@ -61,7 +61,7 @@ function addNumericActorCharacteristic(service, characteristic, CONF_MAP, option
 }
 
 function addNumericSensorActorCharacteristic(service, characteristic, CONF_MAP, optional) {
-    addNumericSensorActorCharacteristicWithTransformation(service, characteristic, CONF_MAP, parseFloat, optional);
+    addNumericSensorActorCharacteristicWithTransformation.bind(this)(service, characteristic, CONF_MAP, parseFloat, optional);
 }
 
 function addNumericSensorActorCharacteristicWithTransformation(service, characteristic, CONF_MAP, transformation, optional) {
