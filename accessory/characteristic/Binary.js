@@ -43,19 +43,11 @@ function addBinarySensorCharacteristic(service, characteristic, CONFIG, optional
     }
 }
 
-function addBinaryActorCharacteristic(service, characteristic, CONFIG, optional) {
+function addBinarySensorActorCharacteristicWithTransformation(service, characteristic, CONFIG, transformation, optional) {
     try {
         let [item] = this._getAndCheckItemType(CONFIG.item, ['Switch']);
-        let inverted = this._checkInvertedConf(CONFIG.inverted);
 
         this._log.debug(`Creating binary actor characteristic for ${this.name} with item ${item} and inverted set to ${inverted}`);
-
-        let transformation = {
-            "OFF": inverted,
-            "ON": !inverted,
-            [!inverted]: "ON",
-            [inverted]: "OFF"
-        };
 
         characteristic.on('set', setState.bind(this,
                 item,
@@ -129,11 +121,26 @@ function addObstructionDetectedCharacteristic(service, optional) {
 }
 
 function addOnCharacteristic(service, optional) {
-    addBinaryActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.On), BINARY_CONFIG, optional);
+    let inverted = this._checkInvertedConf(BINARY_CONFIG.inverted);
+    let transformation = {
+        "OFF": inverted ,
+        "ON": !inverted,
+        [!inverted]: "ON",
+        [inverted]: "OFF"
+    };
+    addBinarySensorActorCharacteristicWithTransformation.bind(this)(service, service.getCharacteristic(this.Characteristic.On), BINARY_CONFIG, transformation, optional);
 }
 
 function addActiveCharacteristic(service, optional) {
-    addBinaryActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.Active), BINARY_CONFIG, optional);
+    let inverted = this._checkInvertedConf(BINARY_CONFIG.inverted);
+    let transformation = {
+        "OFF": inverted ? 1 : 0,
+        "ON": inverted ? 0 : 1,
+        [inverted ? 0 : 1]: "ON",
+        [inverted ? 1 : 0]: "OFF"
+    };
+    this._log.error(`Transformation map for ${this.name}: ${transformation}`);
+    addBinarySensorActorCharacteristicWithTransformation.bind(this)(service, service.getCharacteristic(this.Characteristic.Active), BINARY_CONFIG, transformation, optional);
 }
 
 module.exports = {
