@@ -46,6 +46,7 @@ function addBinarySensorCharacteristic(service, characteristic, CONFIG, optional
 function addBinarySensorActorCharacteristicWithTransformation(service, characteristic, CONFIG, transformation, optional) {
     try {
         let [item] = this._getAndCheckItemType(CONFIG.item, ['Switch']);
+        let inverted = this._checkInvertedConf(CONFIG.inverted);
 
         this._log.debug(`Creating binary actor characteristic for ${this.name} with item ${item} and inverted set to ${inverted}`);
 
@@ -139,7 +140,7 @@ function addActiveCharacteristic(service, optional) {
         [inverted ? 0 : 1]: "ON",
         [inverted ? 1 : 0]: "OFF"
     };
-    this._log.error(`Transformation map for ${this.name}: ${transformation}`);
+    this._log.error(`Transformation map for ${this.name}: ${JSON.stringify(transformation)}`);
     addBinarySensorActorCharacteristicWithTransformation.bind(this)(service, service.getCharacteristic(this.Characteristic.Active), BINARY_CONFIG, transformation, optional);
 }
 
