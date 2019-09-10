@@ -129,7 +129,7 @@ class Accessory {
 
     _tryBatteryService() {
         this._log.debug(`Trying battery service for ${this.name}`);
-        let batteryService = new this.Service.BatteryService(this.name);
+        let batteryService = new this.Service.BatteryService(this.name + " Battery");
         try {
             addBatteryWarningCharacteristic.bind(this)(batteryService);
             addChargingStateCharacterstic.bind(this)(batteryService);
@@ -138,9 +138,8 @@ class Accessory {
             return batteryService;
         } catch(e) {
             this._log.info(`Not configuring battery service for ${this.name}: ${e.message}`);
-            return null;
         }
-        return batteryService;
+        return null;
     }
 }
 
