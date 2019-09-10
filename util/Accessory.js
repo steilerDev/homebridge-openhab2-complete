@@ -139,7 +139,7 @@ class Accessory {
             this._log.info(`Not configuring battery service for ${this.name}: ${e.message}`);
             return null;
         }
-        return primaryService;
+        return batteryService;
     }
 }
 
