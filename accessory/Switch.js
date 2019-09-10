@@ -4,11 +4,8 @@ const {Accessory} = require('../util/Accessory');
 const {addOnCharacteristic} = require('./characteristic/Binary');
 
 class SwitchAccessory extends Accessory {
-
     constructor(platform, config) {
         super(platform, config);
-
-        // Services will be retrieved by homebridge
         this._services.unshift(this._getAccessoryInformationService('Switch'));
         this._services.push(this._getPrimaryService());
     }

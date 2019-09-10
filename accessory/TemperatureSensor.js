@@ -2,17 +2,12 @@
 
 const {Accessory} = require('../util/Accessory');
 const {addCurrentTemperatureCharacteristic} = require('./characteristic/Climate');
-const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class TemperatureSensorAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Temperature Sensor'),
-            this._tryBatteryService(),
-            this._getPrimaryService()
-        ]
+        this._services.unshift(this._getAccessoryInformationService('Temperature Sensor'));
+        this._services.push(this._getPrimaryService());
     }
 
     _getPrimaryService() {

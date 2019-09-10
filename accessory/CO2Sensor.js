@@ -1,18 +1,14 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 const {addCarbonDioxideLevelCharacteristic} = require('./characteristic/Level');
 const {addCarbonDioxideDetectedCharacteristic} = require('./characteristic/Binary');
 
 class CO2SensorAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Carbon Dioxide Sensor'),
-            this._getPrimaryService()
-        ]
+        this._services.unshift(this._getAccessoryInformationService('Carbon Dioxide Sensor'));
+        this._services.push(this._getPrimaryService());
     }
 
     _getPrimaryService() {
@@ -20,7 +16,6 @@ class CO2SensorAccessory extends Accessory {
         let primaryService = new this.Service.CarbonDioxideSensor(this.name);
         addCarbonDioxideDetectedCharacteristic.bind(this)(primaryService);
         addCarbonDioxideLevelCharacteristic.bind(this)(primaryService);
-        addBatteryWarningCharacteristic.bind(this)(primaryService);
         return primaryService;
     }
 }

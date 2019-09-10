@@ -78,7 +78,7 @@ function addBatteryLevelCharacteristic(service) {
     }
 }
 
-function addChargingStateCharacterstic(service) {
+function addChargingStateCharacteristic(service) {
     let NOT_CHARGING = 0;
     let CHARGING = 1;
     let NOT_CHARGEABLE = 2;
@@ -104,6 +104,6 @@ function addChargingStateCharacterstic(service) {
 
 module.exports = {
     addBatteryWarningCharacteristic,
-    addChargingStateCharacterstic,
+    addChargingStateCharacteristic,
     addBatteryLevelCharacteristic
 };

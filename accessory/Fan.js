@@ -7,12 +7,8 @@ class FanAccessory extends Accessory {
 
     constructor(platform, config) {
         super(platform, config);
-
-        // Services will be retrieved by homebridge
-        this._services = [
-            this._getAccessoryInformationService('Fan'),
-            this._getPrimaryService()
-        ]
+        this._services.unshift(this._getAccessoryInformationService('Fan'));
+        this._services.push(this._getPrimaryService());
     }
 
     _getPrimaryService() {

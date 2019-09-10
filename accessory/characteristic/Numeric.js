@@ -33,33 +33,6 @@ function addNumericSensorCharacteristic(service, characteristic, CONF_MAP, optio
     }
 }
 
-function addNumericActorCharacteristic(service, characteristic, CONF_MAP, optional) {
-    try {
-
-        let [item] = this._getAndCheckItemType(CONF_MAP.item, ['Number']);
-
-        this._log.debug(`Creating numeric actor characteristic for ${this.name} with ${item}`);
-
-        characteristic.on('set', setState.bind(this,
-            item,
-            parseFloat
-        ));
-
-        this._subscribeCharacteristic(characteristic,
-            item,
-            parseFloat
-        );
-    } catch(e) {
-        let msg = `Not configuring numeric actor characteristic for ${this.name}: ${e.message}`;
-        service.removeCharacteristic(characteristic);
-        if(optional) {
-            this._log.debug(msg);
-        } else {
-            throw new Error(msg);
-        }
-    }
-}
-
 function addNumericSensorActorCharacteristic(service, characteristic, CONF_MAP, optional) {
     addNumericSensorActorCharacteristicWithTransformation.bind(this)(service, characteristic, CONF_MAP, parseFloat, optional);
 }

@@ -154,6 +154,34 @@ The following services are also defined by the HomeKit protocol, but since I don
 * Doorbell
 * Stateless Programmable Switch
 
+## Configuration for every service
+Every Service can be configured to show battery warnings and battery levels (currently not supported in the Home App). The following configuration can be optionally added to every item:
+```
+{
+    "batteryItem": "Itemname-within-OpenHAB",
+    "batteryItemThreshold": "10",
+    "batteryItemInverted": "false",
+    "batteryItemChargingState": "Itemname-within-OpenHAB",
+    "batteryItemChargingStateInverted": "false"
+}
+```
+
+* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
+  * Needs to be of type `Switch` or `Contact` within openHAB
+  * **Alternatively**: Can be of type `Number`, then the `batteryItemThreshold` needs to be specified!
+* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` (Only for types `Switch` and `Contact`)
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `batteryItemThreshold` *(optional)*: The threshold of `batteryItem`'s numeric value, below a warning will be triggered
+  * Allowed values: All integers
+* `batteryItemChargingState`: The openHAB item representing if the device is currently charging
+  * Needs to be of type `Switch` or `Contact` within openHAB
+  * Default: Item will be reported as 'Not chargeable' to HomeKit if this item is not available
+* `batteryItemChargingStateInverted` *(optional)*: If `batteryItemChargingState`'s state needs to be interpreted inverted, set this value to `"true"`
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+  
+
 ### Lightbulb
 This service describes a lightbulb.
 
@@ -680,8 +708,6 @@ This service describes a temperature sensor.
     "type": "temp",
     "currentTempItem": "Itemname-within-OpenHAB",
     "tempUnit": "Celsius",
-    "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false"
 }
 ```
 * `currentTempItem`: The openHAB item representing the current temperature
@@ -689,11 +715,6 @@ This service describes a temperature sensor.
 * `tempUnit` *(optional)*: Gives the measurement unit of the thermostat. HomeKit always expects the input to be in degrees celsius, therefore specifying Fahrenheit as a unit, the plugin will convert the values to be shown correctly on the fly.
   * Default: `Celsius`
   * Allowed values: `Celsius` & `Fahrenheit`
-* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
-  * Needs to be of type `Switch` or `Contact` within openHAB
-* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Humidity Sensor
 This service describes a humidity sensor.
@@ -703,17 +724,10 @@ This service describes a humidity sensor.
     "name": "An items name, as shown in Homekit later",
     "type": "humidity",
     "item": "Itemname-within-OpenHAB",
-    "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false"
 }
 ```
 * `item`: The openHAB item representing the current humidity 
   * Needs to be of type `Number` within openHAB
-* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
-  * Needs to be of type `Switch` or `Contact` within openHAB
-* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Light Sensor
 This service describes a light sensor.
@@ -723,17 +737,10 @@ This service describes a light sensor.
     "name": "An items name, as shown in Homekit later",
     "type": "lux",
     "item": "Itemname-within-OpenHAB",
-    "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false"
 }
 ```
 * `item`: The openHAB item representing the current light in lux 
   * Needs to be of type `Number` within openHAB
-* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
-  * Needs to be of type `Switch` or `Contact` within openHAB
-* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Air Quality Sensor
 This service describes an air quality sensor.
@@ -743,8 +750,6 @@ This service describes an air quality sensor.
     "name": "An items name, as shown in Homekit later",
     "type": "air",
     "item": "Itemname-within-OpenHAB",
-    "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false"
 }
 ```
 * `item`: The openHAB item representing the current air quality, referring to the cumulative air quality recorded by the accessory, which may be based on multiple sensors present.
@@ -756,11 +761,6 @@ This service describes an air quality sensor.
     * 3 ≙ `FAIR`
     * 4 ≙ `INFERIOR`
     * 5 ≙ `POOR`
-* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
-  * Needs to be of type `Switch` or `Contact` within openHAB
-* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
   
 ### Switch
 This service describes a binary switch.
@@ -814,18 +814,11 @@ This service describes a motion sensor.
     "type": "motion",
     "item": "Itemname-within-OpenHAB",
     "inverted": "true",
-    "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false"
 }
 ```
 * `item`: The openHAB item showing, if motion is detected
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
-  * Needs to be of type `Switch` or `Contact` within openHAB
-* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
@@ -838,18 +831,11 @@ This service describes an occupancy sensor.
     "type": "occupancy",
     "item": "Itemname-within-OpenHAB",
     "inverted": "true",
-    "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false"
 }
 ```
 * `item`: The openHAB item showing, if occupancy is detected
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
-  * Needs to be of type `Switch` or `Contact` within openHAB
-* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
@@ -862,18 +848,11 @@ This service describes a leak sensor.
     "type": "leak",
     "item": "Itemname-within-OpenHAB",
     "inverted": "true",
-    "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false"
 }
 ```
 * `item`: The openHAB item showing, if a leak is detected
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
-  * Needs to be of type `Switch` or `Contact` within openHAB
-* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
@@ -887,8 +866,6 @@ This service describes a carbon monoxide sensor.
     "item": "Itemname-within-OpenHAB",
     "inverted": "true",
     "levelItem": "Itemname-within-OpenHAB",
-    "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false"
 }
 ```
 * `item`: The openHAB item showing, if carbon monoxide is detected
@@ -898,11 +875,6 @@ This service describes a carbon monoxide sensor.
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `levelItem` *(optional)*: The openHAB item representing the current carbon monoxide level, measured by the sensor
   * Needs to be of type `Number` within openHAB
-* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
-  * Needs to be of type `Switch` or `Contact` within openHAB
-* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Carbon Dioxide Sensor
 This service describes a carbon dioxide sensor.
@@ -914,8 +886,6 @@ This service describes a carbon dioxide sensor.
     "item": "Itemname-within-OpenHAB",
     "inverted": "true",
     "levelItem": "Itemname-within-OpenHAB",
-    "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false"
 }
 ```
 * `item`: The openHAB item showing, if carbon dioxide is detected
@@ -925,11 +895,6 @@ This service describes a carbon dioxide sensor.
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `levelItem` *(optional)*: The openHAB item representing the current carbon dioxide level, measured by the sensor
   * Needs to be of type `Number` within openHAB
-* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
-  * Needs to be of type `Switch` or `Contact` within openHAB
-* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
 ### Contact Sensor
 This service describes a contact sensor.
@@ -940,18 +905,11 @@ This service describes a contact sensor.
     "type": "contact",
     "item": "Itemname-within-OpenHAB",
     "inverted": "true",
-    "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false",
 }
 ```
 * `item`: The openHAB item showing, if contact is detected
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
-  * Needs to be of type `Switch` or `Contact` within openHAB
-* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
@@ -964,18 +922,11 @@ This service describes a smoke sensor.
     "type": "smoke",
     "item": "Itemname-within-OpenHAB",
     "inverted": "true",
-    "batteryItem": "Itemname-within-OpenHAB",
-    "batteryItemInverted": "false",
 }
 ```
 * `item`: The openHAB item showing, if smoke is detected
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
-  * Needs to be of type `Switch` or `Contact` within openHAB
-* `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 

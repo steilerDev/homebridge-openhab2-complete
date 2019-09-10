@@ -14,16 +14,11 @@ const {
     addTargetHeaterCoolerStateCharacteristic
 } = require('./characteristic/ClimateHeaterCooler');
 
-
-
 class HeaterCoolerAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Heater/Cooler'),
-            this._getPrimaryService()
-        ]
+        this._services.unshift(this._getAccessoryInformationService('Heater/Cooler'));
+        this._services.push(this._getPrimaryService());
     }
 
     _getPrimaryService() {

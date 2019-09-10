@@ -6,11 +6,8 @@ const {addActiveCharacteristic} = require('./characteristic/Binary');
 class FaucetAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Faucet'),
-            this._getPrimaryService()
-        ]
+        this._services.unshift(this._getAccessoryInformationService('Faucet'));
+        this._services.push(this._getPrimaryService());
     }
 
     _getPrimaryService() {
