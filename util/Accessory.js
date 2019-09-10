@@ -7,6 +7,8 @@ let PLATFORM = {
     openHAB: "openHAB"
 };
 
+const {addBatteryLevelCharacteristic, addChargingStateCharacterstic, addBatteryWarningCharacteristic} = require('../accessory/characteristic/Battery');
+
 class Accessory {
     constructor(platform, config) {
         this._log = platform[PLATFORM.log];
@@ -122,6 +124,21 @@ class Accessory {
             .setCharacteristic(this.Characteristic.SerialNumber, this.uuid_base)
             .setCharacteristic(this.Characteristic.FirmwareRevision, this._config.version)
             .setCharacteristic(this.Characteristic.HardwareRevision, this._config.version);
+    }
+
+    _tryBatteryService() {
+        this._log.debug(`Trying battery service for ${this.name}`);
+        let batteryService = new this.Service.BatteryService(this.name);
+        try {
+            addBatteryWarningCharacteristic.bind(this)(batteryService);
+            addChargingStateCharacterstic.bind(this)(batteryService);
+            addBatteryLevelCharacteristic.bind(this)(batteryService);
+            return batteryService;
+        } catch(e) {
+            this._log.info(`Not configuring battery service for ${this.name}: ${e.message}`);
+            return null;
+        }
+        return primaryService;
     }
 }
 

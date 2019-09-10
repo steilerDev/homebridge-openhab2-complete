@@ -10,6 +10,7 @@ class TemperatureSensorAccessory extends Accessory {
 
         this._services = [
             this._getAccessoryInformationService('Temperature Sensor'),
+            this._tryBatteryService(),
             this._getPrimaryService()
         ]
     }

@@ -1,31 +1,51 @@
 'use strict';
 
 const {getState} = require('../../util/Accessory');
+const {addNumericSensorCharacteristic} = require('./Numeric');
+const {addBinarySensorCharacteristicWithTransformation} = require('./Binary');
 
 const BATTERY_CONFIG = {
     batteryItem: "batteryItem",
-    batteryItemInverted: "batteryItemInverted"
+    batteryItemThreshold: "batteryItemThreshold",
+    batteryItemInverted: "batteryItemInverted",
+    batteryItemChargingState: "batteryItemChargingState",
+    batteryItemChargingStateInverted: "batteryItemChargingStateInverted"
 };
 
 // This function will try and add a battery warning characteristic to the provided service
-function addBatteryWarningCharacteristic(service) {
+function addBatteryWarningCharacteristic(service, optional) {
     try {
-        let [batteryItem] = this._getAndCheckItemType(BATTERY_CONFIG.batteryItem, ['Switch', 'Contact']);
-        let inverted = this._checkInvertedConf(BATTERY_CONFIG.batteryItemInverted);
+        let [batteryItem, batteryItemType] = this._getAndCheckItemType(BATTERY_CONFIG.batteryItem, ['Switch', 'Contact', 'Number']);
+        let batteryTransformation;
 
-        this._log.debug(`Creating battery warning characteristic for ${this.name} with item ${batteryItem} and inverted set to ${inverted}`);
+        if(batteryItemType === "Number") {
+            if(!(this._config[BATTERY_CONFIG.batteryItemThreshold])) {
+                throw new Error(`Required ${BATTERY_CONFIG.batteryItemThreshold} for ${this.name} not defined: ${JSON.stringify(this._config)}`)
+            } else {
+                let threshold = this._config[BATTERY_CONFIG.batteryItemThreshold];
+                this._log.debug(`Creating battery warning characteristic for ${this.name} with item ${batteryItem} and threshold set to ${threshold}`);
 
-        let batteryTransformation = inverted ? {
-            "OFF": 1,
-            "ON": 0,
-            "CLOSED": 1,
-            "OPEN": 0
-        } : {
-            "OFF": 0,
-            "ON": 1,
-            "CLOSED": 0,
-            "OPEN": 1
-        };
+               batteryTransformation = function(val) {
+                   return val < threshold ? 1 : 0;
+               }
+           }
+        } else {
+            let inverted = this._checkInvertedConf(BATTERY_CONFIG.batteryItemInverted);
+
+            this._log.debug(`Creating battery warning characteristic for ${this.name} with item ${batteryItem} and inverted set to ${inverted}`);
+
+            batteryTransformation = inverted ? {
+                "OFF": 1,
+                "ON": 0,
+                "CLOSED": 1,
+                "OPEN": 0
+            } : {
+                "OFF": 0,
+                "ON": 1,
+                "CLOSED": 0,
+                "OPEN": 1
+            };
+        }
 
         service.getCharacteristic(this.Characteristic.StatusLowBattery)
             .on('get', getState.bind(this, batteryItem, batteryTransformation));
@@ -35,9 +55,55 @@ function addBatteryWarningCharacteristic(service) {
             batteryTransformation
         );
     } catch (e) {
-        this._log.debug(`Not configuring battery warning characteristic for ${this.name}: ${e.message}`);
+        let msg = `Not configuring battery warning characteristic for ${this.name}: ${e.message}`;
         service.removeCharacteristic(this.Characteristic.StatusLowBattery);
+        if(optional) {
+            this._log.debug(msg);
+        } else {
+            throw new Error(msg);
+        }
     }
 }
 
-module.exports = {addBatteryWarningCharacteristic};
+function addBatteryLevelCharacteristic(service) {
+    try {
+        addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.BatteryLevel), {item: BATTERY_CONFIG.batteryItem});
+    } catch (e) {
+        this._log.debug(`Not adding numeric battery level characteristic, adding default behaviour: ${e}`);
+        let batteryLevelCharacteristic = service.getCharacteristic(this.Characteristic.BatteryLevel);
+        batteryLevelCharacteristic.setProps({
+            minValue: -1,
+        });
+        batteryLevelCharacteristic.on('get', function() { return -1; });
+    }
+}
+
+function addChargingStateCharacterstic(service) {
+    let NOT_CHARGING = 0;
+    let CHARGING = 1;
+    let NOT_CHARGEABLE = 2;
+    try {
+        let inverted = this._checkInvertedConf(BATTERY_CONFIG.batteryItemChargingStateInverted);
+        let transformation = {
+            "OFF": inverted ? CHARGING : NOT_CHARGING,
+            "ON": inverted ? NOT_CHARGING : CHARGING,
+            "CLOSED": inverted ? CHARGING : NOT_CHARGING,
+            "OPEN": inverted ? NOT_CHARGING : CHARGING
+        };
+        addBinarySensorCharacteristicWithTransformation.bind(this)(service,
+            service.getCharacteristic(this.Characteristic.ChargingState),
+            {item: BATTERY_CONFIG.batteryItemChargingState, inverted: BATTERY_CONFIG.batteryItemChargingStateInverted},
+            transformation
+        );
+    } catch(e) {
+        this._log.debug(`Not adding charging state characteristic, adding default behaviour: ${e}`);
+        let chargingStateCharacteristic = service.getCharacteristic(this.Characteristic.ChargingState);
+        chargingStateCharacteristic.on('get', function() { return NOT_CHARGEABLE; });
+    }
+}
+
+module.exports = {
+    addBatteryWarningCharacteristic,
+    addChargingStateCharacterstic,
+    addBatteryLevelCharacteristic
+};

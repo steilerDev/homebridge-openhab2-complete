@@ -95,7 +95,6 @@ function addNumericSensorActorCharacteristicWithTransformation(service, characte
     }
 }
 
-
 function addCurrentRelativeHumidityCharacteristic(service) {
     addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.CurrentRelativeHumidity), NUMERIC_CONFIG);
 }

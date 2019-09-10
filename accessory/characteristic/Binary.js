@@ -9,19 +9,13 @@ const BINARY_CONFIG = {
 
 const {CURRENT_TARGET_DOOR_CONFIG} = require('./CurrentTargetPositionDiscrete');
 
-function addBinarySensorCharacteristic(service, characteristic, CONFIG, optional) {
+
+function addBinarySensorCharacteristicWithTransformation(service, characteristic, CONFIG, transformation, optional) {
     try {
         let [item] = this._getAndCheckItemType(CONFIG.item, ['Contact', 'Switch']);
         let inverted = this._checkInvertedConf(CONFIG.inverted);
 
         this._log.debug(`Creating binary sensor characteristic for ${this.name} with item ${item} and inverted set to ${inverted}`);
-
-        let transformation = {
-            "OFF": inverted,
-            "ON": !inverted,
-            "CLOSED": inverted,
-            "OPEN": !inverted
-        };
 
         characteristic.on('get', getState.bind(this,
             item,
@@ -41,6 +35,17 @@ function addBinarySensorCharacteristic(service, characteristic, CONFIG, optional
             throw new Error(msg);
         }
     }
+}
+
+function addBinarySensorCharacteristic(service, characteristic, CONFIG, optional) {
+    let inverted = this._checkInvertedConf(CONFIG.inverted);
+    let transformation = {
+        "OFF": inverted,
+        "ON": !inverted,
+        "CLOSED": inverted,
+        "OPEN": !inverted
+    };
+    addBinarySensorCharacteristicWithTransformation.bind(this)(service, characteristic, CONFIG, transformation, optional);
 }
 
 function addBinarySensorActorCharacteristicWithTransformation(service, characteristic, CONFIG, transformation, optional) {
@@ -156,5 +161,6 @@ module.exports = {
     addSwingModeCharacteristic,
     addObstructionDetectedCharacteristic,
     addOnCharacteristic,
-    addActiveCharacteristic
+    addActiveCharacteristic,
+    addBinarySensorCharacteristicWithTransformation
 };

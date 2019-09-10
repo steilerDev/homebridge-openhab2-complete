@@ -42,5 +42,4 @@ module.exports = {
     addCarbonDioxideLevelCharacteristic,
     addCarbonMonoxideLevelCharacteristic,
     addFilterLifeLevelCharacteristic
-
 };
