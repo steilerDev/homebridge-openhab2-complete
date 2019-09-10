@@ -1,6 +1,6 @@
 'use strict';
 
-const {getState, setState} = require('../../util/Accessory');
+const {getState, setState} = require('../../util/Util');
 
 const CLIMATE_AIRPURIFIER_CONFIG = {
     modeItem: "modeItem",
