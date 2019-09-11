@@ -72,4 +72,8 @@ function setState(habItem, transformation, state, callback, context, connectionI
     }
 }
 
-module.exports = {transformValue, getState, setState};
+function dummyTransformation(val) {
+    return val;
+}
+
+module.exports = {transformValue, getState, setState, dummyTransformation};

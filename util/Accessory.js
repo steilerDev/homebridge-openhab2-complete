@@ -4,7 +4,8 @@ let PLATFORM = {
     log: "log",
     api: "api",
     hap: "hap",
-    openHAB: "openHAB"
+    openHAB: "openHAB",
+    community: "community"
 };
 
 const {addBatteryLevelCharacteristic, addChargingStateCharacteristic, addBatteryWarningCharacteristic} = require('../accessory/characteristic/Battery');
@@ -17,6 +18,7 @@ class Accessory {
 
         this.Characteristic = platform[PLATFORM.api][PLATFORM.hap].Characteristic;
         this.Service = platform[PLATFORM.api][PLATFORM.hap].Service;
+        this.Community = platform[PLATFORM.community];
 
         this._config = config;
         this._openHAB = platform[PLATFORM.openHAB];
