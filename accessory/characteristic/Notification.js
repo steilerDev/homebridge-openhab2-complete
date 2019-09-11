@@ -4,13 +4,12 @@ const {getState, dummyTransformation} = require('../../util/Util');
 const {addNumericSensorCharacteristic}  = require('./Numeric');
 
 const NOTIFICATION_CONFIG = {
-    item: "item",
-    codeItem: "codeItem"
+    notificationItem: "notificationItem"
 };
 
 function addNotificationTextCharacteristic(service) {
     try {
-        let [item] = this._getAndCheckItemType(NOTIFICATION_CONFIG.item, ['String']);
+        let [item] = this._getAndCheckItemType(NOTIFICATION_CONFIG.notificationItem, ['String']);
         this._log.debug(`Creating notification text characteristic for ${this.name} with ${item}`);
 
         service.getCharacteristic(this.Community.NotificationText)
