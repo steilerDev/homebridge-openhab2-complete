@@ -81,7 +81,7 @@ function addAirQualityCharacteristic(service) {
 }
 
 function addAtmosphericPressureLevel(service) {
-    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Community.AtmosphericPressureLevel, NUMERIC_CONFIG))
+    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Community.AtmosphericPressureLevel), NUMERIC_CONFIG);
 }
 
 
