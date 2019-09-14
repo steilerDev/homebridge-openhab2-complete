@@ -1,18 +1,15 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addActiveCharacteristic} = require('./characteristic/BinarySensor');
+const {addActiveCharacteristic} = require('./characteristic/Binary');
 const {addInUseCharacteristic} = require('./characteristic/InUse');
 const {addProgramModeCharacteristic, addDurationCharacteristic} = require('./characteristic/Watering');
 
 class IrrigationSystemAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Irrigation System'),
-            this._getPrimaryService()
-        ]
+        this._services.unshift(this._getAccessoryInformationService('Irrigation System'));
+        this._services.push(this._getPrimaryService());
     }
 
     _getPrimaryService() {

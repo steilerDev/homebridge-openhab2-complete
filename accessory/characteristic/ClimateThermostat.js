@@ -1,11 +1,11 @@
 'use strict';
 
-const {getState} = require('../../util/Accessory');
+const {getState} = require('../../util/Util');
 const {addNumericSensorCharacteristic, addNumericSensorActorCharacteristic} = require('./Numeric');
 
 const CLIMATE_THERMOSTAT_CONFIG = {
-    heatingItem: "heatingItem", //State mutual Exclusive with coolingItem, 'Switch' type
-    coolingItem: "coolingItem", //State mutual Exclusive with heatingItem, 'Switch' type
+    heatingItem: "heatingItem", //State mutual Exclusive with coolingItem, 'Switch' or 'Contact' type
+    coolingItem: "coolingItem", //State mutual Exclusive with heatingItem, 'Switch' or 'Contact' type
     modeItem: "modeItem",
 };
 
@@ -85,9 +85,9 @@ function _transformHeatingCoolingState(thisItemMode, characteristic, value) {
     let currentState = characteristic.value;
 
     if(thisItemMode === "heating") {
-        if(value === "ON") {
+        if(value === "ON" || value === "OPEN") {
             return HEAT;
-        } else if(value === "OFF") {
+        } else if(value === "OFF" || value === "CLOSED") {
             if(currentState === COOL) {
                 return COOL;
             } else {
@@ -95,9 +95,9 @@ function _transformHeatingCoolingState(thisItemMode, characteristic, value) {
             }
         }
     } else if(thisItemMode === "cooling") {
-        if(value === "ON") {
+        if(value === "ON" || value === "OPEN") {
             return COOL;
-        } else if(value === "OFF") {
+        } else if(value === "OFF" || value === "CLOSED") {
             if(currentState === HEAT) {
                 return HEAT;
             } else {
@@ -116,13 +116,17 @@ function _getHeatingCoolingState(mode, heatingItem, coolingItem, callback) {
         case "Heating":
             getState.bind(this)(heatingItem, {
                 "ON": HEAT,
-                "OFF": OFF
+                "OFF": OFF,
+                "OPEN": HEAT,
+                "CLOSED": OFF
             }, callback);
             break;
         case "Cooling":
             getState.bind(this, coolingItem, {
                 "ON": COOL,
-                "OFF": OFF
+                "OFF": OFF,
+                "OPEN": COOL,
+                "CLOSED": OFF
             }, callback);
             break;
         case "HeatingCooling":
@@ -136,11 +140,11 @@ function _getHeatingCoolingState(mode, heatingItem, coolingItem, callback) {
                 callback(heatingState);
             }
 
-            if (heatingState === "OFF" && coolingState === "OFF") {
+            if ((heatingState === "OFF" || heatingState === "CLOSED") && (coolingState === "OFF" || coolingState === "CLOSED")) {
                 callback(null, OFF);
-            } else if (heatingState === "ON" && coolingState === "OFF") {
+            } else if ((heatingState === "ON" || heatingState === "OPEN") && (coolingState === "OFF" || coolingState === "CLOSED")) {
                 callback(null, HEAT);
-            } else if (heatingState === "OFF" && coolingState === "ON") {
+            } else if ((heatingState === "OFF" || heatingState === "CLOSED") && (coolingState === "ON" || coolingState === "OPEN")) {
                 callback(null, COOL);
             } else {
                 let msg = `Combination of heating state (${heatingState}) and cooling state (${coolingState}) not allowed!`;

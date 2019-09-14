@@ -1,6 +1,6 @@
 'use strict';
 
-const {getState} = require('../../util/Accessory');
+const {getState} = require('../../util/Util');
 const {addNumericSensorActorCharacteristic} = require('./Numeric');
 
 const CLIMATE_HUMIDIFIER_DEHUMIDIFIER_CONFIG = {

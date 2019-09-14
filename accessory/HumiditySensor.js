@@ -2,23 +2,19 @@
 
 const {Accessory}  = require('../util/Accessory');
 const {addCurrentRelativeHumidityCharacteristic} = require('./characteristic/Numeric');
-const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
 
 class HumiditySensorAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Humidity Sensor'),
-            this._getPrimaryService()
-        ]
+        this._services.unshift(this._getAccessoryInformationService('Humidity Sensor'));
+        this._services.push(this._getPrimaryService());
     }
 
     _getPrimaryService() {
         this._log.debug(`Creating humidity sensor service for ${this.name}`);
         let primaryService = new this.Service.HumiditySensor(this.name);
         addCurrentRelativeHumidityCharacteristic.bind(this)(primaryService);
-        addBatteryWarningCharacteristic.bind(this)(primaryService);
+        primaryService.isPrimaryService = true;
         return primaryService;
     }
 }

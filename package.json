@@ -30,6 +30,7 @@
     "eventsource": "^1.0.7",
     "request": "^2.88.0",
     "sleep": "^6.0.0",
-    "sync-request": "^6.0.0"
+    "sync-request": "^6.0.0",
+    "hap-nodejs-community-types": "https://github.com/homespun/hap-nodejs-community-types.git"
   }
 }

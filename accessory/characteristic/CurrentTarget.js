@@ -1,6 +1,6 @@
 'use strict';
 
-const {getState, setState} = require('../../util/Accessory');
+const {getState, setState} = require('../../util/Util');
 
 function addCurrentStateCharacteristic(characteristic, item, itemType, inverted, transformation, targetCharacteristic) {
     this._log.debug(`Creating current state characteristic for ${this.name} with item ${item} (${itemType}), inverted set to ${inverted}`);

@@ -1,6 +1,6 @@
 'use strict';
 
-const {setState} = require('../../util/Accessory');
+const {setState} = require('../../util/Util');
 const {addCurrentStateCharacteristic, addTargetStateCharacteristic} = require('./CurrentTarget');
 
 const CURRENT_TARGET_POSITION_CONFIG = {

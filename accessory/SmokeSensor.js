@@ -1,24 +1,19 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addSmokeDetectedCharacteristic} = require('./characteristic/BinarySensor');
-const {addBatteryWarningCharacteristic} = require('./characteristic/Battery');
+const {addSmokeDetectedCharacteristic} = require('./characteristic/Binary');
 
 class SmokeSensorAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Smoke Sensor'),
-            this._getPrimaryService()
-        ]
+        this._services.unshift(this._getAccessoryInformationService('Smoke Sensor'));
+        this._services.push(this._getPrimaryService());
     }
 
     _getPrimaryService() {
         this._log.debug(`Creating occupancy sensor service for ${this.name}`);
         let primaryService = new this.Service.SmokeSensor(this.name);
         addSmokeDetectedCharacteristic.bind(this)(primaryService);
-        addBatteryWarningCharacteristic.bind(this)(primaryService);
         return primaryService;
     }
 }

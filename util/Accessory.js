@@ -4,8 +4,12 @@ let PLATFORM = {
     log: "log",
     api: "api",
     hap: "hap",
-    openHAB: "openHAB"
+    openHAB: "openHAB",
+    community: "community"
 };
+
+const {addBatteryLevelCharacteristic, addChargingStateCharacteristic, addBatteryWarningCharacteristic} = require('../accessory/characteristic/Battery');
+const {transformValue} = require('./Util');
 
 class Accessory {
     constructor(platform, config) {
@@ -14,6 +18,7 @@ class Accessory {
 
         this.Characteristic = platform[PLATFORM.api][PLATFORM.hap].Characteristic;
         this.Service = platform[PLATFORM.api][PLATFORM.hap].Service;
+        this.Community = platform[PLATFORM.community];
 
         this._config = config;
         this._openHAB = platform[PLATFORM.openHAB];
@@ -22,6 +27,10 @@ class Accessory {
 
         this._services = [];
 
+        let batteryService = this._tryBatteryService();
+        if(batteryService !== null) {
+            this._services.push(batteryService);
+        }
     }
 
     // Called by homebridge
@@ -33,6 +42,7 @@ class Accessory {
     // Called by homebridge
     getServices() {
         this._log.debug(`Getting services for ${this.name} (${this._services.length} service(s) registered for this accessory`);
+        this._log.debug(`Registered services: ${JSON.stringify(this._services, ['displayName', 'UUID', 'characteristics', 'value', 'optionalCharacteristics', 'isHiddenService', 'isPrimaryService'], 4)}`);
         return this._services;
     }
 
@@ -123,83 +133,20 @@ class Accessory {
             .setCharacteristic(this.Characteristic.FirmwareRevision, this._config.version)
             .setCharacteristic(this.Characteristic.HardwareRevision, this._config.version);
     }
-}
 
-// transformation may be 'undefined', a map or a function [in case of a function the return value needs to be either a valid value or an Error()
-function transformValue(transformation, value) {
-    if (transformation === null || transformation === undefined) {
-        return value;
-    } else if (typeof (transformation) === "function") {
-        return transformation(value);
-    } else if (typeof (transformation) === "object") {
-        if (transformation[value] !== undefined) {
-            return transformation[value];
-        } else if (transformation["_default"] !== undefined) {
-            return transformation["_default"];
-        } else {
-            return new Error(`Unable to transform ${value} using transformation map ${JSON.stringify(transformation)}`);
+    _tryBatteryService() {
+        this._log.debug(`Trying battery service for ${this.name}`);
+        let batteryService = new this.Service.BatteryService(`${this.name} Battery`);
+        try {
+            addBatteryWarningCharacteristic.bind(this)(batteryService);
+            addChargingStateCharacteristic.bind(this)(batteryService);
+            addBatteryLevelCharacteristic.bind(this)(batteryService);
+            return batteryService;
+        } catch(e) {
+            this._log.debug(`Not configuring battery service for ${this.name}: ${e.message}`);
         }
+        return null;
     }
 }
 
-function getState(habItem, transformation, callback) {
-    this._log.debug(`Getting state for ${this.name} [${habItem}]`);
-    this._openHAB.getState(habItem, function(error, state) {
-        if(error) {
-            this._log.error(`Unable to get state for ${this.name} [${habItem}]: ${error.message}`);
-            if(callback && typeof callback === "function") {
-                callback(error);
-            }
-        } else {
-            let transformedState = transformValue(transformation, state);
-            this._log(`Received state: ${state} (transformed to ${transformedState}) for ${this.name} [${habItem}]`);
-            if(transformedState instanceof Error) {
-                this._log.error(transformedState.message);
-                if(callback && typeof callback === "function") {
-                    callback(transformedState);
-                }
-            } else {
-                if(callback && typeof callback === "function") {
-                    callback(null, transformedState);
-                }
-            }
-        }
-    }.bind(this));
-}
-
-// context and connectionID are variables giving information about the origin of the request. If a setValue/setCharacteristic is called, we are able to manipulate those.
-// If context is set to 'openHABIgnore' the actual set state will not be executed towards openHAB
-function setState(habItem, transformation, state, callback, context, connectionID) {
-    let transformedState = transformValue(transformation, state);
-    this._log.debug(`Change target state of ${this.name} [${habItem}] to ${state} (transformed to ${transformedState}) [Context: ${context ? JSON.stringify(context): 'Not defined'}, ConnectionID: ${connectionID}`);
-    if(context === "openHABIgnore") {
-        callback();
-    } else {
-        if(transformedState instanceof Error) {
-            this._log.error(transformedState.message);
-            if(callback && typeof callback === "function") {
-                callback(transformedState);
-            }
-        } else {
-            this._openHAB.sendCommand(habItem, `${transformedState}`, function (error) {
-                if (error) {
-                    this._log.error(`Unable to send command: ${error.message}`);
-                    if(callback && typeof callback === "function") {
-                        callback(error);
-                    }
-                } else {
-                    this._log(`Changed target state of ${this.name} [${habItem}] to ${transformedState}`);
-                    if(callback && typeof callback === "function") {
-                        callback();
-                    }
-                }
-            }.bind(this));
-        }
-    }
-}
-
-function dummyTransformation(itemType, inverted, value) {
-    return value;
-}
-
-module.exports = {Accessory, getState, setState, dummyTransformation};
+module.exports = {Accessory};

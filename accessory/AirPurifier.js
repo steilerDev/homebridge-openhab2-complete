@@ -1,23 +1,18 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addSwingModeCharacteristic, addActiveCharacteristic} = require('./characteristic/BinarySensor');
+const {addSwingModeCharacteristic, addActiveCharacteristic} = require('./characteristic/Binary');
 const {addRotationSpeedCharacteristic} = require('./characteristic/Climate');
 const {
     addCurrentAirPurifierStateCharacteristic,
     addTargetAirPurifierStateCharacteristic
 } = require('./characteristic/ClimateAirPurifier');
 
-
-
 class AirPurifierAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Air Purifier'),
-            this._getPrimaryService()
-        ]
+        this._services.unshift(this._getAccessoryInformationService('Air Purifier'));
+        this._services.push(this._getPrimaryService());
     }
 
     _getPrimaryService() {

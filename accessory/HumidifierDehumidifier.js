@@ -1,7 +1,7 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addSwingModeCharacteristic, addActiveCharacteristic} = require('./characteristic/BinarySensor');
+const {addSwingModeCharacteristic, addActiveCharacteristic} = require('./characteristic/Binary');
 const {
     addWaterLevelCharacteristic,
     addRotationSpeedCharacteristic,
@@ -17,11 +17,8 @@ const {
 class HumidifierDehumidifierAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Humidifier/Dehumidifier'),
-            this._getPrimaryService()
-        ]
+        this._services.unshift(this._getAccessoryInformationService('Humidifier/Dehumidifier'));
+        this._services.push(this._getPrimaryService());
     }
 
     _getPrimaryService() {

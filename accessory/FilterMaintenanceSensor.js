@@ -1,17 +1,14 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addFilterChangeIndicationCharacteristic} = require('./characteristic/BinarySensor');
+const {addFilterChangeIndicationCharacteristic} = require('./characteristic/Binary');
 const {addFilterLifeLevelCharacteristic} = require('./characteristic/Level');
 
 class FilterMaintenanceSensorAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Filter Maintenance Sensor'),
-            this._getPrimaryService()
-        ]
+        this._services.unshift(this._getAccessoryInformationService('Filter Maintenance Sensor'));
+        this._services.push(this._getPrimaryService());
     }
 
     _getPrimaryService() {

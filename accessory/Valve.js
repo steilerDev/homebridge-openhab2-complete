@@ -1,18 +1,15 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addActiveCharacteristic} = require('./characteristic/BinarySensor');
+const {addActiveCharacteristic} = require('./characteristic/Binary');
 const {addInUseCharacteristic} = require('./characteristic/InUse');
 const {addValveTypeCharacteristic, addDurationCharacteristic} = require('./characteristic/Watering');
 
 class ValveAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
-
-        this._services = [
-            this._getAccessoryInformationService('Valve'),
-            this._getPrimaryService()
-        ]
+        this._services.unshift(this._getAccessoryInformationService('Valve'));
+        this._services.push(this._getPrimaryService());
     }
 
     _getPrimaryService() {

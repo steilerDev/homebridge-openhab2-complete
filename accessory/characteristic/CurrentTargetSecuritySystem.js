@@ -1,6 +1,6 @@
 'use strict';
 
-const {setState} = require('../../util/Accessory');
+const {setState} = require('../../util/Util');
 
 const CURRENT_TARGET_SECURITY_CONFIG = {
     homeItem: "homeItem",
@@ -50,7 +50,7 @@ function addSecuritySystemStateCharacteristic(service) {
         let awayItemInverted = this._checkInvertedConf(CURRENT_TARGET_SECURITY_CONFIG.awayItemInverted);
         items["away"] = [awayItem, awayItemInverted];
     } catch(e) {
-        this._log.debug(`Not adding home item to security system: ${e.message}`);
+        this._log.debug(`Not adding away item to security system: ${e.message}`);
     }
 
     try {
