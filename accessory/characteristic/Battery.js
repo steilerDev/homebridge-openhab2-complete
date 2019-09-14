@@ -85,7 +85,10 @@ function addBatteryLevelCharacteristic(service) {
         );
     } catch (e) {
         this._log.debug(`Adding default battery level behaviour: ${e.message}`);
-        batteryLevelCharacteristic.setValue(0);
+        batteryLevelCharacteristic.setProps({
+            minValue: -1
+        });
+        batteryLevelCharacteristic.setValue(-1);
     }
 }
 
