@@ -77,11 +77,6 @@ function addBatteryLevelCharacteristic(service) {
     } catch (e) {
         this._log.debug(`Not adding numeric battery level characteristic, adding default behaviour: ${e}`);
 
-        delete batteryLevelCharacteristic.props["unit"];
-        delete batteryLevelCharacteristic.props["maxValue"];
-        delete batteryLevelCharacteristic.props["minValue"];
-        delete batteryLevelCharacteristic.props["minStep"];
-
         batteryLevelCharacteristic.setProps({
             format: 'string'
         });
