@@ -42,6 +42,7 @@ class Accessory {
     // Called by homebridge
     getServices() {
         this._log.debug(`Getting services for ${this.name} (${this._services.length} service(s) registered for this accessory`);
+        this._log.debug(`Registered services: ${JSON.stringify(this._services, undefined, 4}`);
         return this._services;
     }
 
@@ -135,7 +136,7 @@ class Accessory {
 
     _tryBatteryService() {
         this._log.debug(`Trying battery service for ${this.name}`);
-        let batteryService = new this.Service.BatteryService();
+        let batteryService = new this.Service.BatteryService(`${this.name} Battery`);
         try {
             addBatteryWarningCharacteristic.bind(this)(batteryService);
             addChargingStateCharacteristic.bind(this)(batteryService);
