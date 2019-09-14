@@ -80,6 +80,10 @@ function addAirQualityCharacteristic(service) {
     addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.AirQuality), NUMERIC_CONFIG);
 }
 
+function addAtmosphericPressureLevel(service) {
+    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Community.AtmosphericPressureLevel, NUMERIC_CONFIG))
+}
+
 
 module.exports = {
     addCurrentRelativeHumidityCharacteristic,
@@ -88,4 +92,5 @@ module.exports = {
     addNumericSensorActorCharacteristic,
     addNumericSensorActorCharacteristicWithTransformation,
     addAirQualityCharacteristic,
+    addAtmosphericPressureLevel
 };
