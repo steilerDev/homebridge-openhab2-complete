@@ -87,13 +87,13 @@ function _commitFunction(service, type) {
         } else if (hue === undefined && saturation === undefined && brightness === undefined) {
             command = binary ? "ON" : "OFF";
         } else if (hue === undefined && saturation === undefined) {
-            if(binary && brightness === 0) { // For some reaason when invoking Siri to turn on a light brightness is sometimes set to '0'
+            if(binary && (brightness === 0 || brightness === 100)) { // For some reaason when invoking Siri to turn on a light brightness is sometimes set to '0'
                 command = "ON";
             } else {
                 command = binary ? `${brightness}` : "OFF";
             }
         } else {
-            if(binary && brightness === 0) { // For some reaason when invoking Siri to turn on a light brightness is sometimes set to '0'
+            if(binary && (brightness === 0 || brightness === 100)) { // For some reaason when invoking Siri to turn on a light brightness is sometimes set to '0'
                 command = "ON";
             } else {
                 command = binary ? `${hue},${saturation},${brightness}` : "OFF";
