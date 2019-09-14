@@ -80,8 +80,11 @@ function addChargingStateCharacteristic(service) {
     let NOT_CHARGING = 0;
     let CHARGING = 1;
     let NOT_CHARGEABLE = 2;
-    let chargingCharacteristic = service.getCharacteristic(this.Characteristic.ChargingState);
+
+    let chargingStateCharacteristic = service.getCharacteristic(this.Characteristic.ChargingState);
+
     try {
+        this._getAndCheckItemType(BATTERY_CONFIG.batteryItemChargingState, ['Contact', 'Switch']);
         let inverted = this._checkInvertedConf(BATTERY_CONFIG.batteryItemChargingStateInverted);
         let transformation = {
             "OFF": inverted ? CHARGING : NOT_CHARGING,
@@ -90,11 +93,11 @@ function addChargingStateCharacteristic(service) {
             "OPEN": inverted ? NOT_CHARGING : CHARGING
         };
         addBinarySensorCharacteristicWithTransformation.bind(this)(service,
-            chargingCharacteristic,
+            chargingStateCharacteristic,
             {item: BATTERY_CONFIG.batteryItemChargingState, inverted: BATTERY_CONFIG.batteryItemChargingStateInverted},
             transformation
         );
-    } catch(e) {
+    } catch (e) {
         this._log.debug(`Not adding charging state characteristic, adding default behaviour: ${e}`);
         chargingStateCharacteristic.on('get', function() { return NOT_CHARGEABLE; });
     }
