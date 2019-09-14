@@ -99,7 +99,7 @@ function addChargingStateCharacteristic(service) {
         );
     } catch (e) {
         this._log.debug(`Not adding charging state characteristic, adding default behaviour: ${e}`);
-        chargingStateCharacteristic.on('get', function() { return NOT_CHARGEABLE; });
+        chargingStateCharacteristic.setValue(NOT_CHARGEABLE);
     }
 }
 
