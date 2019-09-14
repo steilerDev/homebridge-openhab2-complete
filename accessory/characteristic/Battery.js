@@ -83,14 +83,7 @@ function addBatteryLevelCharacteristic(service) {
         );
     } catch (e) {
         this._log.debug(`Adding default battery level behaviour: ${e.message}`);
-        batteryLevelCharacteristic.on('get', function(lowBatCharacteristic, callback) {
-            const BATTERY_LEVEL_NORMAL = 0;
-            if(lowBatCharacteristic.value === BATTERY_LEVEL_NORMAL) {
-                callback(100);
-            } else {
-                callback(0);
-            }
-        }.bind(service.getCharacteristic(this.Characteristic.StatusLowBattery)));
+        batteryLevelCharacteristic.setValue(0);
     }
 }
 
