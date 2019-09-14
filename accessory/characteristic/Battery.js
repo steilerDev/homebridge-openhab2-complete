@@ -34,7 +34,7 @@ function addBatteryWarningCharacteristic(service, optional) {
             this._log.debug(`Creating battery warning characteristic for ${this.name} with item ${batteryItem} and threshold set to ${threshold}`);
 
            batteryTransformation = function(val) {
-               return val < threshold ? BATTERY_LEVEL_LOW : BATTERY_LEVEL_NORMAL;
+               return val < threshold ? 1 : 0 ;
            }
         } else {
             let inverted = this._checkInvertedConf(BATTERY_CONFIG.batteryItemInverted);
