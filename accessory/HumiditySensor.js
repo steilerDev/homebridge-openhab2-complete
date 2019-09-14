@@ -14,6 +14,7 @@ class HumiditySensorAccessory extends Accessory {
         this._log.debug(`Creating humidity sensor service for ${this.name}`);
         let primaryService = new this.Service.HumiditySensor(this.name);
         addCurrentRelativeHumidityCharacteristic.bind(this)(primaryService);
+        primaryService.isPrimaryService = true;
         return primaryService;
     }
 }
