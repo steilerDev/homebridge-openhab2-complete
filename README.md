@@ -155,7 +155,7 @@ The following services are also defined by the HomeKit protocol, but since I don
 * Stateless Programmable Switch
 
 ## Configuration for every service
-Every Service can be configured to show battery warnings and battery levels (currently not supported in the Home App). The following configuration can be optionally added to every item:
+Every Service can be configured to show battery warnings and battery levels. The following configuration can be optionally added to every item:
 ```
 {
     "batteryItem": "Itemname-within-OpenHAB",
