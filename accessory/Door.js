@@ -7,7 +7,6 @@ const {
     addPositionStateCharacteristic,
     addHoldPositionCharacteristic
 } = require('./characteristic/CurrentTargetPosition');
-const {addNotificationTextCharacteristic} = require('./characteristic/Notification');
 
 class DoorAccessory extends Accessory {
 
