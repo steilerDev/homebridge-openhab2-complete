@@ -66,13 +66,21 @@ function addBatteryWarningCharacteristic(service, optional) {
 }
 
 function addBatteryLevelCharacteristic(service) {
+    let batteryLevelCharacteristic = service.getCharacteristic(this.Characteristic.BatteryLevel);
+
     try {
-        addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.BatteryLevel), {item: BATTERY_CONFIG.batteryItem});
+        this._getAndCheckItemType(BATTERY_CONFIG.batteryItem, ['Number']);
+        addNumericSensorCharacteristic.bind(this)(service,
+            batteryLevelCharacteristic,
+            {item: BATTERY_CONFIG.batteryItem}
+        );
     } catch (e) {
         this._log.debug(`Not adding numeric battery level characteristic, adding default behaviour: ${e}`);
 
-        service.getCharacteristic(this.Characteristic.BatteryLevel)
-            .on('get', function() { return 1; });
+        batteryLevelCharacteristic.setProps({
+            minValue: -1
+        });
+        batteryLevelCharacteristic.setValue(-1);
     }
 }
 
