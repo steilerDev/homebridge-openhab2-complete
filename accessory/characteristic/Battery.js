@@ -76,9 +76,9 @@ function addBatteryLevelCharacteristic(service) {
         );
     } catch (e) {
         this._log.debug(`Not adding numeric battery level characteristic, adding default behaviour: ${e}`);
-
         batteryLevelCharacteristic.setProps({
-            minValue: -1
+            minValue: -1,
+            maxValue: 100
         });
         batteryLevelCharacteristic.setValue(-1);
     }
