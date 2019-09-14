@@ -166,9 +166,10 @@ Every Service can be configured to show battery warnings and battery levels (cur
 }
 ```
 
-* `batteryItem` *(optional)*: The openHAB item representing a battery warning for this accessory. If the item has the state `ON` or `OPEN` the battery warning will be triggered
+* `batteryItem` *(optional)*: The openHAB item representing the battery level for this accessory.
   * Needs to be of type `Switch`, `Contact` or `Number` within openHAB
-  * **Note**: If the type is `Number`, then the battery warning will be based on `batteryItemThreshold`
+  * **Note**: If the type is `Number`, then the battery warning will be based on `batteryItemThreshold` and the battery level will be the value of the item
+  * **Note**: If the type is `Switch` or `Contact` the `BatteryLevel` will always show 0% and for states `ON` or `OPEN` a battery warning will be triggered
 * `batteryItemInverted` *(optional)*: If `batteryItem`'s state needs to be interpreted inverted, set this value to `"true"` (Only for types `Switch` and `Contact`)
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
