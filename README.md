@@ -536,7 +536,7 @@ This service describes motorized window coverings or shades - examples include s
     "stateItem": "Itemname-within-OpenHAB",
     "stateItemInverted": "false"
     "stateItemMultiplier": "1",
-    "manuMode": "false"
+    "manuMode": "false",
     "horizontalTiltItem": "Itemname-within-OpenHAB",
     "horizontalTiltItemRangeStart": "-90",
     "horizontalTiltItemRangeEnd": "90",
