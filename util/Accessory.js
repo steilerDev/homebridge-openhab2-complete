@@ -40,7 +40,7 @@ class Accessory {
     // Called by homebridge
     getServices() {
         this._log.debug(`Getting services for ${this.name} (${this._services.length} service(s) registered for this accessory`);
-        this._log.debug(`Registered services: ${JSON.stringify(this._services, ['displayName', 'UUID', 'characteristics', 'value', 'optionalCharacteristics', 'isHiddenService', 'isPrimaryService'], 4)}`);
+        //this._log.debug(`Registered services: ${JSON.stringify(this._services, ['displayName', 'UUID', 'characteristics', 'value', 'optionalCharacteristics', 'isHiddenService', 'isPrimaryService'], 4)}`);
         return this._services;
     }
 

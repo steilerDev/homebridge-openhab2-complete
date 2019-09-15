@@ -26,7 +26,7 @@ function addCurrentTiltCharacteristic(service, characteristic, CONF_MAP) {
     const rangeStartHAP = -90;
     const rangeEndHAP = 90;
     this._log.debug(`Adding current tilt characteristic with range start at ${rangeStart} and range end at ${rangeEnd}`);
-    
+
     addNumericSensorCharacteristicWithTransformation.bind(this)(service,
         characteristic,
         {item: CONF_MAP.item},
