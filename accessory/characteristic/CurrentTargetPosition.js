@@ -53,13 +53,13 @@ function addTargetTiltCharacteristic(service, characteristic, CONF_MAP) {
 
 function mapRanges(inputStart, inputEnd, outputStart, outputEnd, input) {
     let output = outputStart + ((outputEnd - outputStart)/(inputEnd - inputStart)) * (input - inputStart);
-    this._log.warn(`Mapping ranges:`);
-    this._log.warn(`    Input: ${input}`);
-    this._log.warn(`    Input Start: ${inputStart}`);
-    this._log.warn(`    Input End: ${inputEnd}`);
-    this._log.warn(`    Output Start: ${outputStart}`);
-    this._log.warn(`    Output End: ${outputEnd}`);
-    this._log.warn(`    Output: ${output}`);
+    this._log.debug(`Mapping ranges:`);
+    this._log.debug(`    Input: ${input}`);
+    this._log.debug(`    Input Start: ${inputStart}`);
+    this._log.debug(`    Input End: ${inputEnd}`);
+    this._log.debug(`    Output Start: ${outputStart}`);
+    this._log.debug(`    Output End: ${outputEnd}`);
+    this._log.debug(`    Output: ${output}`);
     return output
 }
 

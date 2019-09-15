@@ -15,10 +15,12 @@
 * Reworked 'Thermostat' and 'Temperature Sensor' to support a wider range of numbers (now from -100 to +200) and also support exotic temperature units (Fahrenheit :P)
 * Reworked light based on issues #13 and #43
 * Added numeric battery state and battery warnings for _every_ accessory type
+* Added vertical and horizontal tilt angle's for `Window Covering`'s slats
 
 Issues:
 * Closes #9
 * (Hopefully finally) closes #13
+* Closes #17
 * Closes #43
 * Closes #24
 * Closes #33

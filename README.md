@@ -537,6 +537,12 @@ This service describes motorized window coverings or shades - examples include s
     "stateItemInverted": "false"
     "stateItemMultiplier": "1",
     "manuMode": "false"
+    "horizontalTiltItem": "Itemname-within-OpenHAB",
+    "horizontalTiltItemRangeStart": "-90",
+    "horizontalTiltItemRangeEnd": "90",
+    "verticalTiltItem": "Itemname-within-openHAB",
+    "verticalTiltItemRangeStart": "-90",
+    "verticalTiltItemRangeEnd": "90"
 }
 ```
 * `item`: The openHAB item representing the window covering, receiving commands about the target position and determining the current position (if `stateItem` is not set)
@@ -558,6 +564,31 @@ This service describes motorized window coverings or shades - examples include s
 * `manuMode` *(optional)*: If your item can be operated manually, you should enable this mode to not see `Opening...` or `Closing...` on the item when manipulating the state manually (This is due to the fact that HomeKit stores a `TargetState` value and compares it to the `ActualState` to show this metadata. The `manuMode` automatically changes the `TargetState` of the item, when the `ActualState` is changed)
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `horizontalTiltItem` *(optional)*: An item representing the angle of horizontal slats. 
+  * Needs to be of type `Number` within openHAB
+  * Allowed value range: `-90` to `90` (for different ranges, see `horizontalTiltItemRangeStart` and `horizontalTiltItemRangeEnd`):
+    * A value of 0 indicates that the slats are rotated to a fully open position
+    * A value of -90 indicates that the slats are rotated all the way in a direction where the user-facing edge is higher than the window-facing edge
+    * A value of 90 indicates that the slats are rotated all the way in a direction where the window-facing edge is higher than the user-facing edge
+* `horizontalTiltItemRangeStart` *(optional)*: If the range of the openHAB item does not start at `-90` (e.g. if the angle is represented in percent from 0 to 100) set this value. The range will be mapped linearly.
+  * Default: `"-90"`
+  * Allowed values: All integers
+* `horizontalTiltItemRangeEnd` *(optional)*: If the range of the openHAB item does not end at `90` (e.g. if the angle is represented in percent from 0 to 100) set this value. The range will be mapped linearly.
+  * Default: `"90"`
+  * Allowed values: All integers
+* `verticalTiltItem` *(optional)*: An item representing the angle of vertical slats. 
+  * Needs to be of type `Number` within openHAB
+  * Allowed value range: `-90` to `90` (for different ranges, see `verticalTiltItemRangeStart` and `verticalTiltItemRangeEnd`):
+    * A value of 0 indicates that the slats are rotated to a fully open position
+    * A value of -90 indicates that the slats are rotated all the way in a direction where the user-facing edge is to the left of the window-facing edge
+    * A value of 90 indicates that the slats are rotated all the way in a direction where the user-facing edge is to the right of the window-facing edge
+* `verticalTiltItemRangeStart` *(optional)*: If the range of the openHAB item does not start at `-90` (e.g. if the angle is represented in percent from 0 to 100) set this value. The range will be mapped linearly.
+  * Default: `"-90"`
+  * Allowed values: All integers
+* `verticalTiltItemRangeEnd` *(optional)*: If the range of the openHAB item does not end at `90` (e.g. if the angle is represented in percent from 0 to 100) set this value. The range will be mapped linearly.
+  * Default: `"90"`
+  * Allowed values: All integers
+  
 
 ### Door 
 This service describes a motorized door
