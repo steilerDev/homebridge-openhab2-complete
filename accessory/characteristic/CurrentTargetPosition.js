@@ -17,7 +17,7 @@ const CURRENT_TARGET_POSITION_CONFIG = {
     horizontalTiltItemRangeEnd: "horizontalTiltItemRangeEnd",
     verticalTiltItem: "verticalTiltItem",
     verticalTiltItemRangeStart: "verticalTiltItemRangeStart",
-    verticalTiltItemRangeEnd: "verticalTiltItemRangeEnd",
+    verticalTiltItemRangeEnd: "verticalTiltItemRangeEnd"
 };
 
 function addCurrentTiltCharacteristic(service, characteristic, CONF_MAP) {
