@@ -6,14 +6,26 @@ const CURRENT_TARGET_SECURITY_CONFIG = {
     item: "item"
 };
 
+const securitySystemTransformation = {
+    StayArm: 0,
+    0: "StayArm",
+    AwayArm: 1,
+    1: "AwayArm",
+    NightArm: 2,
+    2: "NightArm",
+    Disarmed: 3,
+    3: "Disarmed: 3",
+    AlarmTriggered: 4,
+    4: "AlarmTriggered"
+};
+
 function addSecuritySystemStateCharacteristic(service) {
     let currentSystemCharacteristic = service.getCharacteristic(this.Characteristic.SecuritySystemCurrentState);
     let targetSystemCharacteristic = service.getCharacteristic(this.Characteristic.SecuritySystemTargetState);
     try {
         let [item] = this._getAndCheckItemType(CURRENT_TARGET_SECURITY_CONFIG.item, ['String']);
 
-        this._log.debug(`Creating binary sensor characteristic for ${this.name} with item ${item} and inverted set to ${inverted}`);
-
+        this._log.debug(`Creating security system characteristic for ${this.name} with item ${item}`);
 
         currentSystemCharacteristic.on('get', getState.bind(this,
             item,
@@ -38,21 +50,6 @@ function addSecuritySystemStateCharacteristic(service) {
         service.removeCharacteristic(currentSystemCharacteristic);
         service.removeCharacteristic(targetSystemCharacteristic);
         throw new Error(`Not configuring security system characteristic for ${this.name}: ${e.message}`);
-    }
-}
-
-function securitySystemTransformation(value) {
-    if(isNaN(parseFloat(value))) {
-        const STATES = {
-            StayArm: 0,
-            AwayArm: 1,
-            NightArm: 2,
-            Disarmed: 3,
-            AlarmTriggered: 4
-        };
-        return STATES[value] === undefined ? -1 : STATES[value];
-    } else {
-        return parseFloat(value);
     }
 }
 
