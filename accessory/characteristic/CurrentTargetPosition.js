@@ -25,7 +25,8 @@ function addCurrentTiltCharacteristic(service, characteristic, CONF_MAP) {
     let rangeEnd = isNaN(parseFloat(CONF_MAP.rangeEnd)) ? 90 : parseFloat(CONF_MAP.rangeEnd);
     const rangeStartHAP = -90;
     const rangeEndHAP = 90;
-
+    this._log.debug(`Adding current tilt characteristic with range start at ${rangeStart} and range end at ${rangeEnd}`);
+    
     addNumericSensorCharacteristicWithTransformation.bind(this)(service,
         characteristic,
         {item: CONF_MAP.item},
@@ -39,6 +40,7 @@ function addTargetTiltCharacteristic(service, characteristic, CONF_MAP) {
     let rangeEnd = isNaN(parseFloat(CONF_MAP.rangeEnd)) ? 90 : parseFloat(CONF_MAP.rangeEnd);
     const rangeStartHAP = -90;
     const rangeEndHAP = 90;
+    this._log.debug(`Adding target tilt characteristic with range start at ${rangeStart} and range end at ${rangeEnd}`);
 
     addNumericSensorActorCharacteristicWithDistinctTransformation.bind(this)(service,
         characteristic,
