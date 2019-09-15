@@ -3,12 +3,8 @@
 ### V1.0.0 (planned)
 * Code audit & documentation
 
-### V0.11.0
-* Add support for `Numeric` item types in battery warning characteristics
-* Add support for [Community Types](https://github.com/homespun/hap-nodejs-community-types)
-
 ## Changelog
-### V0.10.3
+### V0.11.0
 * Updated Readme to fix typo's
 * Valve and Faucet should now be able to change state of openHAB item (changed configuration and requirements for Valve and Faucet items, see README)
 * 'heatingItem' and 'coolingItem' of Thermostat now actually support 'Contact' type
@@ -30,6 +26,7 @@ Issues:
 
 **Breaking changes**:
 * Changed `item` to `currentTempItem` within `temp` accessory
+* `Valve` and `Faucet` configuration and requirements changed significantly, consult the relevant section in the `README.md`
 
 ### V0.10.2
 * Fixed minor issues from Github.
