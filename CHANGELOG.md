@@ -1,10 +1,10 @@
 # Changelog of homebridge-openhab2-complete
 ## Roadmap
-### V1.0.0 (planned)
+### V1.1.0 (planned)
 * Code audit & documentation
 
 ## Changelog
-### V0.11.0
+### V1.0.0
 * Updated Readme to fix typo's
 * Valve and Faucet should now be able to change state of openHAB item (changed configuration and requirements for Valve and Faucet items, see README)
 * 'heatingItem' and 'coolingItem' of Thermostat now actually support 'Contact' type
@@ -23,6 +23,7 @@ Issues:
 * Closes #33
 * Closes #38
 * Closes #32
+* Closes #34
 * Closes #35
 
 **Breaking changes**:
