@@ -21,6 +21,8 @@ const CURRENT_TARGET_POSITION_CONFIG = {
 };
 
 function addCurrentTiltCharacteristic(service, characteristic, CONF_MAP) {
+    this._log(`RangeStart ${CONF_MAP.rangeStart} parsed to ${parseFloat(CONF_MAP.rangeStart)}`);
+    this._log(`RangeEnd ${CONF_MAP.rangeEnd} parsed to ${parseFloat(CONF_MAP.rangeEnd)}`);
     let rangeStart = isNaN(parseFloat(CONF_MAP.rangeStart)) ? -90 : parseFloat(CONF_MAP.rangeStart);
     let rangeEnd = isNaN(parseFloat(CONF_MAP.rangeEnd)) ? 90 : parseFloat(CONF_MAP.rangeEnd);
     const rangeStartHAP = -90;
@@ -36,6 +38,8 @@ function addCurrentTiltCharacteristic(service, characteristic, CONF_MAP) {
 }
 
 function addTargetTiltCharacteristic(service, characteristic, CONF_MAP) {
+    this._log(`RangeStart ${CONF_MAP.rangeStart} parsed to ${parseFloat(CONF_MAP.rangeStart)}`);
+    this._log(`RangeEnd ${CONF_MAP.rangeEnd} parsed to ${parseFloat(CONF_MAP.rangeEnd)}`);
     let rangeStart = isNaN(parseFloat(CONF_MAP.rangeStart)) ? -90 : parseFloat(CONF_MAP.rangeStart);
     let rangeEnd = isNaN(parseFloat(CONF_MAP.rangeEnd)) ? 90 : parseFloat(CONF_MAP.rangeEnd);
     const rangeStartHAP = -90;
