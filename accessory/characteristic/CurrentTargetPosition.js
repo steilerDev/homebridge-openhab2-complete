@@ -30,7 +30,7 @@ function addCurrentTiltCharacteristic(service, characteristic, CONF_MAP) {
     addNumericSensorCharacteristicWithTransformation.bind(this)(service,
         characteristic,
         {item: CONF_MAP.item},
-        mapRanges.bind(rangeStart, rangeEnd, rangeStartHAP, rangeEndHAP),
+        mapRanges.bind(this, rangeStart, rangeEnd, rangeStartHAP, rangeEndHAP),
         true
     );
 }
@@ -45,14 +45,22 @@ function addTargetTiltCharacteristic(service, characteristic, CONF_MAP) {
     addNumericSensorActorCharacteristicWithDistinctTransformation.bind(this)(service,
         characteristic,
         {item: CONF_MAP.item},
-        mapRanges.bind(rangeStartHAP, rangeEndHAP, rangeStart, rangeEnd),
-        mapRanges.bind(rangeStart, rangeEnd, rangeStartHAP, rangeEndHAP),
+        mapRanges.bind(this, rangeStartHAP, rangeEndHAP, rangeStart, rangeEnd),
+        mapRanges.bind(this, rangeStart, rangeEnd, rangeStartHAP, rangeEndHAP),
         true
     );
 }
 
 function mapRanges(inputStart, inputEnd, outputStart, outputEnd, input) {
-    return outputStart + ((outputEnd - outputStart)/(inputEnd - inputStart)) * (input - inputStart);
+    let output = outputStart + ((outputEnd - outputStart)/(inputEnd - inputStart)) * (input - inputStart);
+    this._log.warn(`Mapping ranges:`);
+    this._log.warn(`    Input: ${input}`);
+    this._log.warn(`    Input Start: ${inputStart}`);
+    this._log.warn(`    Input End: ${inputEnd}`);
+    this._log.warn(`    Output Start: ${outputStart}`);
+    this._log.warn(`    Output End: ${outputEnd}`);
+    this._log.warn(`    Output: ${output}`);
+    return output
 }
 
 function addCurrentHorizontalTiltCharacteristic(service) {
