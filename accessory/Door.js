@@ -23,7 +23,6 @@ class DoorAccessory extends Accessory {
         addTargetPositionCharacteristic.bind(this)(primaryService);
         addPositionStateCharacteristic.bind(this)(primaryService);
         addHoldPositionCharacteristic.bind(this)(primaryService);
-        addNotificationTextCharacteristic.bind(this)(primaryService);
         return primaryService;
     }
 }
