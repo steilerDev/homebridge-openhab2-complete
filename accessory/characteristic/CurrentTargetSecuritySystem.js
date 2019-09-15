@@ -31,7 +31,6 @@ function addSecuritySystemStateCharacteristic(service) {
             item,
             securitySystemTransformation
         ));
-
         this._subscribeCharacteristic(currentSystemCharacteristic,
             item,
             securitySystemTransformation
@@ -45,6 +44,10 @@ function addSecuritySystemStateCharacteristic(service) {
             item,
             securitySystemTransformation
         ));
+        this._subscribeCharacteristic(targetSystemCharacteristic,
+            item,
+            securitySystemTransformation
+        );
 
     } catch (e) {
         service.removeCharacteristic(currentSystemCharacteristic);
