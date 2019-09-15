@@ -1,7 +1,15 @@
 'use strict';
 
 const {Accessory} = require('../util/Accessory');
-const {addCurrentPositionCharacteristic, addTargetPositionCharacteristic, addPositionStateCharacteristic, addHoldPositionCharacteristic} = require('./characteristic/CurrentTargetPosition');
+const {addCurrentPositionCharacteristic,
+    addTargetPositionCharacteristic,
+    addPositionStateCharacteristic,
+    addHoldPositionCharacteristic,
+    addCurrentHorizontalTiltCharacteristic,
+    addCurrentVerticalTiltCharacteristic,
+    addTargetHorizontalTiltCharacteristic,
+    addTargetVerticalTiltCharacteristic
+} = require('./characteristic/CurrentTargetPosition');
 
 class WindowCoveringAccessory extends Accessory {
 
@@ -18,6 +26,10 @@ class WindowCoveringAccessory extends Accessory {
         addTargetPositionCharacteristic.bind(this)(primaryService);
         addPositionStateCharacteristic.bind(this)(primaryService);
         addHoldPositionCharacteristic.bind(this)(primaryService);
+        addCurrentHorizontalTiltCharacteristic.bind(this)(primaryService);
+        addCurrentVerticalTiltCharacteristic.bind(this)(primaryService);
+        addTargetHorizontalTiltCharacteristic.bind(this)(primaryService);
+        addTargetVerticalTiltCharacteristic.bind(this)(primaryService);
         return primaryService;
     }
 }

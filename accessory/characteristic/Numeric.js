@@ -7,6 +7,10 @@ const NUMERIC_CONFIG = {
 };
 
 function addNumericSensorCharacteristic(service, characteristic, CONF_MAP, optional) {
+    addNumericSensorCharacteristicWithTransformation(service, characteristic, CONF_MAP, parseFloat, optional);
+}
+
+function addNumericSensorCharacteristicWithTransformation(service, characteristic, CONF_MAP, transformation, optional) {
     try {
 
         let [item] = this._getAndCheckItemType(CONF_MAP.item, ['Number']);
@@ -15,12 +19,12 @@ function addNumericSensorCharacteristic(service, characteristic, CONF_MAP, optio
 
         characteristic.on('get', getState.bind(this,
             item,
-            parseFloat
+            transformation
         ));
 
         this._subscribeCharacteristic(characteristic,
             item,
-            parseFloat
+            transformation
         );
     } catch(e) {
         let msg = `Not configuring numeric sensor characteristic for ${this.name}: ${e.message}`;
@@ -38,6 +42,10 @@ function addNumericSensorActorCharacteristic(service, characteristic, CONF_MAP, 
 }
 
 function addNumericSensorActorCharacteristicWithTransformation(service, characteristic, CONF_MAP, transformation, optional) {
+    addNumericSensorActorCharacteristicWithDistinctTransformation.bind(this)(service, characteristic, CONF_MAP, transformation, transformation, optional);
+}
+
+function addNumericSensorActorCharacteristicWithDistinctTransformation(service, characteristic, CONF_MAP, setTransformation, getTransformation, optional) {
     try {
 
         let [item] = this._getAndCheckItemType(CONF_MAP.item, ['Number']);
@@ -46,16 +54,16 @@ function addNumericSensorActorCharacteristicWithTransformation(service, characte
 
         characteristic.on('set', setState.bind(this,
             item,
-            transformation
+            setTransformation
         ))
-            .on('get', getState.bind(this,
-                item,
-                transformation
-            ));
+        .on('get', getState.bind(this,
+            item,
+            getTransformation
+        ));
 
         this._subscribeCharacteristic(characteristic,
             item,
-            transformation
+            getTransformation
         );
     } catch(e) {
         let msg = `Not configuring numeric actor characteristic for ${this.name}: ${e.message}`;
@@ -84,7 +92,9 @@ module.exports = {
     addCurrentRelativeHumidityCharacteristic,
     addCurrentAmbientLightLevelCharacteristic,
     addNumericSensorCharacteristic,
+    addNumericSensorCharacteristicWithTransformation,
     addNumericSensorActorCharacteristic,
     addNumericSensorActorCharacteristicWithTransformation,
+    addNumericSensorActorCharacteristicWithDistinctTransformation,
     addAirQualityCharacteristic
 };

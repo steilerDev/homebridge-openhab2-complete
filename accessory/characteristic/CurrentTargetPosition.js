@@ -2,6 +2,7 @@
 
 const {setState} = require('../../util/Util');
 const {addCurrentStateCharacteristic, addTargetStateCharacteristic} = require('./CurrentTarget');
+const {addNumericSensorActorCharacteristicWithDistinctTransformation, addNumericSensorCharacteristicWithTransformation} = require('./Numeric');
 
 const CURRENT_TARGET_POSITION_CONFIG = {
     item: "item",
@@ -10,8 +11,91 @@ const CURRENT_TARGET_POSITION_CONFIG = {
     stateItem: "stateItem",
     stateItemInverted: "stateItemInverted",
     stateItemMultiplier: "stateItemMultiplier",
-    manuMode: "manuMode"
+    manuMode: "manuMode",
+    horizontalTiltItem: "horizontalTiltItem",
+    horizontalTiltItemRangeStart: "horizontalTiltItemRangeStart",
+    horizontalTiltItemRangeEnd: "horizontalTiltItemRangeEnd",
+    verticalTiltItem: "verticalTiltItem",
+    verticalTiltItemRangeStart: "verticalTiltItemRangeStart",
+    verticalTiltItemRangeEnd: "verticalTiltItemRangeEnd",
 };
+
+function addCurrentTiltCharacteristic(service, characteristic, CONF_MAP) {
+    let rangeStart = isNaN(parseFloat(CONF_MAP.rangeStart)) ? -90 : parseFloat(CONF_MAP.rangeStart);
+    let rangeEnd = isNaN(parseFloat(CONF_MAP.rangeEnd)) ? 90 : parseFloat(CONF_MAP.rangeEnd);
+    const rangeStartHAP = -90;
+    const rangeEndHAP = 90;
+
+    addNumericSensorCharacteristicWithTransformation.bind(this)(service,
+        characteristic,
+        {item: CONF_MAP.item},
+        mapRanges.bind(rangeStart, rangeEnd, rangeStartHAP, rangeEndHAP),
+        true
+    );
+}
+
+function addTargetTiltCharacteristic(service, characteristic, CONF_MAP) {
+    let rangeStart = isNaN(parseFloat(CONF_MAP.rangeStart)) ? -90 : parseFloat(CONF_MAP.rangeStart);
+    let rangeEnd = isNaN(parseFloat(CONF_MAP.rangeEnd)) ? 90 : parseFloat(CONF_MAP.rangeEnd);
+    const rangeStartHAP = -90;
+    const rangeEndHAP = 90;
+
+    addNumericSensorActorCharacteristicWithDistinctTransformation.bind(this)(service,
+        characteristic,
+        {item: CONF_MAP.item},
+        mapRanges.bind(rangeStartHAP, rangeEndHAP, rangeStart, rangeEnd),
+        mapRanges.bind(rangeStart, rangeEnd, rangeStartHAP, rangeEndHAP),
+        true
+    );
+}
+
+function mapRanges(inputStart, inputEnd, outputStart, outputEnd, input) {
+    return outputStart + ((outputEnd - outputStart)/(inputEnd - inputStart)) * (input - inputStart);
+}
+
+function addCurrentHorizontalTiltCharacteristic(service) {
+    addCurrentTiltCharacteristic.bind(this)(service,
+        service.getCharacteristic(this.Characteristic.CurrentHorizontalTiltAngle),
+        {
+            item: CURRENT_TARGET_POSITION_CONFIG.horizontalTiltItem,
+            rangeStart: CURRENT_TARGET_POSITION_CONFIG.horizontalTiltItemRangeStart,
+            rangeEnd: CURRENT_TARGET_POSITION_CONFIG.horizontalTiltItemRangeEnd
+        }
+    );
+}
+
+function addTargetHorizontalTiltCharacteristic(service) {
+    addTargetTiltCharacteristic.bind(this)(service,
+        service.getCharacteristic(this.Characteristic.TargetHorizontalTiltAngle),
+        {
+            item: CURRENT_TARGET_POSITION_CONFIG.horizontalTiltItem,
+            rangeStart: CURRENT_TARGET_POSITION_CONFIG.horizontalTiltItemRangeStart,
+            rangeEnd: CURRENT_TARGET_POSITION_CONFIG.horizontalTiltItemRangeEnd
+        }
+    );
+}
+
+function addCurrentVerticalTiltCharacteristic(service) {
+    addCurrentTiltCharacteristic.bind(this)(service,
+        service.getCharacteristic(this.Characteristic.CurrentVerticalTiltAngle),
+        {
+            item: CURRENT_TARGET_POSITION_CONFIG.verticalTiltItem,
+            rangeStart: CURRENT_TARGET_POSITION_CONFIG.verticalTiltItemRangeStart,
+            rangeEnd: CURRENT_TARGET_POSITION_CONFIG.verticalTiltItemRangeEnd
+        }
+    );
+}
+
+function addTargetVerticalTiltCharacteristic(service) {
+    addTargetTiltCharacteristic.bind(this)(service,
+        service.getCharacteristic(this.Characteristic.TargetVerticalTiltAngle),
+        {
+            item: CURRENT_TARGET_POSITION_CONFIG.verticalTiltItem,
+            rangeStart: CURRENT_TARGET_POSITION_CONFIG.verticalTiltItemRangeStart,
+            rangeEnd: CURRENT_TARGET_POSITION_CONFIG.verticalTiltItemRangeEnd
+        }
+    );
+}
 
 function addCurrentPositionCharacteristic(service) {
     let item, itemType, inverted, multiplier;
@@ -174,6 +258,10 @@ module.exports = {
     addCurrentPositionCharacteristic,
     addTargetPositionCharacteristic,
     addHoldPositionCharacteristic,
-    addPositionStateCharacteristic
+    addPositionStateCharacteristic,
+    addCurrentHorizontalTiltCharacteristic,
+    addTargetHorizontalTiltCharacteristic,
+    addCurrentVerticalTiltCharacteristic,
+    addTargetVerticalTiltCharacteristic
 };
 
