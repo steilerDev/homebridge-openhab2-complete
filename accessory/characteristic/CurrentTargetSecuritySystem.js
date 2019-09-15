@@ -14,7 +14,7 @@ const securitySystemTransformation = {
     NightArm: 2,
     2: "NightArm",
     Disarmed: 3,
-    3: "Disarmed: 3",
+    3: "Disarmed",
     AlarmTriggered: 4,
     4: "AlarmTriggered"
 };
