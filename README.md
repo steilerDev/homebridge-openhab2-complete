@@ -217,38 +217,17 @@ This service describes a security system.
 {
     "name": "An items name, as shown in Homekit later",
     "type": "security"
-    "homeItem": "Itemname-within-OpenHAB",
-    "homeItemInverted": "false",
-    "awayItem": "Itemname-within-OpenHAB",
-    "awayItemInverted": "false",
-    "sleepItem": "Itemname-within-OpenHAB",
-    "sleepItemInverted": "false",
-    "alarmItem": "Itemname-within-OpenHAB",
-    "alarmItemInverted": "false"
+    "item": "Itemname-within-OpenHAB",
 }
 ```
-* `homeItem` *(optional)*: The openHAB item representing if the system is in home mode
-  * Needs to be of type `Switch` within openHAB
-* `homeItemInverted` *(optional)*: If `homeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-* `awayItem` *(optional)*: The openHAB item representing if the system is in away mode
-  * Needs to be of type `Switch` within openHAB
-* `awayItemInverted` *(optional)*: If `awayItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-* `sleepItem` *(optional)*: The openHAB item representing if the system is in sleep mode
-  * Needs to be of type `Switch` within openHAB
-* `sleepItemInverted` *(optional)*: If `sleepItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-* `alarmItem` *(optional)*: The openHAB item representing if the system is currently sounding an alarm
-  * Needs to be of type `Switch` within openHAB
-* `alarmItemInverted` *(optional)*: If `alarmItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-
-Each item (`homeItem`, `awayItem`, `sleepItem`, `alarmItem`) is optional, only one of them needs to be defined. When switching between the states (`Home Armed`, `Away Armed`, `Sleep Armed` & `Off`) the respective item gets turned on and all other will be turned off. The state of the system is determined which item in the order `alarmItem` -> `homeItem` -> `awayItem` -> `sleepItem` is turned on first, if all items are off the state is `OFF`.
+* `item`: The openHAB item representing the state of the security system
+  * Needs to be of type `String` within openHAB
+  * Allowed values (Every other value will be ignored and shown as an error)
+    * `StayArm`: The home is occupied and the residents are active, shown as `Home` in the Home.app
+    * `AwayArm`: The home is unoccupied, shown as `Away` in the Home.app
+    * `NightArm`: The home is occupied and the residents are sleeping, shown as `Night` in the Home.app
+    * `Disarmed`: The security system is disabled, shown as `Off` in the Home.app
+    * `AlarmTriggered`: The security alarm is triggered
 
 ### Thermostat
 This service describes a thermostat.

@@ -12,6 +12,7 @@
 * Reworked light based on issues #13 and #43
 * Added numeric battery state and battery warnings for _every_ accessory type
 * Added vertical and horizontal tilt angle's for `Window Covering`'s slats
+* Reworked `Security System` behaviour, using a single `String` item in comparision to a complex `Switch` construct
 
 Issues:
 * Closes #9
@@ -27,6 +28,7 @@ Issues:
 **Breaking changes**:
 * Changed `item` to `currentTempItem` within `temp` accessory
 * `Valve` and `Faucet` configuration and requirements changed significantly, consult the relevant section in the `README.md`
+* `Security System` moved to a single `String` item within OpenHAB
 
 ### V0.10.2
 * Fixed minor issues from Github.
