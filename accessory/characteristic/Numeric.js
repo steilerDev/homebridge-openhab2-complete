@@ -7,7 +7,7 @@ const NUMERIC_CONFIG = {
 };
 
 function addNumericSensorCharacteristic(service, characteristic, CONF_MAP, optional) {
-    addNumericSensorCharacteristicWithTransformation(service, characteristic, CONF_MAP, parseFloat, optional);
+    addNumericSensorCharacteristicWithTransformation.bind(this)(service, characteristic, CONF_MAP, parseFloat, optional);
 }
 
 function addNumericSensorCharacteristicWithTransformation(service, characteristic, CONF_MAP, transformation, optional) {
