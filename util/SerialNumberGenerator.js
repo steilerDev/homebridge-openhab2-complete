@@ -11,7 +11,7 @@ function generate(name, type) {
     const s = hash.digest('hex');
     let i = -1;
 
-    return 'xxxxxxxxxxxx'.replace(/[x]/g, () => s[++i]).toUpperCase();
+    return 'xxxxxxxxxxxxxxxxxxxxx'.replace(/[x]/g, () => s[++i]).toUpperCase();
 }
 
 module.exports = {generate};

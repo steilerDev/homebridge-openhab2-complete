@@ -30,7 +30,6 @@ const OpenHABComplete = class {
             this._platform = {
                 openHAB: new OpenHAB(config.host, config.port, log),
                 api:  api,
-                community: require('hap-nodejs-community-types')(api),
                 log: log
             };
         }
