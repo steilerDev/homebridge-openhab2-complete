@@ -33,7 +33,7 @@ class Accessory {
 
     // Called by homebridge
     identify(callback) {
-        this._log.debug(`Identify request received!`);
+        this._log.debug(`Identify request received for: ${JSON.stringify(this._config)}`);
         callback();
     }
 

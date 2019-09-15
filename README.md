@@ -977,7 +977,6 @@ If you would like to contribute just send me a pull request. In order to add a n
    
 My accessories are using centrally defined characteristics inside `./accessory/characteristic`. See `NumericSensor.js` for a simple characteristic implementation and `TemperatureSensor.js` for a simple accessory using this characteristic. This is not a requirement, but highly recommended. 
 
-
 ## Comparision
 | [homebridge-openhab2 plugin](https://www.npmjs.com/package/homebridge-openhab2) | openHAB2 - Complete Edition
 --- | --- 
@@ -990,3 +989,16 @@ Light item in openHAB gets triggered multiple times from single user interaction
 No support for items with notification capabilities | Many HomeKit services can notify the user about a state change. Those accessories are only supported in this plugin
 
 Concluding, I personally might only consider using the [OpenHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) in smaller, less diverse installations. However my own installation has a a lot of different device types, that I want to fully include in HomeKit, therefore this plugin is the only feasible way for me and everyone alike.
+
+# Acknowledgments
+First of all, a massive thank you to all the users of this plugin, seeing so many positive responses to my work keeps me going and improving!
+
+A couple of people helped me test this piece of software and by opening issues, pointing me into new and interesting directions and showing me ways to improve this plugin. A couple of them are very persistent and I want to thank you guys:
+* Pieter Janssens (@piejanssens) for his [kind words on the openHAB community forum](https://community.openhab.org/t/homekit-holy-grail-homebridge-openhab2-complete/66167)
+* Grzegorz (@grzegorz914) for providing quick feedback and opening a couple of helpful PR's
+* @EjvindHald for at least the same amount of feedback
+* Honorable mentions for finding my bugs and opening great, helpful and responsive issues:
+  * @hartmood
+  * @maisun
+  * @apfelflo89
+  * @CHTHSCH
