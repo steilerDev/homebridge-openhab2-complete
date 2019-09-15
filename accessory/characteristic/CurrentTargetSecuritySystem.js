@@ -1,6 +1,6 @@
 'use strict';
 
-const {setState} = require('../../util/Util');
+const {setState, getState} = require('../../util/Util');
 
 const CURRENT_TARGET_SECURITY_CONFIG = {
     item: "item"
