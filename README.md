@@ -154,8 +154,44 @@ The following services are also defined by the HomeKit protocol, but since I don
 * Doorbell
 * Stateless Programmable Switch
 
-## Configuration for every service
-Every Service can be configured to show battery warnings and battery levels. The following configuration can be optionally added to every item:
+## Configuration for every accessory
+### Grouping
+Since iOS 13 multiple accessories can be grouped within a single accessory. This can be -as far as I have tested- done in an arbitrary way. The syntax to define a grouped item is as follows:
+```
+{
+    {
+        "type": "group",
+        "name": "Group Name",
+        "model": "Group Type Model",
+        "batteryItem": "Itemname-within-OpenHAB",
+        "batteryItemThreshold": "20",
+        "items": [
+            {
+                "type": "homebridge-openhab2-complete item type",
+                "name": "An items name, as shown in Homekit later",
+                "item": "Itemname-within-OpenHAB"
+            }, {
+                "type": "homebridge-openhab2-complete item type",
+                "items": [
+                    {
+                        "name": "An items name, as shown in Homekit later",
+                        "item": "Itemname-within-OpenHAB",
+                    }, {
+                        ...
+                    }
+                ]
+            }
+        ]
+    }
+```
+* `type`: Needs to be `"group"`
+* `name`: The name as shown in HomeKit later (in some instances I have experienced that this name is dropped in favor of the first item's name)
+* `model` *(optional)*: A model description, defining the grouping. This is only shown in the expanded settings of the group.
+* `batteryItem`, `batteryItemThreshold`, ... *(optional)*: A battery service can only be defined on the most upper level for the whole group. See [Battery Levels and Warnings](#battery-levels-and-warnings) for more information on the syntax. All `BatteryServices` defined in the `items` array will be ignored!
+* `items`: An array of item definitions. As shown in the example, the different items will be defined here, as if they were outside of the group, either through single item definition or multiple definitions of the same type in a sub-array. Those configuration styles can be combined!
+
+### Battery Levels and Warnings
+Every accessory can be configured to show battery warnings and battery levels. The following configuration can be optionally added to every item:
 ```
 {
     "batteryItem": "Itemname-within-OpenHAB",

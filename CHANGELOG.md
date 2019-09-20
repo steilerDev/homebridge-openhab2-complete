@@ -4,6 +4,11 @@
 * Code audit & documentation
 
 ## Changelog
+
+### V1.1.0
+* Updated Readme to fix typo's
+* Added possibility to arbitrary group items using the grouping feature of iOS 13
+
 ### V1.0.0
 * Updated Readme to fix typo's
 * Valve and Faucet should now be able to change state of openHAB item (changed configuration and requirements for Valve and Faucet items, see README)
