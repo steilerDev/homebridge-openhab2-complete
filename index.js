@@ -129,13 +129,12 @@ const OpenHABComplete = class {
                         throw new Error(`Invalid configuration: Accessory name is undefined: ${JSON.stringify(configuration)}`);
                     }
 
+                    this._log.debug(`Found accessory group in config: '${groupAccessoryConfig.name}' (${configuration.model})`);
                     let accessoryGroup = [];
 
                     // Get all accessory from the group
                     for (let i = 0; i < configuration.items.length; i++) {
-                        let accessoryConfiguration = configuration.items[i];
-                        accessoryConfiguration.type = configuration.type;
-                        let accessory = this.parseAccessoryConfiguration(accessoryConfiguration);
+                        let accessory = this.parseAccessoryConfiguration(configuration.items[i]);
                         if (accessory !== undefined) {
                             if (accessory instanceof Array) {
                                 accessoryGroup = accessoryGroup.concat(accessory);
