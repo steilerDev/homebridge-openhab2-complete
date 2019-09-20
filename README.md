@@ -204,7 +204,7 @@ This service describes a fan.
 {
     "name": "An items name, as shown in Homekit later",
     "type": "fan",
-    "item": "Itemname-within-OpenHAB",
+    "item": "Itemname-within-OpenHAB"
 }
 ```
 * `item`: The openHAB item controlled by this accessory
@@ -216,8 +216,8 @@ This service describes a security system.
 ```
 {
     "name": "An items name, as shown in Homekit later",
-    "type": "security"
-    "item": "Itemname-within-OpenHAB",
+    "type": "security",
+    "item": "Itemname-within-OpenHAB"
 }
 ```
 * `item`: The openHAB item representing the state of the security system
@@ -245,7 +245,7 @@ This service describes a thermostat.
     "tempUnit": "Celsius",
     "heatingThresholdTempItem": "Itemname-within-OpenHAB",
     "coolingThresholdTempItem": "Itemname-within-OpenHAB",
-    "modeItem": "Itemname-within-OpenHAB",
+    "modeItem": "Itemname-within-OpenHAB"
 }
 ```
 * `currentTempItem`: The openHAB item representing the current temperature as measured by the thermostat
@@ -345,8 +345,8 @@ This service describes a heater and/or cooler accessory.
     "coolingThresholdTempItem": "Itemname-within-OpenHAB",
     "swingItem": "Itemname-within-OpenHAB",
     "swingItemInverted": "false",
-    "rotationSpeedItem": "Itemname-within-OpenHAB"
-    "tempUnit": "Celsius",
+    "rotationSpeedItem": "Itemname-within-OpenHAB",
+    "tempUnit": "Celsius"
 }
 ```
 
@@ -513,7 +513,7 @@ This service describes motorized window coverings or shades - examples include s
     "inverted": "false",
     "multiplier": "1",
     "stateItem": "Itemname-within-OpenHAB",
-    "stateItemInverted": "false"
+    "stateItemInverted": "false",
     "stateItemMultiplier": "1",
     "manuMode": "false",
     "horizontalTiltItem": "Itemname-within-OpenHAB",
@@ -719,7 +719,7 @@ This service describes a temperature sensor.
     "name": "An items name, as shown in Homekit later",
     "type": "temp",
     "currentTempItem": "Itemname-within-OpenHAB",
-    "tempUnit": "Celsius",
+    "tempUnit": "Celsius"
 }
 ```
 * `currentTempItem`: The openHAB item representing the current temperature
@@ -735,7 +735,7 @@ This service describes a humidity sensor.
 {
     "name": "An items name, as shown in Homekit later",
     "type": "humidity",
-    "item": "Itemname-within-OpenHAB",
+    "item": "Itemname-within-OpenHAB"
 }
 ```
 * `item`: The openHAB item representing the current humidity 
@@ -748,7 +748,7 @@ This service describes a light sensor.
 {
     "name": "An items name, as shown in Homekit later",
     "type": "lux",
-    "item": "Itemname-within-OpenHAB",
+    "item": "Itemname-within-OpenHAB"
 }
 ```
 * `item`: The openHAB item representing the current light in lux 
@@ -761,7 +761,7 @@ This service describes an air quality sensor.
 {
     "name": "An items name, as shown in Homekit later",
     "type": "air",
-    "item": "Itemname-within-OpenHAB",
+    "item": "Itemname-within-OpenHAB"
 }
 ```
 * `item`: The openHAB item representing the current air quality, referring to the cumulative air quality recorded by the accessory, which may be based on multiple sensors present.
@@ -825,7 +825,7 @@ This service describes a motion sensor.
     "name": "An items name, as shown in Homekit later",
     "type": "motion",
     "item": "Itemname-within-OpenHAB",
-    "inverted": "true",
+    "inverted": "true"
 }
 ```
 * `item`: The openHAB item showing, if motion is detected
@@ -842,7 +842,7 @@ This service describes an occupancy sensor.
     "name": "An items name, as shown in Homekit later",
     "type": "occupancy",
     "item": "Itemname-within-OpenHAB",
-    "inverted": "true",
+    "inverted": "true"
 }
 ```
 * `item`: The openHAB item showing, if occupancy is detected
@@ -859,7 +859,7 @@ This service describes a leak sensor.
     "name": "An items name, as shown in Homekit later",
     "type": "leak",
     "item": "Itemname-within-OpenHAB",
-    "inverted": "true",
+    "inverted": "true"
 }
 ```
 * `item`: The openHAB item showing, if a leak is detected
@@ -877,7 +877,7 @@ This service describes a carbon monoxide sensor.
     "type": "co",
     "item": "Itemname-within-OpenHAB",
     "inverted": "true",
-    "levelItem": "Itemname-within-OpenHAB",
+    "levelItem": "Itemname-within-OpenHAB"
 }
 ```
 * `item`: The openHAB item showing, if carbon monoxide is detected
@@ -897,7 +897,7 @@ This service describes a carbon dioxide sensor.
     "type": "co2",
     "item": "Itemname-within-OpenHAB",
     "inverted": "true",
-    "levelItem": "Itemname-within-OpenHAB",
+    "levelItem": "Itemname-within-OpenHAB"
 }
 ```
 * `item`: The openHAB item showing, if carbon dioxide is detected
@@ -916,7 +916,7 @@ This service describes a contact sensor.
     "name": "An items name, as shown in Homekit later",
     "type": "contact",
     "item": "Itemname-within-OpenHAB",
-    "inverted": "true",
+    "inverted": "true"
 }
 ```
 * `item`: The openHAB item showing, if contact is detected
@@ -933,7 +933,7 @@ This service describes a smoke sensor.
     "name": "An items name, as shown in Homekit later",
     "type": "smoke",
     "item": "Itemname-within-OpenHAB",
-    "inverted": "true",
+    "inverted": "true"
 }
 ```
 * `item`: The openHAB item showing, if smoke is detected
