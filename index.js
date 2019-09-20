@@ -8,6 +8,13 @@ const platformPrettyName = 'openHAB2-Complete';
 const SerialNumberGenerator = require('./util/SerialNumberGenerator');
 const {OpenHAB} = require('./util/OpenHAB');
 
+const {Accessory} = require('./util/Accessory');
+
+const UUID = {
+    AccessoryInformationService: "0000003E-0000-1000-8000-0026BB765291",
+    BatteryService: "00000096-0000-1000-8000-0026BB765291"
+};
+
 module.exports = (homebridge) => {
     homebridge.registerPlatform(platformName, platformPrettyName, OpenHABComplete);
 };
@@ -83,7 +90,14 @@ const OpenHABComplete = class {
         const configuration = this._config.accessories;
         this._log.info(`Loading accessories from configuration, this might take a while...`);
         configuration.forEach(function(acc) {
-            this.parseAccessoryConfiguration(acc, _accessories);
+            let accessory = this.parseAccessoryConfiguration(acc, _accessories);
+            if(accessory !== undefined) {
+                if(accessory instanceof Array) {
+                    _accessories = _accessories.concat(accessory);
+                } else {
+                    _accessories.push(accessory);
+                }
+            }
         }.bind(this));
         this._platform.openHAB.startSubscription();
         this._platform.openHAB.syncItemValues();
@@ -92,38 +106,110 @@ const OpenHABComplete = class {
         callback(_accessories);
     }
 
-    parseAccessoryConfiguration(configuration, accessories) {
+    parseAccessoryConfiguration(configuration) {
         try {
             if (!(configuration.type)) {
                 throw new Error(`Invalid configuration: Accessory type is undefined: ${JSON.stringify(configuration)}`);
             }
 
-            const factory = this._factories[configuration.type];
-            if (factory === undefined) {
-                throw new Error(`Invalid configuration: Accessory type is unknown: ${configuration.type}`);
-            }
+            if(configuration.type === "group") {
+                if(configuration.items && configuration.items instanceof Array) {
+                    let groupAccessoryConfig = {};
 
-            if(configuration.items && configuration.items instanceof Array) {
-                configuration.items.forEach(function(acc) {
-                    acc.type = configuration.type;
-                    this.parseAccessoryConfiguration(acc, accessories);
-                }.bind(this));
-            } else {
-                if (configuration.name) {
-                    configuration.serialNumber = SerialNumberGenerator.generate(configuration.name, configuration.type);
+                    if (configuration.name) {
+                        groupAccessoryConfig.serialNumber = SerialNumberGenerator.generate(configuration.name, configuration.type);
+                        groupAccessoryConfig.name = configuration.name;
+                        groupAccessoryConfig.version = version;
+                        if (configuration.model) {
+                            groupAccessoryConfig.model = configuration.model;
+                        } else {
+                            groupAccessoryConfig.model = "Generic accessory group"
+                        }
+                    } else {
+                        throw new Error(`Invalid configuration: Accessory name is undefined: ${JSON.stringify(configuration)}`);
+                    }
+
+                    let accessoryGroup = [];
+
+                    // Get all accessory from the group
+                    for (let i = 0; i < configuration.items.length; i++) {
+                        let accessoryConfiguration = configuration.items[i];
+                        accessoryConfiguration.type = configuration.type;
+                        let accessory = this.parseAccessoryConfiguration(accessoryConfiguration);
+                        if (accessory !== undefined) {
+                            if (accessory instanceof Array) {
+                                accessoryGroup = accessoryGroup.concat(accessory);
+                            } else {
+                                accessoryGroup.push(accessory);
+                            }
+                        }
+                    }
+
+                    // Merge all provided services, except battery and accessory information services
+                    let groupAccessoryServices = [];
+                    for (let i = 0; i < accessoryGroup.length; i++) {
+                        let groupedAccessory = accessoryGroup[i];
+                        for (let n = 0; n < groupedAccessory._services.length; n++) {
+                            let groupedService = groupedAccessory._services[n];
+                            if (groupedService.UUID === UUID.AccessoryInformationService) {
+                                this._log.debug(`Ignoring Accessory Information Service for grouped accessory ${groupAccessoryConfig.name}`)
+                            } else if (groupedService.UUID === UUID.BatteryService) {
+                                this._log.debug(`Ignoring Battery Service for grouped accessory ${groupAccessoryConfig.name}`)
+                            } else {
+                                groupAccessoryServices.push(groupedService);
+                            }
+                        }
+                    }
+                    this._log.debug(`Creating grouped accessory ${groupAccessoryConfig.name} with ${accessoryGroup.length} accessories and ${groupAccessoryServices.length} services`);
+                    let groupAccessory = new Accessory(this._platform, groupAccessoryConfig);
+                    groupAccessory._services = groupAccessoryServices;
+                    groupAccessory._services.unshift(groupAccessory._getAccessoryInformationService(groupAccessoryConfig.model));
+                    return groupAccessory;
                 } else {
-                    throw new Error(`Invalid configuration: Accessory name is undefined: ${JSON.stringify(configuration)}`);
+                   throw new Error(`Invalid configuration: Accessory group does not define items: ${JSON.stringify(configuration)}`);
+                }
+            } else {
+                // Not an accessory group
+                const factory = this._factories[configuration.type];
+                if (factory === undefined) {
+                    throw new Error(`Invalid configuration: Accessory type is unknown: ${configuration.type}`);
                 }
 
-                this._log.debug(`Found accessory in config: '${configuration.name}' (${configuration.type})`);
-                configuration.version = version;
-                // Checked that: 'serialNumber' 'version' 'name' exists and 'type' is valid
-                const accessory = factory(this._platform, configuration);
-                accessories.push(accessory);
-                this._log(`Added accessory ${configuration.name} (Type: ${configuration.type})`);
+                //
+                // Multiple items of the same type grouped in a configuration array
+                //
+                if(configuration.items && configuration.items instanceof Array) {
+                    let accessoryTypeGroup = [];
+                    for (let i = 0; i < configuration.items.length; i++) {
+                        let accessoryConfiguration = configuration.items[i];
+                        accessoryConfiguration.type = configuration.type;
+                        let accessory = this.parseAccessoryConfiguration(accessoryConfiguration);
+                        if(accessory !== undefined) {
+                            accessoryTypeGroup.push(accessory);
+                        }
+                    }
+                    return accessoryTypeGroup;
+                } else {
+                    //
+                    // Single item
+                    //
+                    if (configuration.name) {
+                        configuration.serialNumber = SerialNumberGenerator.generate(configuration.name, configuration.type);
+                    } else {
+                        throw new Error(`Invalid configuration: Accessory name is undefined: ${JSON.stringify(configuration)}`);
+                    }
+
+                    this._log.debug(`Found accessory in config: '${configuration.name}' (${configuration.type})`);
+                    configuration.version = version;
+                    // Checked that: 'serialNumber' 'version' 'name' exists and 'type' is valid
+                    const accessory = factory(this._platform, configuration);
+                    this._log(`Added accessory ${configuration.name} (Type: ${configuration.type})`);
+                    return accessory;
+                }
             }
         } catch (e) {
             this._log.warn(`Unable to add accessory ${configuration.name}: ${e}, skipping`);
+            return undefined;
         }
     }
 };
