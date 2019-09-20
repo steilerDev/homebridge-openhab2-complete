@@ -139,6 +139,7 @@ class Accessory {
             addBatteryWarningCharacteristic.bind(this)(batteryService);
             addChargingStateCharacteristic.bind(this)(batteryService);
             addBatteryLevelCharacteristic.bind(this)(batteryService);
+            this._log.debug(`Configured battery service for ${this.name}!`);
             return batteryService;
         } catch(e) {
             this._log.debug(`Not configuring battery service for ${this.name}: ${e.message}`);

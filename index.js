@@ -168,10 +168,11 @@ const OpenHABComplete = class {
                             }
                         }
                     }
-                    this._log.debug(`Creating grouped accessory ${groupAccessoryConfig.name} with ${accessoryGroup.length} accessories and ${groupAccessoryServices.length} services`);
+                    this._log.debug(`Creating grouped accessory ${groupAccessoryConfig.name} (${configuration.model}) with ${accessoryGroup.length} accessories and ${groupAccessoryServices.length} services`);
                     let groupAccessory = new Accessory(this._platform, groupAccessoryConfig);
-                    groupAccessory._services = groupAccessoryServices;
+                    groupAccessory._services = groupAccessory._services.concat(groupAccessoryServices);
                     groupAccessory._services.unshift(groupAccessory._getAccessoryInformationService(groupAccessoryConfig.model));
+                    this._log.info(`Created grouped accessory ${groupAccessoryConfig.name} (${configuration.model}) with ${accessoryGroup.length} accessories and ${groupAccessoryServices.length} services`);
                     return groupAccessory;
                 } else {
                    throw new Error(`Invalid configuration: Accessory group does not define items: ${JSON.stringify(configuration)}`);
