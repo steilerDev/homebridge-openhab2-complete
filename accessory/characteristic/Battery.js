@@ -119,5 +119,6 @@ function addChargingStateCharacteristic(service) {
 module.exports = {
     addBatteryWarningCharacteristic,
     addChargingStateCharacteristic,
-    addBatteryLevelCharacteristic
+    addBatteryLevelCharacteristic,
+    BATTERY_CONFIG
 };

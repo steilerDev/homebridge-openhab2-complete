@@ -15,6 +15,8 @@ const UUID = {
     BatteryService: "00000096-0000-1000-8000-0026BB765291"
 };
 
+const {BATTERY_CONFIG} = require('./accessory/characteristic/Battery');
+
 module.exports = (homebridge) => {
     homebridge.registerPlatform(platformName, platformPrettyName, OpenHABComplete);
 };
@@ -125,6 +127,12 @@ const OpenHABComplete = class {
                         } else {
                             groupAccessoryConfig.model = "Generic Accessory Group"
                         }
+                        // Merging battery items
+                        groupAccessoryConfig[BATTERY_CONFIG.batteryItem] = configuration[BATTERY_CONFIG.batteryItem];
+                        groupAccessoryConfig[BATTERY_CONFIG.batteryItemInverted] = configuration[BATTERY_CONFIG.batteryItemInverted];
+                        groupAccessoryConfig[BATTERY_CONFIG.batteryItemThreshold] = configuration[BATTERY_CONFIG.batteryItemThreshold];
+                        groupAccessoryConfig[BATTERY_CONFIG.batteryItemChargingState] = configuration[BATTERY_CONFIG.batteryItemChargingState];
+                        groupAccessoryConfig[BATTERY_CONFIG.batteryItemChargingStateInverted] = configuration[BATTERY_CONFIG.batteryItemChargingState];
                     } else {
                         throw new Error(`Invalid configuration: Accessory name is undefined: ${JSON.stringify(configuration)}`);
                     }
