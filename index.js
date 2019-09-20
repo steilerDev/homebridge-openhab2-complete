@@ -163,6 +163,7 @@ const OpenHABComplete = class {
                     let groupAccessory = new Accessory(this._platform, groupAccessoryConfig);
                     groupAccessory._services = groupAccessoryServices;
                     groupAccessory._services.unshift(groupAccessory._getAccessoryInformationService(groupAccessoryConfig.model));
+                    this._log.warn(`Created grouped item with services: ${JSON.stringify(groupAccessory._services, undefined, 2)}`);
                     return groupAccessory;
                 } else {
                    throw new Error(`Invalid configuration: Accessory group does not define items: ${JSON.stringify(configuration)}`);
