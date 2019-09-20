@@ -123,7 +123,7 @@ const OpenHABComplete = class {
                         if (configuration.model) {
                             groupAccessoryConfig.model = configuration.model;
                         } else {
-                            groupAccessoryConfig.model = "Generic accessory group"
+                            groupAccessoryConfig.model = "Generic Accessory Group"
                         }
                     } else {
                         throw new Error(`Invalid configuration: Accessory name is undefined: ${JSON.stringify(configuration)}`);
@@ -155,6 +155,7 @@ const OpenHABComplete = class {
                             } else if (groupedService.UUID === UUID.BatteryService) {
                                 this._log.debug(`Ignoring Battery Service for grouped accessory ${groupAccessoryConfig.name}`)
                             } else {
+                                groupedService.subtype = `Type ${n}`;
                                 groupAccessoryServices.push(groupedService);
                             }
                         }
