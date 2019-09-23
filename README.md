@@ -96,6 +96,11 @@ The following is a list of all services that are currently supported and which v
     * Homebridge configuration type: `heatercooler`
   * [Air Purifier](#air-purifier)
     * Homebridge configuration type: `airpurifier`
+* Audio Accessories:
+  * [Speaker](#speaker)
+    * Homebridge configuration type: `speaker`
+  * [Microphone](#microphone)
+    * Homebridge configuration type: `microphone`
 * Watering Accessories:
   * [Faucet](#faucet)
     * Homebridge configuration type: `faucet`
@@ -149,7 +154,6 @@ The following is a list of all services that are currently supported and which v
     * Homebridge configuration type: `filter`
   
 The following services are also defined by the HomeKit protocol, but since I don't know a good way to map them to openHAB items, I currently don't plan to implement them. Let me know if you have any ideas, by opening an issue!
-* Slat
 * Microphone
 * Speaker
 * Camera RTP Stream Management
@@ -221,7 +225,7 @@ Every accessory can be configured to show battery warnings and battery levels. T
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
   
-
+## Available accessory types
 ### Lightbulb
 This service describes a lightbulb.
 
@@ -451,6 +455,46 @@ This service describes an air purifier accessory.
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `rotationSpeedItem`: *(optional)* The openHAB item representing the rotation speed
+  * Needs to be of type `Number` within openHAB
+
+### Speaker
+This service is used to control the audio output settings on a speaker device.
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "speaker",
+    "muteItem": "Itemname-within-OpenHAB",
+    "muteItemInverted": "true",
+    "volumeItem": "Itemname-within-OpenHAB"
+    
+}
+```
+* `muteItem`: The openHAB item showing, if the speaker is muted
+  * Needs to be of type `Switch` within openHAB
+* `muteItemInverted` *(optional)*: If `muteItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `volumeItem` *(optional)*: The openHAB item controlling the speaker's volume
+  * Needs to be of type `Number` within openHAB
+  
+### Microphone
+This service is used to control the audio input settings on an audio device (primarily used for microphones).
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "microphone",
+    "muteItem": "Itemname-within-OpenHAB",
+    "muteItemInverted": "true",
+    "volumeItem": "Itemname-within-OpenHAB"
+    
+}
+```
+* `muteItem`: The openHAB item showing, if the microphone is muted
+  * Needs to be of type `Switch` within openHAB
+* `muteItemInverted` *(optional)*: If `muteItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `volumeItem` *(optional)*: The openHAB item controlling the microphone's volume
   * Needs to be of type `Number` within openHAB
 
 ### Faucet

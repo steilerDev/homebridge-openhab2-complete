@@ -1,6 +1,6 @@
 # Changelog of homebridge-openhab2-complete
 ## Roadmap
-### V1.1.0 (planned)
+### V1.2.0 (planned)
 * Code audit & documentation
 
 ## Changelog
@@ -9,6 +9,7 @@
 * Updated Readme to fix typo's
 * Added possibility to arbitrary group items using the grouping feature of iOS 13
 * Added slat type accessory
+* Added audio type accessories: Microphone & Speaker
 
 ### V1.0.0
 * Updated Readme to fix typo's

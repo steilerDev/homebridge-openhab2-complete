@@ -13,7 +13,7 @@ const CLIMATE_CONFIG = {
     coolingThresholdTempItem: "coolingThresholdTempItem",
     dehumidifierThresholdItem: "dehumidifierThresholdItem",
     humidifierThresholdItem: "humidifierThresholdItem",
-    tempUnit: "tempUnit", // 'Celsius' (default), 'Fahrenheit'
+    tempUnit: "tempUnit" // 'Celsius' (default), 'Fahrenheit'
 };
 
 function addWaterLevelCharacteristic(service, optional) {

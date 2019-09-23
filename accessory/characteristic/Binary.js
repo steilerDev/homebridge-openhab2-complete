@@ -162,5 +162,6 @@ module.exports = {
     addObstructionDetectedCharacteristic,
     addOnCharacteristic,
     addActiveCharacteristic,
-    addBinarySensorCharacteristicWithTransformation
+    addBinarySensorCharacteristicWithTransformation,
+    addBinarySensorActorCharacteristicWithTransformation
 };
