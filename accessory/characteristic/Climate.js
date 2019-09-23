@@ -84,8 +84,7 @@ function addTemperatureDisplayUnitsCharacteristic(service) {
     }
 
     service.getCharacteristic(this.Characteristic.TemperatureDisplayUnits)
-        .on('get', function(callback) { callback(null, this._tempUnit) }.bind(this))
-        .on('set', function(_, callback) { callback() }.bind(this));
+        .setValue(this._tempUnit);
 }
 
 module.exports = {

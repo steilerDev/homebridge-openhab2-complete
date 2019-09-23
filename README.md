@@ -114,6 +114,8 @@ The following is a list of all services that are currently supported and which v
     * Homebridge configuration type: `lock`
   * [Garage Door Opener](#garage-door-opener)
     * Homebridge configuration type: `garage`
+  * [Slat](#slat)
+    * Homebridge configuration type: `slat`
 * Numeric Sensors:
   * [Temperature Sensor](#temperature-sensor)
     * Homebridge configuration type: `temp`
@@ -746,6 +748,47 @@ This service describes a garage door opener tat controls a single door. If a gar
 * `obstructionItemInverted` *(optional)*: If `obstructionItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+  
+### Slat 
+This service describes a slat which tilts on a vertical or a horizontal axis.
+
+```
+{
+    "name": "An items name, as shown in Homekit later",
+    "type": "slat",
+    "stateItem": "Itemname-within-OpenHAB",
+    "stateItemInverted": "false",
+    "item": "Itemname-within-OpenHAB",
+    "itemRangeStart: "itemRangeStart",
+    "itemRangeEnd: "itemRangeEnd",
+    "slatType": "horizontal"
+}
+```
+* `stateItem`: The openHAB item describing the current state. The state can be `Fixed` or `Swinging`.
+  * Needs to be of type `Switch` or `Contact` within openHAB
+  * By default, `OPEN` or `ON` represents a swinging state, and `CLOSED` or `OFF` a fixed state.
+* `stateItemInverted` *(optional)*: If `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+* `item` *(optional)*: The openHAB item representing the tilt angle of the slat, if the user can set the slats to a particular tilt angle.
+  * Needs to be of type `Number` within openHAB
+  * Allowed value range: `-90` to `90` (for different ranges, see `itemRangeStart` and `itemRangeEnd`):
+    * A value of 0 indicates that the slats are rotated to a fully open position
+    * If `slatType` is `vertical`:
+      * A value of -90 indicates that the slats are rotated all the way in a direction where the user-facing edge is higher than the window-facing edge
+      * A value of 90 indicates that the slats are rotated all the way in a direction where the window-facing edge is higher than the user-facing edge
+    * If `slatType` is `horizontal`:
+      * A value of -90 indicates that the slats are rotated all the way in a direction where the user-facing edge is to the left of the window-facing edge
+      * A value of 90 indicates that the slats are rotated all the way in a direction where the user-facing edge is to the right of the window-facing edge
+* `itemRangeStart` *(optional)*: If the range of the openHAB item does not start at `-90` (e.g. if the angle is represented in percent from 0 to 100) set this value. The range will be mapped linearly.
+  * Default: `"-90"`
+  * Allowed values: All integers
+* `itemRangeEnd` *(optional)*: If the range of the openHAB item does not end at `90` (e.g. if the angle is represented in percent from 0 to 100) set this value. The range will be mapped linearly.
+  * Default: `"90"`
+  * Allowed values: All integers
+* `slatType` *(optional)*: Describes the type of slats
+  * Default: `horizontal`
+  * Allowed values: `horizontal` & `vertical`
   
 ### Temperature Sensor
 This service describes a temperature sensor.

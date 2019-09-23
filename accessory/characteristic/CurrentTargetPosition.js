@@ -20,7 +20,7 @@ const CURRENT_TARGET_POSITION_CONFIG = {
     verticalTiltItemRangeEnd: "verticalTiltItemRangeEnd"
 };
 
-function addCurrentTiltCharacteristic(service, characteristic, CONF_MAP) {
+function addCurrentTiltCharacteristic(service, characteristic, CONF_MAP, optional) {
     let rangeStart = isNaN(parseFloat(this._config[CONF_MAP.rangeStart])) ? -90 : parseFloat(this._config[CONF_MAP.rangeStart]);
     let rangeEnd = isNaN(parseFloat(this._config[CONF_MAP.rangeEnd])) ? 90 : parseFloat(this._config[CONF_MAP.rangeEnd]);
     const rangeStartHAP = -90;
@@ -31,11 +31,11 @@ function addCurrentTiltCharacteristic(service, characteristic, CONF_MAP) {
         characteristic,
         {item: CONF_MAP.item},
         mapRanges.bind(this, rangeStart, rangeEnd, rangeStartHAP, rangeEndHAP),
-        true
+        optional
     );
 }
 
-function addTargetTiltCharacteristic(service, characteristic, CONF_MAP) {
+function addTargetTiltCharacteristic(service, characteristic, CONF_MAP, optional) {
     let rangeStart = isNaN(parseFloat(this._config[CONF_MAP.rangeStart])) ? -90 : parseFloat(this._config[CONF_MAP.rangeStart]);
     let rangeEnd = isNaN(parseFloat(this._config[CONF_MAP.rangeEnd])) ? 90 : parseFloat(this._config[CONF_MAP.rangeEnd]);
     const rangeStartHAP = -90;
@@ -47,7 +47,7 @@ function addTargetTiltCharacteristic(service, characteristic, CONF_MAP) {
         {item: CONF_MAP.item},
         mapRanges.bind(this, rangeStartHAP, rangeEndHAP, rangeStart, rangeEnd),
         mapRanges.bind(this, rangeStart, rangeEnd, rangeStartHAP, rangeEndHAP),
-        true
+        optional
     );
 }
 
@@ -70,7 +70,8 @@ function addCurrentHorizontalTiltCharacteristic(service) {
             item: CURRENT_TARGET_POSITION_CONFIG.horizontalTiltItem,
             rangeStart: CURRENT_TARGET_POSITION_CONFIG.horizontalTiltItemRangeStart,
             rangeEnd: CURRENT_TARGET_POSITION_CONFIG.horizontalTiltItemRangeEnd
-        }
+        },
+        true
     );
 }
 
@@ -81,7 +82,8 @@ function addTargetHorizontalTiltCharacteristic(service) {
             item: CURRENT_TARGET_POSITION_CONFIG.horizontalTiltItem,
             rangeStart: CURRENT_TARGET_POSITION_CONFIG.horizontalTiltItemRangeStart,
             rangeEnd: CURRENT_TARGET_POSITION_CONFIG.horizontalTiltItemRangeEnd
-        }
+        },
+        true
     );
 }
 
@@ -92,7 +94,8 @@ function addCurrentVerticalTiltCharacteristic(service) {
             item: CURRENT_TARGET_POSITION_CONFIG.verticalTiltItem,
             rangeStart: CURRENT_TARGET_POSITION_CONFIG.verticalTiltItemRangeStart,
             rangeEnd: CURRENT_TARGET_POSITION_CONFIG.verticalTiltItemRangeEnd
-        }
+        },
+        true
     );
 }
 
@@ -103,7 +106,8 @@ function addTargetVerticalTiltCharacteristic(service) {
             item: CURRENT_TARGET_POSITION_CONFIG.verticalTiltItem,
             rangeStart: CURRENT_TARGET_POSITION_CONFIG.verticalTiltItemRangeStart,
             rangeEnd: CURRENT_TARGET_POSITION_CONFIG.verticalTiltItemRangeEnd
-        }
+        },
+        true
     );
 }
 
@@ -269,6 +273,8 @@ module.exports = {
     addTargetPositionCharacteristic,
     addHoldPositionCharacteristic,
     addPositionStateCharacteristic,
+    addCurrentTiltCharacteristic,
+    addTargetTiltCharacteristic,
     addCurrentHorizontalTiltCharacteristic,
     addTargetHorizontalTiltCharacteristic,
     addCurrentVerticalTiltCharacteristic,

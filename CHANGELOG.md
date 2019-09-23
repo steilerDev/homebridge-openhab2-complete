@@ -8,6 +8,7 @@
 ### V1.1.0
 * Updated Readme to fix typo's
 * Added possibility to arbitrary group items using the grouping feature of iOS 13
+* Added slat type accessory
 
 ### V1.0.0
 * Updated Readme to fix typo's
