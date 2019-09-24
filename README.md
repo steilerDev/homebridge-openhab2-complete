@@ -3,7 +3,7 @@
 
 [![NPM](https://nodei.co/npm/homebridge-openhab2-complete.png)](https://nodei.co/npm/homebridge-openhab2-complete/)
 
-This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](https://www.openhab.org) fully supports all services offered by Apple's HomeKit Accessory Protocol (HAP), as far as it is feasible based on the item types offered by OpenHAB (see [below](#supported-hap-services) for the currently supported 29 accessories). In opposite to the existing [openHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) or the native [openHAB Homekit Plugin](https://www.openhab.org/addons/integrations/homekit/), this plugin requires explicit declaration of accessories in the homebridge configuration and does not use openHAB's tagging system, which leads to a little more effort during configuration, but proves more reliable and functional in more complex installations. See [Comparisson](#comparison) below.
+This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](https://www.openhab.org) fully supports all services offered by Apple's HomeKit Accessory Protocol (HAP), as far as it is feasible based on the item types offered by OpenHAB (see [below](#supported-hap-services) for the currently supported 32 accessories). In opposite to the existing [openHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) or the native [openHAB Homekit Plugin](https://www.openhab.org/addons/integrations/homekit/), this plugin requires explicit declaration of accessories in the homebridge configuration and does not use openHAB's tagging system, which leads to a little more effort during configuration, but proves more reliable and functional in more complex installations. See [Comparisson](#comparison) below.
 
 ## Installation
 *Note: Please install [homebridge](https://www.npmjs.com/package/homebridge) first.*
@@ -154,8 +154,6 @@ The following is a list of all services that are currently supported and which v
     * Homebridge configuration type: `filter`
   
 The following services are also defined by the HomeKit protocol, but since I don't know a good way to map them to openHAB items, I currently don't plan to implement them. Let me know if you have any ideas, by opening an issue!
-* Microphone
-* Speaker
 * Camera RTP Stream Management
 * Doorbell
 * Stateless Programmable Switch
@@ -459,6 +457,9 @@ This service describes an air purifier accessory.
 
 ### Speaker
 This service is used to control the audio output settings on a speaker device.
+
+**Note:** Even though `Speaker` is part of Apple's HAP specification, this accessory is shown as "not supported" in the Home.app.
+
 ```
 {
     "name": "An items name, as shown in Homekit later",
@@ -479,6 +480,8 @@ This service is used to control the audio output settings on a speaker device.
   
 ### Microphone
 This service is used to control the audio input settings on an audio device (primarily used for microphones).
+
+**Note:** Even though `Microphone` is part of Apple's HAP specification, this accessory is shown as "not supported" in the Home.app.
 ```
 {
     "name": "An items name, as shown in Homekit later",
@@ -795,6 +798,8 @@ This service describes a garage door opener tat controls a single door. If a gar
   
 ### Slat 
 This service describes a slat which tilts on a vertical or a horizontal axis.
+
+**Note:** Even though `Slat` is part of Apple's HAP specification, this accessory is shown as "not supported" in the Home.app.
 
 ```
 {
