@@ -285,7 +285,10 @@ This service describes a thermostat.
     "tempUnit": "Celsius",
     "heatingThresholdTempItem": "Itemname-within-OpenHAB",
     "coolingThresholdTempItem": "Itemname-within-OpenHAB",
-    "modeItem": "Itemname-within-OpenHAB"
+    "modeItem": "Itemname-within-OpenHAB",
+    "minTemp": "-100",
+    "maxTemp": "200",
+    "minStep": "0.1"
 }
 ```
 * `currentTempItem`: The openHAB item representing the current temperature as measured by the thermostat
@@ -311,21 +314,30 @@ This service describes a thermostat.
 * `tempUnit` *(optional)*: Gives the measurement unit of the thermostat. HomeKit always expects the input to be in degrees celsius, therefore specifying Fahrenheit as a unit, the plugin will convert the values to be shown correctly on the fly.
   * Default: `Celsius`
   * Allowed values: `Celsius` & `Fahrenheit`
-* `heatingThresholdTempItem`: *(optional)* The openHAB item describing the heating threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'minimum temperature' that mus be reached before heating is turned on.
+* `heatingThresholdTempItem` *(optional)*: The openHAB item describing the heating threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'minimum temperature' that mus be reached before heating is turned on.
   * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
   
     *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
-* `coolingThresholdTempItem`: *(optional)* The openHAB item describing the cooling threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'maximum temperature' that mus be reached before cooling is turned on.
+* `coolingThresholdTempItem` *(optional)*: The openHAB item describing the cooling threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'maximum temperature' that mus be reached before cooling is turned on.
   * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
   
     *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
-* `modeItem`: *(optional)* If your thermostat can be set to heating, cooling or auto mode through an item, and/or reports back its current configuration use this item, otherwise the heating/cooling capabilities are deferred from `heatingItem` and `coolingItem` and will not be changeable.
+* `modeItem` *(optional)*: If your thermostat can be set to heating, cooling or auto mode through an item, and/or reports back its current configuration use this item, otherwise the heating/cooling capabilities are deferred from `heatingItem` and `coolingItem` and will not be changeable.
   * Needs to be of type `Number` within openHAB
   * Only discrete values are recognized:
     * 0 ≙ `Off`
     * 1 ≙ `Heating`
     * 2 ≙ `Cooling`
     * 3 ≙ `Auto`
+* `minTemp` *(optional)*: If you need to change the minimum allowed temperature, the thermostat is reading
+  * Needs to be an float
+  * Default: `-100`
+* `maxTemp` *(optional)*: If you need to change the maximum allowed temperature, the thermostat is reading
+  * Needs to be a float
+  * Default: `200`
+* `minStep` *(optional)*: If you need to change the granularity of the temperature reading
+  * Needs to be a float
+  * Default: `0.1`
 
 ### Humidifier/Dehumidifier
 This service describes a humidifier and/or dehumidifier accessory.
@@ -889,7 +901,10 @@ This service describes a temperature sensor.
     "name": "An items name, as shown in Homekit later",
     "type": "temp",
     "currentTempItem": "Itemname-within-OpenHAB",
-    "tempUnit": "Celsius"
+    "tempUnit": "Celsius",
+    "minTemp": "-100",
+    "maxTemp": "200",
+    "minStep": "0.1"
 }
 ```
 * `currentTempItem`: The openHAB item representing the current temperature
@@ -899,6 +914,15 @@ This service describes a temperature sensor.
 * `tempUnit` *(optional)*: Gives the measurement unit of the thermostat. HomeKit always expects the input to be in degrees celsius, therefore specifying Fahrenheit as a unit, the plugin will convert the values to be shown correctly on the fly.
   * Default: `Celsius`
   * Allowed values: `Celsius` & `Fahrenheit`
+* `minTemp` *(optional)*: If you need to change the minimum allowed temperature, the thermostat is reading
+  * Needs to be an float
+  * Default: `-100`
+* `maxTemp` *(optional)*: If you need to change the maximum allowed temperature, the thermostat is reading
+  * Needs to be a float
+  * Default: `200`
+* `minStep` *(optional)*: If you need to change the granularity of the temperature reading
+  * Needs to be a float
+  * Default: `0.1`
 
 ### Humidity Sensor
 This service describes a humidity sensor.

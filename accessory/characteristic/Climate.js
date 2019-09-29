@@ -1,6 +1,10 @@
 'use strict';
 
-const {addNumericSensorCharacteristic, addNumericSensorActorCharacteristic, addNumericSensorActorCharacteristicWithTransformation} = require('./Numeric');
+const {addNumericSensorCharacteristic,
+    addNumericSensorCharacteristicWithTransformation,
+    addNumericSensorActorCharacteristic,
+    addNumericSensorActorCharacteristicWithDistinctTransformation
+} = require('./Numeric');
 
 const CLIMATE_CONFIG = {
     waterLevelItem: "waterLevelItem",
@@ -13,8 +17,15 @@ const CLIMATE_CONFIG = {
     coolingThresholdTempItem: "coolingThresholdTempItem",
     dehumidifierThresholdItem: "dehumidifierThresholdItem",
     humidifierThresholdItem: "humidifierThresholdItem",
-    tempUnit: "tempUnit" // 'Celsius' (default), 'Fahrenheit'
+    tempUnit: "tempUnit", // 'Celsius' (default), 'Fahrenheit'
+    minTemp: "minTemp",
+    maxTemp: "maxTemp",
+    minStep: "minStep"
 };
+
+const DEFAULT_MIN_TEMP = -100;
+const DEFAULT_MAX_TEMP = 200;
+const DEFAULT_MIN_STEP = 0.1;
 
 function addWaterLevelCharacteristic(service, optional) {
     addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.WaterLevel), {item: CLIMATE_CONFIG.waterLevelItem}, optional);
@@ -33,27 +44,57 @@ function addTargetRelativeHumidityCharacteristic(service, optional) {
 }
 
 function addCurrentTemperatureCharacteristic(service, optional) {
+    let thisMinTemp = this._config[CLIMATE_CONFIG.minTemp] !== undefined ? parseFloat(this._config[CLIMATE_CONFIG.minTemp]) : DEFAULT_MIN_TEMP;
+    let thisMaxTemp = this._config[CLIMATE_CONFIG.maxTemp] !== undefined ? parseFloat(this._config[CLIMATE_CONFIG.maxTemp]) : DEFAULT_MAX_TEMP;
+    let thisMinStep = this._config[CLIMATE_CONFIG.minStep] !== undefined ? parseFloat(this._config[CLIMATE_CONFIG.minStep]) : DEFAULT_MIN_STEP;
+
+    let transformation = this._config[CLIMATE_CONFIG.tempUnit] === "Fahrenheit" ? _convertFahrenheitToCelsius : parseFloat;
+
     let currentTemperatureCharacteristic = service.getCharacteristic(this.Characteristic.CurrentTemperature);
     currentTemperatureCharacteristic.setProps({
-        minValue: -100,
-        maxValue: 200
+        minValue: thisMinTemp,
+        maxValue: thisMaxTemp,
+        minStep: thisMinStep
     });
-    addNumericSensorActorCharacteristicWithTransformation.bind(this)(service,
+
+    addNumericSensorCharacteristicWithTransformation.bind(this)(service,
         currentTemperatureCharacteristic,
         {item: CLIMATE_CONFIG.currentTempItem},
-        function(val) {
-            if(this._config[CLIMATE_CONFIG.tempUnit] === "Fahrenheit") {
-                return (((parseFloat(val)-32)*5)/9);
-            } else {
-                return parseFloat(val);
-            }
-        }.bind(this),
+        transformation,
         optional
     );
 }
 
 function addTargetTemperatureCharacteristic(service, optional) {
+    let thisMinTemp = this._config[CLIMATE_CONFIG.minTemp] !== undefined ? parseFloat(this._config[CLIMATE_CONFIG.minTemp]) : DEFAULT_MIN_TEMP;
+    let thisMaxTemp = this._config[CLIMATE_CONFIG.maxTemp] !== undefined ? parseFloat(this._config[CLIMATE_CONFIG.maxTemp]) : DEFAULT_MAX_TEMP;
+    let thisMinStep = this._config[CLIMATE_CONFIG.minStep] !== undefined ? parseFloat(this._config[CLIMATE_CONFIG.minStep]) : DEFAULT_MIN_STEP;
+
+    let getTransformation = this._config[CLIMATE_CONFIG.tempUnit] === "Fahrenheit" ? _convertFahrenheitToCelsius : parseFloat;
+    let setTransformation = this._config[CLIMATE_CONFIG.tempUnit] === "Fahrenheit" ? _convertCelsiusToFahrenheit : parseFloat;
+
+    let targetTemperatureCharacteristic = service.getCharacteristic(this.Characteristic.TargetTemperature);
+    targetTemperatureCharacteristic.setProps({
+        minValue: thisMinTemp,
+        maxValue: thisMaxTemp,
+        minStep: thisMinStep
+    });
+    addNumericSensorActorCharacteristicWithDistinctTransformation.bind(this)(service,
+        targetTemperatureCharacteristic,
+        {item: CLIMATE_CONFIG.targetTempItem},
+        setTransformation,
+        getTransformation,
+        optional
+    );
     addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.TargetTemperature), {item: CLIMATE_CONFIG.targetTempItem}, optional);
+}
+
+function _convertFahrenheitToCelsius(val) {
+    return (((parseFloat(val)-32)*5)/9);
+}
+
+function _convertCelsiusToFahrenheit(val) {
+    return (((parseFloat(val) * 9)/5) + 32);
 }
 
 function addCoolingThresholdCharacteristic(service, optional) {
