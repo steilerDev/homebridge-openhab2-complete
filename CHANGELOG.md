@@ -4,6 +4,8 @@
 * Code audit & documentation
 
 ## Changelog
+### V1.1.1
+* Extended `NumericSensor` and `NumericSensorActor` capabilities to support `Rollershutter` and `Dimmer` types.
 
 ### V1.1.0
 * Updated Readme to fix typo's
