@@ -289,13 +289,21 @@ This service describes a thermostat.
 }
 ```
 * `currentTempItem`: The openHAB item representing the current temperature as measured by the thermostat
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `targetTempItem`: The openHAB item representing the target temperature inside the room
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `currentHumidityItem` *(optional)*: The openHAB item representing the current humidity as measured by the thermostat
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `targetHumidityItem` *(optional)*: The openHAB item representing the target humidity inside the room
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `heatingItem` *(optional, if `coolingItem` is present, otherwise required)*: The openHAB item showing, if the room is currently being heated
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `coolingItem` *(optional, if `heatingItem` is present, otherwise required)*: The openHAB item showing, if the room is currently being cooled
@@ -304,9 +312,13 @@ This service describes a thermostat.
   * Default: `Celsius`
   * Allowed values: `Celsius` & `Fahrenheit`
 * `heatingThresholdTempItem`: *(optional)* The openHAB item describing the heating threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'minimum temperature' that mus be reached before heating is turned on.
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `coolingThresholdTempItem`: *(optional)* The openHAB item describing the cooling threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'maximum temperature' that mus be reached before cooling is turned on.
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `modeItem`: *(optional)* If your thermostat can be set to heating, cooling or auto mode through an item, and/or reports back its current configuration use this item, otherwise the heating/cooling capabilities are deferred from `heatingItem` and `coolingItem` and will not be changeable.
   * Needs to be of type `Number` within openHAB
   * Only discrete values are recognized:
@@ -338,7 +350,9 @@ This service describes a humidifier and/or dehumidifier accessory.
 ```
 
 * `currentHumidityItem`: The openHAB item representing the current humidity
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `activeItem`: The openHAB item showing, if the (de-)humidfier is currently active
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `activeItemInverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
@@ -355,18 +369,26 @@ This service describes a humidifier and/or dehumidifier accessory.
     * 1 ≙ `Humidifier`
     * 2 ≙ `Dehumidifier`
 * `humidifierThresholdItem`: *(optional)* The openHAB item describing the humidifying threshold. The value of this characteristic represents the 'minimum relative humidity' that mus be reached before humidifying is turned on.
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `dehumidifierThresholdItem`: *(optional)* The openHAB item describing the dehumidifying threshold. The value of this characteristic represents the 'maximum relative humidity' that mus be reached before dehumidifying is turned on.
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `waterLevelItem`: *(optional)* The openHAB item representing the current water level 
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `swingItem`: *(optional)* The openHAB item showing, if swing is active
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `swingItemInverted` *(optional)*: If `swingItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `rotationSpeedItem`: *(optional)* The openHAB item representing the rotation speed
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 
 ### Heater/Cooler 
 This service describes a heater and/or cooler accessory.
@@ -391,7 +413,9 @@ This service describes a heater and/or cooler accessory.
 ```
 
 * `currentTempItem`: The openHAB item representing the current temperature
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `activeItem`: The openHAB item showing, if the heater/cooler is currently active
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `activeItemInverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
@@ -408,16 +432,22 @@ This service describes a heater and/or cooler accessory.
     * 1 ≙ `Heat`
     * 2 ≙ `Cool`
 * `heatingThresholdTempItem`: *(optional)* The openHAB item describing the heating threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'minimum temperature' that mus be reached before heating is turned on.
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `coolingThresholdTempItem`: *(optional)* The openHAB item describing the cooling threshold in Celsius for devices that support simultaneous heating and cooling. The value of this characteristic represents the 'maximum temperature' that mus be reached before cooling is turned on.
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `swingItem`: *(optional)* The openHAB item showing, if swing is active
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `swingItemInverted` *(optional)*: If `swingItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `rotationSpeedItem`: *(optional)* The openHAB item representing the rotation speed
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `tempUnit` *(optional)*: Gives the measurement unit of the thermostat, currently does not change anything inside HomeKit
   * Default: `Celsius`
   * Allowed values: `Celsius` & `Fahrenheit`
@@ -453,7 +483,9 @@ This service describes an air purifier accessory.
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `rotationSpeedItem`: *(optional)* The openHAB item representing the rotation speed
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 
 ### Speaker
 This service is used to control the audio output settings on a speaker device.
@@ -476,7 +508,9 @@ This service is used to control the audio output settings on a speaker device.
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `volumeItem` *(optional)*: The openHAB item controlling the speaker's volume
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
   
 ### Microphone
 This service is used to control the audio input settings on an audio device (primarily used for microphones).
@@ -498,7 +532,9 @@ This service is used to control the audio input settings on an audio device (pri
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `volumeItem` *(optional)*: The openHAB item controlling the microphone's volume
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 
 ### Faucet
 This service describes a faucet.
@@ -629,7 +665,9 @@ This service describes motorized window coverings or shades - examples include s
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `horizontalTiltItem` *(optional)*: An item representing the angle of horizontal slats. 
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
   * Allowed value range: `-90` to `90` (for different ranges, see `horizontalTiltItemRangeStart` and `horizontalTiltItemRangeEnd`):
     * A value of 0 indicates that the slats are rotated to a fully open position
     * A value of -90 indicates that the slats are rotated all the way in a direction where the user-facing edge is higher than the window-facing edge
@@ -641,7 +679,9 @@ This service describes motorized window coverings or shades - examples include s
   * Default: `"90"`
   * Allowed values: All integers
 * `verticalTiltItem` *(optional)*: An item representing the angle of vertical slats. 
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
   * Allowed value range: `-90` to `90` (for different ranges, see `verticalTiltItemRangeStart` and `verticalTiltItemRangeEnd`):
     * A value of 0 indicates that the slats are rotated to a fully open position
     * A value of -90 indicates that the slats are rotated all the way in a direction where the user-facing edge is to the left of the window-facing edge
@@ -820,7 +860,9 @@ This service describes a slat which tilts on a vertical or a horizontal axis.
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `item` *(optional)*: The openHAB item representing the tilt angle of the slat, if the user can set the slats to a particular tilt angle.
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
   * Allowed value range: `-90` to `90` (for different ranges, see `itemRangeStart` and `itemRangeEnd`):
     * A value of 0 indicates that the slats are rotated to a fully open position
     * If `slatType` is `vertical`:
@@ -851,7 +893,9 @@ This service describes a temperature sensor.
 }
 ```
 * `currentTempItem`: The openHAB item representing the current temperature
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `tempUnit` *(optional)*: Gives the measurement unit of the thermostat. HomeKit always expects the input to be in degrees celsius, therefore specifying Fahrenheit as a unit, the plugin will convert the values to be shown correctly on the fly.
   * Default: `Celsius`
   * Allowed values: `Celsius` & `Fahrenheit`
@@ -867,7 +911,9 @@ This service describes a humidity sensor.
 }
 ```
 * `item`: The openHAB item representing the current humidity 
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 
 ### Light Sensor
 This service describes a light sensor.
@@ -880,7 +926,9 @@ This service describes a light sensor.
 }
 ```
 * `item`: The openHAB item representing the current light in lux 
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 
 ### Air Quality Sensor
 This service describes an air quality sensor.
@@ -1014,7 +1062,9 @@ This service describes a carbon monoxide sensor.
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `levelItem` *(optional)*: The openHAB item representing the current carbon monoxide level, measured by the sensor
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 
 ### Carbon Dioxide Sensor
 This service describes a carbon dioxide sensor.
@@ -1034,7 +1084,9 @@ This service describes a carbon dioxide sensor.
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `levelItem` *(optional)*: The openHAB item representing the current carbon dioxide level, measured by the sensor
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 
 ### Contact Sensor
 This service describes a contact sensor.
@@ -1088,7 +1140,9 @@ This service describes a filter maintenance sensor.
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `levelItem` *(optional)*: The openHAB item representing the current filter level
-  * Needs to be of type `Number` within openHAB
+  * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
+  
+    *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 
 ## Additional Services & Notes from the Developer
 Obviously the aim of this project is a full coverage of the HAP specification. Due to the limitations of smart devices in my home I can only test a subset and would love to have your feedback and input for this project.

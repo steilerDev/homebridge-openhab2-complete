@@ -13,7 +13,7 @@ function addNumericSensorCharacteristic(service, characteristic, CONF_MAP, optio
 function addNumericSensorCharacteristicWithTransformation(service, characteristic, CONF_MAP, transformation, optional) {
     try {
 
-        let [item] = this._getAndCheckItemType(CONF_MAP.item, ['Number']);
+        let [item] = this._getAndCheckItemType(CONF_MAP.item, ['Number', 'Dimmer', 'Rollershutter']);
 
         this._log.debug(`Creating numeric sensor characteristic for ${this.name} with ${item}`);
 
@@ -48,7 +48,7 @@ function addNumericSensorActorCharacteristicWithTransformation(service, characte
 function addNumericSensorActorCharacteristicWithDistinctTransformation(service, characteristic, CONF_MAP, setTransformation, getTransformation, optional) {
     try {
 
-        let [item] = this._getAndCheckItemType(CONF_MAP.item, ['Number']);
+        let [item] = this._getAndCheckItemType(CONF_MAP.item, ['Number', 'Dimmer', 'Rollershutter']);
 
         this._log.debug(`Creating numeric sensor/actor characteristic for ${this.name} with ${item}`);
 
