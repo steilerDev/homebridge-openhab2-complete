@@ -244,22 +244,6 @@ function positionTransformation(multiplier, targetStateCharacteristic, type, inv
                 } else {
                     transformedValue = Math.floor(parseFloat(value) * multiplier);
                 }
-                if (transformedValue >= 99) { // Weird not showing 100 or 0 bug of openHAB
-                    transformedValue = 100;
-                }
-                if (transformedValue <= 1) {
-                    transformedValue = 0;
-                }
-
-                const threshold = 3;
-                if (targetStateCharacteristic && targetStateCharacteristic.value !== transformedValue) {
-                    this._log.debug(`Checking if actual state is within threshold (${threshold}) of target state`);
-                    if ((targetStateCharacteristic.value > transformedValue && (targetStateCharacteristic.value - threshold) <= transformedValue) ||
-                        (targetStateCharacteristic.value < transformedValue && (targetStateCharacteristic.value + threshold) >= transformedValue)) {
-                        this._log.debug(`Actually assigning target state ${targetStateCharacteristic.value}, because its within the threshold (${threshold}) of the actual state ${transformedValue}`);
-                        transformedValue = targetStateCharacteristic.value;
-                    }
-                }
             }
             break;
     }
