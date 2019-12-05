@@ -86,7 +86,6 @@ function addTargetTemperatureCharacteristic(service, optional) {
         getTransformation,
         optional
     );
-    addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.TargetTemperature), {item: CLIMATE_CONFIG.targetTempItem}, optional);
 }
 
 function _convertFahrenheitToCelsius(val) {
