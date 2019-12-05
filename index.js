@@ -1,5 +1,5 @@
 const fs = require('fs');
-const sleep = require('sleep');
+const {sleep} = require('./util/Util');
 
 const version = require('./package').version;
 const platformName = require('./package').name;
@@ -75,11 +75,11 @@ const OpenHABComplete = class {
         this._log.info(`Waiting for openHAB host (${config.host}) to come online...`);
         let online = false;
         while(!online) {
-            sleep.sleep(2);
+            sleep(2);
             this._log.debug(`Checking if openHAB host (${config.host}) is online...`);
             online = this._platform.openHAB.isOnline();
         }
-        sleep.sleep(10);
+        sleep(10);
         this._log.info(`openHAB host (${config.host}) is online, now syncing...`);
         this._platform.openHAB.syncItemTypes();
 

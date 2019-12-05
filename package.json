@@ -29,7 +29,6 @@
   "dependencies": {
     "eventsource": "^1.0.7",
     "request": "^2.88.0",
-    "sleep": "^6.0.0",
     "sync-request": "^6.0.0"
   }
 }
