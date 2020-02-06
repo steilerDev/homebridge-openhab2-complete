@@ -63,10 +63,15 @@ class OpenHAB {
     }
 
     isOnline() {
-        let myURL = this._getURL(`/rest/items`);
-        const response = syncRequest('GET', myURL);
-        this._log.debug(`Online request for openHAB (${myURL}) resulted in status code ${response.statusCode}`);
-        return response.statusCode === 200;
+        try {
+          let myURL = this._getURL(`/rest/items`);
+          const response = syncRequest('GET', myURL);
+          this._log.debug(`Online request for openHAB (${myURL}) resulted in status code ${response.statusCode}`);
+          return response.statusCode === 200;
+        } catch (e) {
+          this._log.warn(`Unable to retrieve openHAB URL ${myURL}: ${e}`);
+          return false;
+        }
     }
 
     getState(habItem, callback) {
