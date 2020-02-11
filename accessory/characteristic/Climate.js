@@ -57,6 +57,8 @@ function addCurrentTemperatureCharacteristic(service, optional) {
         minStep: thisMinStep
     });
 
+    this._log.debug(`Applied minValue ${thisMinTemp}, maxValue ${thisMaxTemp} and minStep ${thisMinStep}`);
+
     addNumericSensorCharacteristicWithTransformation.bind(this)(service,
         currentTemperatureCharacteristic,
         {item: CLIMATE_CONFIG.currentTempItem},
