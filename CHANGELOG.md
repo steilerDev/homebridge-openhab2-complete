@@ -7,6 +7,8 @@
 ### V1.1.1
 * Extended `NumericSensor` and `NumericSensorActor` capabilities to support `Rollershutter` and `Dimmer` types.
 * Allowing user defined `minTemp`, `maxTemp` and `minStep` for `Thermostat` and `TemperatureSensor` accessory types.
+* Homebridge no longer crashes if openHAB's host is not available
+* Support for scientifically notated numbers (e.g. `7E+1`)
 
 ### V1.1.0
 * Updated Readme to fix typo's
