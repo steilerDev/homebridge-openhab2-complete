@@ -410,8 +410,8 @@ This service describes a heater and/or cooler accessory.
     "name": "An items name, as shown in Homekit later",
     "type": "heatercooler",
     "currentTempItem": "Itemname-within-OpenHAB",
-    "activeItem": "Itemname-within-OpenHAB",
-    "activeItemInverted": "false",
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "false",
     "heatingItem": "Itemname-within-OpenHAB",
     "coolingItem": "Itemname-within-OpenHAB",
     "modeItem": "Itemname-within-OpenHAB",
@@ -428,9 +428,9 @@ This service describes a heater and/or cooler accessory.
   * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
   
     *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
-* `activeItem`: The openHAB item showing, if the heater/cooler is currently active
+* `item`: The openHAB item showing, if the heater/cooler is currently active
   * Needs to be of type `Switch` or `Contact` within openHAB
-* `activeItemInverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `inverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `heatingItem` *(optional, if `coolingItem` is present, otherwise required)*: The openHAB item showing, if the room is currently being heated
