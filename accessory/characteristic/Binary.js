@@ -145,7 +145,6 @@ function addActiveCharacteristic(service, optional) {
         [inverted ? 0 : 1]: "ON",
         [inverted ? 1 : 0]: "OFF"
     };
-    this._log.error(`Transformation map for ${this.name}: ${JSON.stringify(transformation)}`);
     addBinarySensorActorCharacteristicWithTransformation.bind(this)(service, service.getCharacteristic(this.Characteristic.Active), BINARY_CONFIG, transformation, optional);
 }
 
