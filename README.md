@@ -286,11 +286,22 @@ This service describes a thermostat.
     "heatingThresholdTempItem": "Itemname-within-OpenHAB",
     "coolingThresholdTempItem": "Itemname-within-OpenHAB",
     "modeItem": "Itemname-within-OpenHAB",
+    "modeItemCharacteristic": "HeatingCooling",
     "minTemp": "-100",
     "maxTemp": "200",
     "minTempStep": "0.1"
 }
 ```
+*Start important notes on Thermostat Capabilities*
+* A thermostat can have the capability to cool, heat or do both
+* The `modeItem` will precede `heatingItem` or `coolingItem` (when `modeItem` is defined, `heatingItem` and `coolingItem` will be ignored)
+  * If `modeItem` is present while `modeItemCharacteristic` is present the allowed values for `modeItem` will be restricted based on `modeItemCharacteristic` (see below)
+* If `modeItem` is not present, one of the following is required: `heatingItem` and/or `coolingItem`
+  * Based on those, the capabilities to heat/cool will be derived
+  * Changing heating/cooling mode in the app will not change anything, since those will be fixed upon startup. If you want to be flexible you need to use `modeItem`
+
+*End important notes on Thermostat Capabilities*
+
 * `currentTempItem`: The openHAB item representing the current temperature as measured by the thermostat
   * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
   
@@ -307,6 +318,7 @@ This service describes a thermostat.
   * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
   
     *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
+
 * `heatingItem` *(optional, if `coolingItem` is present, otherwise required)*: The openHAB item showing, if the room is currently being heated
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `coolingItem` *(optional, if `heatingItem` is present, otherwise required)*: The openHAB item showing, if the room is currently being cooled
@@ -329,6 +341,9 @@ This service describes a thermostat.
     * 1 ≙ `Heating`
     * 2 ≙ `Cooling`
     * 3 ≙ `Auto`
+* `modeItemCharacteristic` *(optional)*: If you are using `modeItem` the discrete values accepted and shown in the app can be restricted:
+  * Allowed values: `Heating` (will restrict `modeItem` to `0`, `1`), `Cooling` (will restrict `modeItem` to `0`, `2`) or `HeatingCooling` (will not restrict `modeItem`)
+  * Default `HeatingCooling`
 * `minTemp` *(optional)*: If you need to change the minimum allowed temperature, the `currentTempItem` is reading
   * Needs to be an float
   * Default: `-100`

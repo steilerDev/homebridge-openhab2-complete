@@ -7,20 +7,47 @@ const CLIMATE_THERMOSTAT_CONFIG = {
     heatingItem: "heatingItem", //State mutual Exclusive with coolingItem, 'Switch' or 'Contact' type
     coolingItem: "coolingItem", //State mutual Exclusive with heatingItem, 'Switch' or 'Contact' type
     modeItem: "modeItem",
+    modeItemCharacteristic: "modeItemCharacteristic"
 };
 
 function addCurrentHeatingCoolingStateCharacteristic(service) {
     let [heatingItem] = this._getAndCheckItemType(CLIMATE_THERMOSTAT_CONFIG.heatingItem, ['Switch', 'Contact'], true);
     let [coolingItem] = this._getAndCheckItemType(CLIMATE_THERMOSTAT_CONFIG.coolingItem, ['Switch', 'Contact'], true);
+    let [modeItem] = this._getAndCheckItemType(CLIMATE_THERMOSTAT_CONFIG.modeItem, ['Number'], true);
+
+    let OFF = 0;
+    let HEAT = 1;
+    let COOL = 2;
 
     let mode;
+
+    if(modeItem !== null) {
+        this._log.debug(`Creating 'CurrentHeatingCoolingState' characteristic for ${this.name} with ${modeItem}`);
+        let currentHeatingCoolingStateCharacteristic = service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState);
+        let modeItemCharacteristic = this._config[CLIMATE_THERMOSTAT_CONFIG.modeItemCharacteristic];
+        if(modeItemCharacteristic !== undefined) {
+            switch(modeItemCharacteristic) {
+                case "Heating":
+                    currentHeatingCoolingStateCharacteristic.setProps({
+                        validValues: [OFF,HEAT]
+                    });
+                    break;
+                case "Cooling":
+                    currentHeatingCoolingStateCharacteristic.setProps({
+                        validValues: [OFF,COOL]
+                    });
+                    break;
+                case "HeatingCooling":
+                    break;
+                default:
+                    throw new Error(`modeItemCharacteristic has invalid value: ${modeItemCharacteristic}`);
+            }
+        }
+        addNumericSensorCharacteristic.bind(this)(service, currentHeatingCoolingStateCharacteristic, {item: CLIMATE_THERMOSTAT_CONFIG.modeItem});
+    }
     if(!(heatingItem || coolingItem)) {
         throw new Error(`heatingItem and/or coolingItem needs to be set: ${JSON.stringify(this._config)}`);
     } else {
-        let OFF = 0;
-        let HEAT = 1;
-        let COOL = 2;
-
         let currentHeatingCoolingStateCharacteristic = service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState);
         if(heatingItem) {
             mode = 'Heating';
@@ -60,16 +87,37 @@ function addCurrentHeatingCoolingStateCharacteristic(service) {
 }
 
 function addTargetHeatingCoolingStateCharacteristic(service) {
+    let OFF = 0;
+    let HEAT = 1;
+    let COOL = 2;
+    let AUTO = 3;
+
     let modeItem = this._config[CLIMATE_THERMOSTAT_CONFIG.modeItem];
     if (modeItem !== undefined) {
         this._log.debug(`Creating 'TargetHeatingCoolingState' characteristic for ${this.name} with ${modeItem}`);
-        addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState), {item: CLIMATE_THERMOSTAT_CONFIG.modeItem});
+        let targetHeatingCoolingStateCharacteristic = service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState);
+        let modeItemCharacteristic = this._config[CLIMATE_THERMOSTAT_CONFIG.modeItemCharacteristic];
+        if(modeItemCharacteristic !== undefined) {
+            switch(modeItemCharacteristic) {
+                case "Heating":
+                    targetHeatingCoolingStateCharacteristic.setProps({
+                        validValues: [OFF,HEAT]
+                    });
+                    break;
+                case "Cooling":
+                    targetHeatingCoolingStateCharacteristic.setProps({
+                        validValues: [OFF,COOL]
+                    });
+                    break;
+                case "HeatingCooling":
+                    break;
+                default:
+                    throw new Error(`modeItemCharacteristic has invalid value: ${modeItemCharacteristic}`);
+            }
+        }
+        addNumericSensorActorCharacteristic.bind(this)(service, targetHeatingCoolingStateCharacteristic, {item: CLIMATE_THERMOSTAT_CONFIG.modeItem});
     } else {
         let mode;
-        let OFF = 0;
-        let HEAT = 1;
-        let COOL = 2;
-        let AUTO = 3;
 
         let targetHeatingCoolingState = service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState);
         if (this._config[CLIMATE_THERMOSTAT_CONFIG.coolingItem] && this._config[CLIMATE_THERMOSTAT_CONFIG.heatingItem]) {
