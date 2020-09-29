@@ -12,12 +12,18 @@
 * Enabling support for user-defined min/max values:
   * minTemp, maxTemp, minTempStep for Thermostat, HeaterCooler and Temperature Sensor
   * minFanSpeed, maxFanSpeed, minFanStep for HeaterCooler, AirPurifier and Humidifier/Dehumidifier
+* Fixed documentation issue around `activeItem` and `activeItemInverted` for Air Purifier, Irrigation System, Humidifier/Dehumidifier.
+* Fixed missing `LEVEL_CONFIG` for Filter Maintenance Sensor, CO Sensor and CO2 Sensor
 
 Issues:
-* Closes #70
 * Closes #60
-* Closes #84
+* Closes #70
+* Closes #73
+* Closes #74
+* Closes #79
+* Closes #82
 * Closes #83
+* Closes #84
 
 ### V1.1.0
 * Updated Readme to fix typo's

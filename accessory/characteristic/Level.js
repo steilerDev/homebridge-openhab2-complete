@@ -2,6 +2,9 @@
 
 const {addNumericSensorActorCharacteristic} = require('./Numeric');
 
+const LEVEL_CONFIG = {
+    levelItem: "levelItem"
+};
 
 function addCarbonDioxideLevelCharacteristic(service) {
     addNumericSensorActorCharacteristic.bind(this)(service,

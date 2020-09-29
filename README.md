@@ -362,8 +362,8 @@ This service describes a humidifier and/or dehumidifier accessory.
     "name": "An items name, as shown in Homekit later",
     "type": "humidifier",
     "currentHumidityItem": "Itemname-within-OpenHAB",
-    "activeItem": "Itemname-within-OpenHAB",
-    "activeItemInverted": "false",
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "false",
     "humidifierItem": "Itemname-within-OpenHAB",
     "dehumidifierItem": "Itemname-within-OpenHAB",
     "modeItem": "Itemname-within-OpenHAB",
@@ -383,9 +383,9 @@ This service describes a humidifier and/or dehumidifier accessory.
   * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
   
     *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
-* `activeItem`: The openHAB item showing, if the (de-)humidfier is currently active
+* `item`: The openHAB item showing, if the (de-)humidfier is currently active
   * Needs to be of type `Switch` or `Contact` within openHAB
-* `activeItemInverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `inverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `humidifierItem` *(optional, if `dehumidifierItem` is present, otherwise required)*: The openHAB item showing, if the room is currently humidified
@@ -524,8 +524,8 @@ This service describes an air purifier accessory.
     "type": "airpurifier",
     "purifyingItem": "Itemname-within-OpenHAB",
     "modeItem": "Itemname-within-OpenHAB",
-    "activeItem": "Itemname-within-OpenHAB",
-    "activeItemInverted": "false",
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "false",
     "swingItem": "Itemname-within-OpenHAB",
     "swingItemInverted": "false",
     "rotationSpeedItem": "Itemname-within-OpenHAB",
@@ -538,9 +538,9 @@ This service describes an air purifier accessory.
   * Needs to be of type `Switch` or `Contact` within openHAB
 * `modeItem`: The openHAB item showing, if the air purifier is currently in Manual (`OFF` or `CLOSED`) or Automatic Mode (`ON` or `OPEN`)
   * Needs to be of type `Switch` or `Contact` within openHAB
-* `activeItem`: The openHAB item showing, if the air purifier is currently active
+* `item`: The openHAB item showing, if the air purifier is currently active
   * Needs to be of type `Switch` or `Contact` within openHAB
-* `activeItemInverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `inverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `swingItem`: *(optional)* The openHAB item showing, if swing is active
@@ -666,9 +666,8 @@ This service describes an irrigation system.
 {
     "name": "An items name, as shown in Homekit later",
     "type": "irrigation",
-    
-    "activeItem": "Itemname-within-OpenHAB",
-    "acitveItemInverted": "true",
+    "item": "Itemname-within-OpenHAB",
+    "inverted": "true",
     "inUseItem": "Itemname-within-OpenHAB",
     "inUseItemInverted": "true",
     "durationItem": "Itemname-within-OpenHAB",
@@ -676,9 +675,9 @@ This service describes an irrigation system.
     "programModeItem": "Itemname-within-OpenHAB"
 }
 ```
-* `activeItem`: The openHAB item showing, if the valve is currently active
+* `item`: The openHAB item showing, if the valve is currently active
   * Needs to be of type `Switch` or `Contact` within openHAB
-* `activeItemInverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
+* `inverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `inUseItem` Representing, if the valve is currently in use (if `Switch` is `ON`, `Contact` is `OPEN` or `Number` is greater than 0)
