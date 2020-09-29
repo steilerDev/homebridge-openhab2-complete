@@ -272,6 +272,16 @@ This service describes a security system.
 ### Thermostat
 This service describes a thermostat.
 
+*Important notes on Thermostat Capabilities*
+* A thermostat can have the capability to cool, heat or do both
+* The `modeItem` will precede `heatingItem` or `coolingItem` (when `modeItem` is defined, `heatingItem` and `coolingItem` will be ignored)
+  * If `modeItem` is present while `modeItemCharacteristic` is present the allowed values for `modeItem` will be restricted based on `modeItemCharacteristic` (see below)
+* If `modeItem` is not present, one of the following is required: `heatingItem` or `coolingItem`
+  * Based on those, the capability to heat or cool will be derived
+  * If both are present, `coolingItem` will be ignored, therefore the item will only be able to either cool or heat
+
+*Important notes on Thermostat Capabilities*
+
 ```
 {
     "name": "An items name, as shown in Homekit later",
@@ -292,15 +302,7 @@ This service describes a thermostat.
     "minTempStep": "0.1"
 }
 ```
-*Start important notes on Thermostat Capabilities*
-* A thermostat can have the capability to cool, heat or do both
-* The `modeItem` will precede `heatingItem` or `coolingItem` (when `modeItem` is defined, `heatingItem` and `coolingItem` will be ignored)
-  * If `modeItem` is present while `modeItemCharacteristic` is present the allowed values for `modeItem` will be restricted based on `modeItemCharacteristic` (see below)
-* If `modeItem` is not present, one of the following is required: `heatingItem` and/or `coolingItem`
-  * Based on those, the capabilities to heat/cool will be derived
-  * Changing heating/cooling mode in the app will not change anything, since those will be fixed upon startup. If you want to be flexible you need to use `modeItem`
 
-*End important notes on Thermostat Capabilities*
 
 * `currentTempItem`: The openHAB item representing the current temperature as measured by the thermostat
   * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
@@ -319,10 +321,10 @@ This service describes a thermostat.
   
     *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 
-* `heatingItem` *(optional, if `coolingItem` is present, otherwise required)*: The openHAB item showing, if the room is currently being heated
-  * Needs to be of type `Switch` or `Contact` within openHAB
-* `coolingItem` *(optional, if `heatingItem` is present, otherwise required)*: The openHAB item showing, if the room is currently being cooled
-  * Needs to be of type `Switch` or `Contact` within openHAB
+* `heatingItem` *(optional, see Important Notes above)*: The openHAB item showing, if the room is currently being heated
+  * Needs to be of type `Switch` within openHAB
+* `coolingItem` *(optional, see Important Notes above)*: The openHAB item showing, if the room is currently being cooled
+  * Needs to be of type `Switch` within openHAB
 * `tempUnit` *(optional)*: Gives the measurement unit of the thermostat. HomeKit always expects the input to be in degrees celsius, therefore specifying Fahrenheit as a unit, the plugin will convert the values to be shown correctly on the fly.
   * Default: `Celsius`
   * Allowed values: `Celsius` & `Fahrenheit`
@@ -334,7 +336,7 @@ This service describes a thermostat.
   * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
   
     *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
-* `modeItem` *(optional)*: If your thermostat can be set to heating, cooling or auto mode through an item, and/or reports back its current configuration use this item, otherwise the heating/cooling capabilities are deferred from `heatingItem` and `coolingItem` and will not be changeable.
+* `modeItem` *(optional)*: If your thermostat can be set to heating, cooling or auto mode through an item, and/or reports back its current configuration use this item, otherwise the heating/cooling capabilities are deferred from `heatingItem` and `coolingItem`.
   * Needs to be of type `Number` within openHAB
   * Only discrete values are recognized:
     * 0 ≙ `Off`
@@ -342,7 +344,7 @@ This service describes a thermostat.
     * 2 ≙ `Cooling`
     * 3 ≙ `Auto`
 * `modeItemCharacteristic` *(optional)*: If you are using `modeItem` the discrete values accepted and shown in the app can be restricted:
-  * Allowed values: `Heating` (will restrict `modeItem` to `0`, `1`), `Cooling` (will restrict `modeItem` to `0`, `2`) or `HeatingCooling` (will not restrict `modeItem`)
+  * Allowed values: `Heating` (will restrict `modeItem` to `0`, `1`, `3`), `Cooling` (will restrict `modeItem` to `0`, `2`, `3`) or `HeatingCooling` (will not restrict `modeItem`)
   * Default `HeatingCooling`
 * `minTemp` *(optional)*: If you need to change the minimum allowed temperature, the `currentTempItem` is reading
   * Needs to be an float
@@ -431,6 +433,13 @@ This service describes a humidifier and/or dehumidifier accessory.
 
 ### Heater/Cooler 
 This service describes a heater and/or cooler accessory.
+
+*Important notes on Heater/Cooler*
+
+The Heater/Cooler implementation within HomeKit clashes with OpenHAB. The Heater/Cooler is usable but there might be bugs around the mode. If the swing item and rotation speed item are not required, it is recommended to use the Thermostat Service!
+
+*Important notes on Heater/Cooler*
+
 
 ```
 {

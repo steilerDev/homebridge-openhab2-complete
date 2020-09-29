@@ -14,6 +14,7 @@
   * minFanSpeed, maxFanSpeed, minFanStep for HeaterCooler, AirPurifier and Humidifier/Dehumidifier
 * Fixed documentation issue around `activeItem` and `activeItemInverted` for Air Purifier, Irrigation System, Humidifier/Dehumidifier.
 * Fixed missing `LEVEL_CONFIG` for Filter Maintenance Sensor, CO Sensor and CO2 Sensor
+* Reworked thermostat and added warning for Heater/Cooler, see README
 
 Issues:
 * Closes #60
