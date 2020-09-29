@@ -123,15 +123,15 @@ function addTargetHeatingCoolingStateCharacteristic(service) {
             this._log.debug(`Creating 'TargetHeatingCoolingState' characteristic for ${this.name} with heatingItem (${heatingItem})`);
             let inverted = this._checkInvertedConf(CLIMATE_THERMOSTAT_CONFIG.heatingItemInverted);
             let transformation = {
-                "OFF": inverted ? HEAT : OFF,
-                "ON": inverted ? OFF : HEAT,
-                [inverted ? OFF : HEAT]: "ON",
-                [inverted ? HEAT : OFF]: "OFF"
+                "OFF": inverted ? HEAT : AUTO,
+                "ON": inverted ? AUTO : HEAT,
+                [inverted ? AUTO : HEAT]: "ON",
+                [inverted ? HEAT : AUTO]: "OFF"
             };
 
             addBinarySensorActorCharacteristicWithTransformation.bind(this)(service, targetHeatingCoolingStateCharacteristic, {item: CLIMATE_THERMOSTAT_CONFIG.heatingItem, inverted: CLIMATE_THERMOSTAT_CONFIG.heatingItemInverted}, transformation);
             targetHeatingCoolingStateCharacteristic.setProps({
-                validValues: [OFF,HEAT,AUTO]
+                validValues: [HEAT,AUTO]
             });
         } else if (coolingItem) {
             this._log.debug(`Creating 'CurrentHeatingCoolingState' characteristic for ${this.name} with coolingItem (${coolingItem})`);
@@ -147,7 +147,7 @@ function addTargetHeatingCoolingStateCharacteristic(service) {
                 inverted: CLIMATE_THERMOSTAT_CONFIG.coolingItemInverted
             }, transformation);
             targetHeatingCoolingStateCharacteristic.setProps({
-                validValues: [OFF, COOL,AUTO]
+                validValues: [COOL,AUTO]
             });
         }
     }
