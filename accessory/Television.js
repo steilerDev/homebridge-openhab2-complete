@@ -7,9 +7,9 @@ const {addActiveCharacteristic} = require('./characteristic/Binary');
 class TelevisionAccessory extends Accessory {
     constructor(platform, config) {
         super(platform, config);
+        this.category = this.Categories.TELEVISION;
         this._services.unshift(this._getAccessoryInformationService('Television'));
-        this._services.push(this._getPrimaryService());
-        this._services.push(this._getSpeakerService());
+        this._services.push(this._getPrimaryService(), this._getSpeakerService());
     }
 
     _getPrimaryService() {
