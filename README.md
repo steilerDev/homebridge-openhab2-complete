@@ -288,7 +288,7 @@ This service describes a thermostat.
     "modeItem": "Itemname-within-OpenHAB",
     "minTemp": "-100",
     "maxTemp": "200",
-    "minStep": "0.1"
+    "minTempStep": "0.1"
 }
 ```
 * `currentTempItem`: The openHAB item representing the current temperature as measured by the thermostat
@@ -329,13 +329,13 @@ This service describes a thermostat.
     * 1 ≙ `Heating`
     * 2 ≙ `Cooling`
     * 3 ≙ `Auto`
-* `minTemp` *(optional)*: If you need to change the minimum allowed temperature, the thermostat is reading
+* `minTemp` *(optional)*: If you need to change the minimum allowed temperature, the `currentTempItem` is reading
   * Needs to be an float
   * Default: `-100`
-* `maxTemp` *(optional)*: If you need to change the maximum allowed temperature, the thermostat is reading
+* `maxTemp` *(optional)*: If you need to change the maximum allowed temperature, the `currentTempItem` is reading
   * Needs to be a float
   * Default: `200`
-* `minStep` *(optional)*: If you need to change the granularity of the temperature reading
+* `minTempStep` *(optional)*: If you need to change the granularity of the `currentTempItem` reading/writing (Note: Home.app seem to not allow a greater granularity than 0.5 in the UI, however the reported values might be more granular)
   * Needs to be a float
   * Default: `0.1`
 
@@ -357,7 +357,10 @@ This service describes a humidifier and/or dehumidifier accessory.
     "waterLevelItem": "Itemname-within-OpenHAB",
     "swingItem": "Itemname-within-OpenHAB",
     "swingItemInverted": "false",
-    "rotationSpeedItem": "Itemname-within-OpenHAB"
+    "rotationSpeedItem": "Itemname-within-OpenHAB",
+    "minFanSpeed": "0",
+    "maxFanSpeed": "100",
+    "minFanStep": "1"
 }
 ```
 
@@ -401,6 +404,15 @@ This service describes a humidifier and/or dehumidifier accessory.
   * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
   
     *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
+* `minFanSpeed` *(optional)*: If you need to change the minimum allowed fan speed, the `rotationSpeedItem` is reading in percent
+  * Needs to be an float
+  * Default: `0`
+* `maxFanSpeed` *(optional)*: If you need to change the maximum allowed fan speed, the `rotationSpeedItem` is reading in percent
+  * Needs to be a float
+  * Default: `100`
+* `minTempStep` *(optional)*: If you need to change the granularity of the `rotationSpeedItem` reading/writing (Note: Home.app seem to not allow a greater granularity than 0.5 in the UI, however the reported values might be more granular)
+  * Needs to be a float
+  * Default: `1`
 
 ### Heater/Cooler 
 This service describes a heater and/or cooler accessory.
@@ -420,7 +432,13 @@ This service describes a heater and/or cooler accessory.
     "swingItem": "Itemname-within-OpenHAB",
     "swingItemInverted": "false",
     "rotationSpeedItem": "Itemname-within-OpenHAB",
-    "tempUnit": "Celsius"
+    "tempUnit": "Celsius",
+    "minTemp": "-100",
+    "maxTemp": "200",
+    "minTempStep": "0.1"
+    "minFanSpeed": "0",
+    "maxFanSpeed": "100",
+    "minFanStep": "1"
 }
 ```
 
@@ -463,6 +481,24 @@ This service describes a heater and/or cooler accessory.
 * `tempUnit` *(optional)*: Gives the measurement unit of the thermostat, currently does not change anything inside HomeKit
   * Default: `Celsius`
   * Allowed values: `Celsius` & `Fahrenheit`
+* `minTemp` *(optional)*: If you need to change the minimum allowed temperature, the `currentTempItem` is reading
+  * Needs to be an float
+  * Default: `-100`
+* `maxTemp` *(optional)*: If you need to change the maximum allowed temperature, the `currentTempItem` is reading
+  * Needs to be a float
+  * Default: `200`
+* `minTempStep` *(optional)*: If you need to change the granularity of the `currentTempItem` reading/writing (Note: Home.app seem to not allow a greater granularity than 0.5 in the UI, however the reported values might be more granular)
+  * Needs to be a float
+  * Default: `0.1`
+* `minFanSpeed` *(optional)*: If you need to change the minimum allowed fan speed, the `rotationSpeedItem` is reading in percent
+  * Needs to be an float
+  * Default: `0`
+* `maxFanSpeed` *(optional)*: If you need to change the maximum allowed fan speed, the `rotationSpeedItem` is reading in percent
+  * Needs to be a float
+  * Default: `100`
+* `minTempStep` *(optional)*: If you need to change the granularity of the `rotationSpeedItem` reading/writing (Note: Home.app seem to not allow a greater granularity than 0.5 in the UI, however the reported values might be more granular)
+  * Needs to be a float
+  * Default: `1`
 
 ### Air Purifier
 This service describes an air purifier accessory.
@@ -477,7 +513,10 @@ This service describes an air purifier accessory.
     "activeItemInverted": "false",
     "swingItem": "Itemname-within-OpenHAB",
     "swingItemInverted": "false",
-    "rotationSpeedItem": "Itemname-within-OpenHAB"
+    "rotationSpeedItem": "Itemname-within-OpenHAB",
+    "minFanSpeed": "0",
+    "maxFanSpeed": "100",
+    "minFanStep": "1"
 }
 ```
 * `purifyingItem`: The openHAB item showing, if the air purifier is currently purifying the air
@@ -498,6 +537,15 @@ This service describes an air purifier accessory.
   * Needs to be of type `Number`, `Rollershutter`, or `Dimmer` within openHAB 
   
     *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
+* `minFanSpeed` *(optional)*: If you need to change the minimum allowed fan speed, the `rotationSpeedItem` is reading in percent
+  * Needs to be an float
+  * Default: `0`
+* `maxFanSpeed` *(optional)*: If you need to change the maximum allowed fan speed, the `rotationSpeedItem` is reading in percent
+  * Needs to be a float
+  * Default: `100`
+* `minFanStep` *(optional)*: If you need to change the granularity of the `rotationSpeedItem` reading/writing (Note: Home.app seem to not allow a greater granularity than 0.5 in the UI, however the reported values might be more granular)
+  * Needs to be a float
+  * Default: `1`
 
 ### Speaker
 This service is used to control the audio output settings on a speaker device.
@@ -904,7 +952,7 @@ This service describes a temperature sensor.
     "tempUnit": "Celsius",
     "minTemp": "-100",
     "maxTemp": "200",
-    "minStep": "0.1"
+    "minTempStep": "0.1"
 }
 ```
 * `currentTempItem`: The openHAB item representing the current temperature
@@ -914,13 +962,13 @@ This service describes a temperature sensor.
 * `tempUnit` *(optional)*: Gives the measurement unit of the thermostat. HomeKit always expects the input to be in degrees celsius, therefore specifying Fahrenheit as a unit, the plugin will convert the values to be shown correctly on the fly.
   * Default: `Celsius`
   * Allowed values: `Celsius` & `Fahrenheit`
-* `minTemp` *(optional)*: If you need to change the minimum allowed temperature, the thermostat is reading
+* `minTemp` *(optional)*: If you need to change the minimum allowed temperature, the `currentTempItem` is reading
   * Needs to be an float
   * Default: `-100`
-* `maxTemp` *(optional)*: If you need to change the maximum allowed temperature, the thermostat is reading
+* `maxTemp` *(optional)*: If you need to change the maximum allowed temperature, the `currentTempItem` is reading
   * Needs to be a float
   * Default: `200`
-* `minStep` *(optional)*: If you need to change the granularity of the temperature reading
+* `minTempStep` *(optional)*: If you need to change the granularity of the `currentTempItem` reading
   * Needs to be a float
   * Default: `0.1`
 

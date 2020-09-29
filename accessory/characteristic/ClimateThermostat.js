@@ -41,8 +41,17 @@ function addCurrentHeatingCoolingStateCharacteristic(service) {
         }
 
         this._log.debug(`Creating 'CurrentHeatingCoolingState' characteristic for ${this.name} with mode set to ${mode}`);
-        service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState)
-            .on('get', _getHeatingCoolingState.bind(this, mode, heatingItem, coolingItem));
+        let currentHeatingCoolingStateCharacteristic = service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState);
+        currentHeatingCoolingStateCharacteristic.on('get', _getHeatingCoolingState.bind(this, mode, heatingItem, coolingItem))
+        if(mode === "Heating") {
+            currentHeatingCoolingStateCharacteristic.setProps({
+                validValues: [1]
+            });
+        } else if (mode === "Cooling") {
+            currentHeatingCoolingStateCharacteristic.setProps({
+                validValues: [2]
+            });
+        }
     }
 }
 
@@ -57,18 +66,25 @@ function addTargetHeatingCoolingStateCharacteristic(service) {
         let COOL = 2;
         let AUTO = 3;
 
+        let targetHeatingCoolingState = service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState);
         if (this._config[CLIMATE_THERMOSTAT_CONFIG.coolingItem] && this._config[CLIMATE_THERMOSTAT_CONFIG.heatingItem]) {
             mode = AUTO;
         } else if (this._config[CLIMATE_THERMOSTAT_CONFIG.coolingItem]) {
             mode = COOL;
+            targetHeatingCoolingState.setProps({
+                validValues: [COOL]
+            })
         } else if (this._config[CLIMATE_THERMOSTAT_CONFIG.heatingItem]) {
             mode = HEAT;
+            targetHeatingCoolingState.setProps({
+                validValues: [HEAT]
+            })
         } else {
             throw new Error(`Unable to set 'TargetHeatingCoolingState' mode, because neither heating nor cooling item is defined!`);
         }
 
         this._log.debug(`Creating 'TargetHeatingCoolingState' characteristic for ${this.name} with mode set to ${mode}`);
-        service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState)
+        targetHeatingCoolingState
             .on('get', function (callback) {
                 callback(null, mode);
             })

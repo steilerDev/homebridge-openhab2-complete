@@ -111,8 +111,8 @@ function _transformHeaterCoolerState(thisItemMode, characteristic, value) {
 function _getHeaterCoolerState(mode, heatingItem, coolingItem, callback) {
     let INACTIVE = 0;   // = Characteristic.CurrentHeaterCoolerState.INACTIVE
     let IDLE = 1;       // = Characteristic.CurrentHeaterCoolerState.IDLE
-    let HEATING = 1;    // = Characteristic.CurrentHeaterCoolerState.HEATING
-    let COOLING = 2;    // = Characteristic.CurrentHeaterCoolerState.COOLING
+    let HEATING = 2;    // = Characteristic.CurrentHeaterCoolerState.HEATING
+    let COOLING = 3;    // = Characteristic.CurrentHeaterCoolerState.COOLING
 
     switch (mode) {
         case "heating":

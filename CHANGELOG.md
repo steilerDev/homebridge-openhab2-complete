@@ -6,13 +6,18 @@
 ## Changelog
 ### V1.1.1
 * Extended `NumericSensor` and `NumericSensorActor` capabilities to support `Rollershutter` and `Dimmer` types.
-* Allowing user defined `minTemp`, `maxTemp` and `minStep` for `Thermostat` and `TemperatureSensor` accessory types.
 * Homebridge no longer crashes if openHAB's host is not available
 * Support for scientifically notated numbers (e.g. `7E+1`)
+* Fixed wrong heater/cooler state
+* Enabling support for user-defined min/max values:
+  * minTemp, maxTemp, minTempStep for Thermostat, HeaterCooler and Temperature Sensor
+  * minFanSpeed, maxFanSpeed, minFanStep for HeaterCooler, AirPurifier and Humidifier/Dehumidifier
 
 Issues:
 * Closes #70
 * Closes #60
+* Closes #84
+* Closes #83
 
 ### V1.1.0
 * Updated Readme to fix typo's
