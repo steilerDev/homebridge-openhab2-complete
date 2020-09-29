@@ -150,7 +150,7 @@ class Accessory {
     }
 
     getAccessory() {
-        let accessory = this.API.platformAccessory(this.name, this.uuid_base);
+        let accessory = new this.API.platformAccessory(this.name, this.uuid_base);
         accessory.addService(this._services);
         accessory.category = this.api.hap.Categories.TELEVISION;
     }
