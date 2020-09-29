@@ -103,6 +103,9 @@ const OpenHABComplete = class {
         }.bind(this));
         this._platform.openHAB.startSubscription();
         this._platform.openHAB.syncItemValues();
+        for(let val of _accessories) {
+            this._platform.api.registerPlatformAccessories(platformName, platformPrettyName, val.getAccessory());
+        }
         this._log.info(`Finished loading ${_accessories.length} accessories from configuration`);
         this._log.info(`---`);
         callback(_accessories);

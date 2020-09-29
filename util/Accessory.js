@@ -18,6 +18,7 @@ class Accessory {
         this.Characteristic = platform[PLATFORM.api][PLATFORM.hap].Characteristic;
         this.Service = platform[PLATFORM.api][PLATFORM.hap].Service;
         this.Categories = platform[PLATFORM.api][PLATFORM.hap].Categories;
+        this.API = platform[PLATFORM.api];
 
         this._config = config;
         this._openHAB = platform[PLATFORM.openHAB];
@@ -146,6 +147,12 @@ class Accessory {
             this._log.debug(`Not configuring battery service for ${this.name}: ${e.message}`);
         }
         return null;
+    }
+
+    getAccessory() {
+        let accessory = this.API.platformAccessory(this.name, this.uuid_base);
+        accessory.addService(this._services);
+        accessory.category = this.api.hap.Categories.TELEVISION;
     }
 }
 
