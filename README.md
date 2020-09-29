@@ -680,6 +680,7 @@ This service describes an irrigation system.
     "inUseItem": "Itemname-within-OpenHAB",
     "inUseItemInverted": "true",
     "durationItem": "Itemname-within-OpenHAB",
+    "durationItemMax": "3600",
     "programMode": "manual",
     "programModeItem": "Itemname-within-OpenHAB"
 }
@@ -696,6 +697,9 @@ This service describes an irrigation system.
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `durationItem` *(optional)*: This item will be set by HomeKit to show the duration for the watering. This item should also be decreased, to show the remaining watering time
   * Needs to be of type `Number` within openHAB
+* `durationItemMax` *(optional)*: The maximum amount of seconds, the `durationItem` can be set to.
+  * Needs to be a float
+  * Default: `"3600"`
 * `programMode` *(optional)*: The current program mode of this accessory.
   * Default: `noprogram`
   * Allowed values: `noprogram`, `scheduled`, `manual`

@@ -12,7 +12,7 @@ class SpeakerAccessory extends Accessory {
 
     _getPrimaryService() {
         this._log.debug(`Creating Speaker service for ${this.name}`);
-        let primaryService = new this.Service.Speaker(this.name);
+        let primaryService = new this.Service.TelevisionSpeaker(this.name);
         addMuteCharacteristic.bind(this)(primaryService);
         addVolumeCharacteristic.bind(this)(primaryService);
         return primaryService;

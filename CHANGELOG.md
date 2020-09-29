@@ -15,6 +15,7 @@
 * Fixed documentation issue around `activeItem` and `activeItemInverted` for Air Purifier, Irrigation System, Humidifier/Dehumidifier.
 * Fixed missing `LEVEL_CONFIG` for Filter Maintenance Sensor, CO Sensor and CO2 Sensor
 * Reworked thermostat and added warning for Heater/Cooler, see README
+* Added `durationItemMax` to the Valve Service
 
 Issues:
 * Closes #60
@@ -22,6 +23,7 @@ Issues:
 * Closes #73
 * Closes #74
 * Closes #79
+* Closes #80
 * Closes #82
 * Closes #83
 * Closes #84

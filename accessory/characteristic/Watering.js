@@ -4,10 +4,13 @@ const {addNumericSensorActorCharacteristic, addNumericSensorCharacteristic} = re
 
 const WATERING_CONF = {
     durationItem: "durationItem",
+    durationItemMax: "durationItemMax",
     valveType: "valveType",
     programMode: "programMode",
     programModeItem: "programModeItem"
 };
+
+let DEFAULT_MAX_DURATION = 3600;
 
 function addValveTypeCharacteristic(service) {
     if(!(this._config[WATERING_CONF.valveType])) {
@@ -39,8 +42,20 @@ function addValveTypeCharacteristic(service) {
 }
 
 function addDurationCharacteristic(service, optional) {
-    addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.SetDuration), {item: WATERING_CONF.durationItem}, optional);
-    addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.RemainingDuration), {item: WATERING_CONF.durationItem}, optional);
+    let thisMax = this._config[WATERING_CONF.durationItemMax] !== undefined ? parseFloat(this._config[WATERING_CONF.durationItemMax]) : DEFAULT_MAX_DURATION;
+    let setDurationCharacteristic = service.getCharacteristic(this.Characteristic.SetDuration);
+    let remainingDurationCharacteristic = service.getCharacteristic(this.Characteristic.RemainingDuration);
+
+    setDurationCharacteristic.setProps({
+        maxValue: thisMax
+    });
+
+    remainingDurationCharacteristic.setProps({
+        maxValue: thisMax
+    });
+
+    addNumericSensorActorCharacteristic.bind(this)(service, setDurationCharacteristic, {item: WATERING_CONF.durationItem}, optional);
+    addNumericSensorCharacteristic.bind(this)(service, remainingDurationCharacteristic, {item: WATERING_CONF.durationItem}, optional);
 }
 
 function addProgramModeCharacteristic(service, optional) {
