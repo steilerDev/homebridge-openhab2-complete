@@ -100,12 +100,12 @@ function addTargetHeatingCoolingStateCharacteristic(service) {
             switch(modeItemCapability) {
                 case "Heating":
                     targetHeatingCoolingStateCharacteristic.setProps({
-                        validValues: [OFF,HEAT]
+                        validValues: [OFF,HEAT,AUTO]
                     });
                     break;
                 case "Cooling":
                     targetHeatingCoolingStateCharacteristic.setProps({
-                        validValues: [OFF,COOL]
+                        validValues: [OFF,COOL,AUTO]
                     });
                     break;
                 case "HeatingCooling":
@@ -131,7 +131,7 @@ function addTargetHeatingCoolingStateCharacteristic(service) {
 
             addBinarySensorActorCharacteristicWithTransformation.bind(this)(service, targetHeatingCoolingStateCharacteristic, {item: CLIMATE_THERMOSTAT_CONFIG.heatingItem, inverted: CLIMATE_THERMOSTAT_CONFIG.heatingItemInverted}, transformation);
             targetHeatingCoolingStateCharacteristic.setProps({
-                validValues: [OFF,HEAT]
+                validValues: [OFF,HEAT,AUTO]
             });
         } else if (coolingItem) {
             this._log.debug(`Creating 'CurrentHeatingCoolingState' characteristic for ${this.name} with coolingItem (${coolingItem})`);
@@ -147,7 +147,7 @@ function addTargetHeatingCoolingStateCharacteristic(service) {
                 inverted: CLIMATE_THERMOSTAT_CONFIG.coolingItemInverted
             }, transformation);
             targetHeatingCoolingStateCharacteristic.setProps({
-                validValues: [OFF, COOL]
+                validValues: [OFF, COOL,AUTO]
             });
         }
     }
