@@ -17,10 +17,11 @@ function addCurrentHeatingCoolingStateCharacteristic(service) {
     if(!(heatingItem || coolingItem)) {
         throw new Error(`heatingItem and/or coolingItem needs to be set: ${JSON.stringify(this._config)}`);
     } else {
+        let currentHeatingCoolingStateCharacteristic = service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState);
         if(heatingItem) {
             mode = 'Heating';
 
-            this._subscribeCharacteristic(service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState),
+            this._subscribeCharacteristic(currentHeatingCoolingStateCharacteristic,
                 heatingItem,
                 _transformHeatingCoolingState.bind(this,
                     "heating",
@@ -31,7 +32,7 @@ function addCurrentHeatingCoolingStateCharacteristic(service) {
         if(coolingItem) {
             mode = mode === 'Heating' ? 'HeatingCooling' : 'Cooling'; // If heating device was present this means we have Heating Cooling
 
-            this._subscribeCharacteristic(service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState),
+            this._subscribeCharacteristic(currentHeatingCoolingStateCharacteristic,
                 coolingItem,
                 _transformHeatingCoolingState.bind(this,
                     "cooling",
@@ -41,8 +42,7 @@ function addCurrentHeatingCoolingStateCharacteristic(service) {
         }
 
         this._log.debug(`Creating 'CurrentHeatingCoolingState' characteristic for ${this.name} with mode set to ${mode}`);
-        let currentHeatingCoolingStateCharacteristic = service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState);
-        currentHeatingCoolingStateCharacteristic.on('get', _getHeatingCoolingState.bind(this, mode, heatingItem, coolingItem))
+        currentHeatingCoolingStateCharacteristic.on('get', _getHeatingCoolingState.bind(this, mode, heatingItem, coolingItem));
         if(mode === "Heating") {
             currentHeatingCoolingStateCharacteristic.setProps({
                 validValues: [1]
