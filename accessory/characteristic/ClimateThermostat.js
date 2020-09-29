@@ -29,7 +29,7 @@ function addCurrentHeatingCoolingStateCharacteristic(service) {
                 heatingItem,
                 _transformHeatingCoolingState.bind(this,
                     "heating",
-                    service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState),
+                    currentHeatingCoolingStateCharacteristic
                 )
             );
         }
@@ -40,7 +40,7 @@ function addCurrentHeatingCoolingStateCharacteristic(service) {
                 coolingItem,
                 _transformHeatingCoolingState.bind(this,
                     "cooling",
-                    service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState),
+                    currentHeatingCoolingStateCharacteristic
                 )
             );
         }
