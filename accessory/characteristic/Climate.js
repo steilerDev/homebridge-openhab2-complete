@@ -91,7 +91,7 @@ function addCurrentTemperatureCharacteristic(service, optional) {
 function addTargetTemperatureCharacteristic(service, optional) {
     let thisMinTemp = this._config[CLIMATE_CONFIG.minTemp] !== undefined ? parseFloat(this._config[CLIMATE_CONFIG.minTemp]) : DEFAULT_MIN_TEMP;
     let thisMaxTemp = this._config[CLIMATE_CONFIG.maxTemp] !== undefined ? parseFloat(this._config[CLIMATE_CONFIG.maxTemp]) : DEFAULT_MAX_TEMP;
-    let thisMinStep = this._config[CLIMATE_CONFIG.minStep] !== undefined ? parseFloat(this._config[CLIMATE_CONFIG.minStep]) : DEFAULT_MIN_STEP;
+    let thisMinStep = this._config[CLIMATE_CONFIG.minTempStep] !== undefined ? parseFloat(this._config[CLIMATE_CONFIG.minTempStep]) : DEFAULT_MIN_TEMP_STEP;
 
     let getTransformation = this._config[CLIMATE_CONFIG.tempUnit] === "Fahrenheit" ? _convertFahrenheitToCelsius : parseFloat;
     let setTransformation = this._config[CLIMATE_CONFIG.tempUnit] === "Fahrenheit" ? _convertCelsiusToFahrenheit : parseFloat;
