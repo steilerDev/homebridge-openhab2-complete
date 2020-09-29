@@ -17,6 +17,10 @@ function addCurrentHeatingCoolingStateCharacteristic(service) {
     if(!(heatingItem || coolingItem)) {
         throw new Error(`heatingItem and/or coolingItem needs to be set: ${JSON.stringify(this._config)}`);
     } else {
+        let OFF = 0;
+        let HEAT = 1;
+        let COOL = 2;
+
         let currentHeatingCoolingStateCharacteristic = service.getCharacteristic(this.Characteristic.CurrentHeatingCoolingState);
         if(heatingItem) {
             mode = 'Heating';
@@ -45,11 +49,11 @@ function addCurrentHeatingCoolingStateCharacteristic(service) {
         currentHeatingCoolingStateCharacteristic.on('get', _getHeatingCoolingState.bind(this, mode, heatingItem, coolingItem));
         if(mode === "Heating") {
             currentHeatingCoolingStateCharacteristic.setProps({
-                validValues: [1]
+                validValues: [OFF,HEAT]
             });
         } else if (mode === "Cooling") {
             currentHeatingCoolingStateCharacteristic.setProps({
-                validValues: [2]
+                validValues: [OFF,COOL]
             });
         }
     }
@@ -62,6 +66,7 @@ function addTargetHeatingCoolingStateCharacteristic(service) {
         addNumericSensorActorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.TargetHeatingCoolingState), {item: CLIMATE_THERMOSTAT_CONFIG.modeItem});
     } else {
         let mode;
+        let OFF = 0;
         let HEAT = 1;
         let COOL = 2;
         let AUTO = 3;
@@ -72,12 +77,12 @@ function addTargetHeatingCoolingStateCharacteristic(service) {
         } else if (this._config[CLIMATE_THERMOSTAT_CONFIG.coolingItem]) {
             mode = COOL;
             targetHeatingCoolingState.setProps({
-                validValues: [COOL]
+                validValues: [OFF,COOL]
             })
         } else if (this._config[CLIMATE_THERMOSTAT_CONFIG.heatingItem]) {
             mode = HEAT;
             targetHeatingCoolingState.setProps({
-                validValues: [HEAT]
+                validValues: [OFF,HEAT]
             })
         } else {
             throw new Error(`Unable to set 'TargetHeatingCoolingState' mode, because neither heating nor cooling item is defined!`);
@@ -89,7 +94,7 @@ function addTargetHeatingCoolingStateCharacteristic(service) {
                 callback(null, mode);
             })
             .on('set', function(_, callback) { callback() }.bind(this));
-
+        this._log.debug(``)
     }
 }
 
