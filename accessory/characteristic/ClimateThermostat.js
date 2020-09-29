@@ -30,12 +30,12 @@ function addCurrentHeatingCoolingStateCharacteristic(service) {
             switch(modeItemCapability) {
                 case "Heating":
                     currentHeatingCoolingStateCharacteristic.setProps({
-                        validValues: [OFF,HEAT,AUTO]
+                        validValues: [OFF,HEAT]
                     });
                     break;
                 case "Cooling":
                     currentHeatingCoolingStateCharacteristic.setProps({
-                        validValues: [OFF,COOL,AUTO]
+                        validValues: [OFF,COOL]
                     });
                     break;
                 case "HeatingCooling":
@@ -54,26 +54,26 @@ function addCurrentHeatingCoolingStateCharacteristic(service) {
             this._log.debug(`Creating 'CurrentHeatingCoolingState' characteristic for ${this.name} with heatingItem (${heatingItem})`);
             let inverted = this._checkInvertedConf(CLIMATE_THERMOSTAT_CONFIG.heatingItemInverted);
             let transformation = {
-                "OFF": inverted ? HEAT : AUTO,
-                "ON": inverted ? AUTO : HEAT
+                "OFF": inverted ? HEAT : OFF,
+                "ON": inverted ? OFF : HEAT
             };
             addBinarySensorCharacteristicWithTransformation.bind(this)(service, currentHeatingCoolingStateCharacteristic, {item: CLIMATE_THERMOSTAT_CONFIG.heatingItem, inverted: CLIMATE_THERMOSTAT_CONFIG.heatingItemInverted}, transformation);
             currentHeatingCoolingStateCharacteristic.setProps({
-                validValues: [AUTO,HEAT]
+                validValues: [OFF,HEAT]
             });
         } else if (coolingItem) {
             this._log.debug(`Creating 'CurrentHeatingCoolingState' characteristic for ${this.name} with coolingItem (${coolingItem})`);
             let inverted = this._checkInvertedConf(CLIMATE_THERMOSTAT_CONFIG.coolingItemInverted);
             let transformation = {
-                "OFF": inverted ? COOL : AUTO,
-                "ON": inverted ? AUTO : COOL
+                "OFF": inverted ? COOL : OFF,
+                "ON": inverted ? OFF : COOL
             };
             addBinarySensorCharacteristicWithTransformation.bind(this)(service, currentHeatingCoolingStateCharacteristic, {
                 item: CLIMATE_THERMOSTAT_CONFIG.coolingItem,
                 inverted: CLIMATE_THERMOSTAT_CONFIG.coolingItemInverted
             }, transformation);
             currentHeatingCoolingStateCharacteristic.setProps({
-                validValues: [AUTO, COOL]
+                validValues: [OFF, COOL]
             });
         }
     }
