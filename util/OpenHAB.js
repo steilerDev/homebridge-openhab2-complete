@@ -142,7 +142,10 @@ class OpenHAB {
         request({
             url: myURL,
             method: 'POST',
-            body: command
+            body: command,
+            headers: {
+                'Content-Type': 'text/plain'
+            }
         },
         function(error, response) {
             if(error) {
