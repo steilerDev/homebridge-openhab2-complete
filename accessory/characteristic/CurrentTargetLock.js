@@ -12,7 +12,7 @@ const CURRENT_TARGET_LOCK_CONFIG = {
 function addCurrentLockStateCharacteristic(service) {
     let item, itemType, inverted;
     if(this._config[CURRENT_TARGET_LOCK_CONFIG.stateItem]) {
-        [item, itemType] = this._getAndCheckItemType(CURRENT_TARGET_LOCK_CONFIG.stateItem, ['Switch']);
+        [item, itemType] = this._getAndCheckItemType(CURRENT_TARGET_LOCK_CONFIG.stateItem, ['Switch', 'Contact']);
         inverted = this._checkInvertedConf(CURRENT_TARGET_LOCK_CONFIG.stateItemInverted);
     } else {
         [item, itemType] = this._getAndCheckItemType(CURRENT_TARGET_LOCK_CONFIG.item, ['Switch']);
@@ -27,7 +27,7 @@ function addTargetLockStateCharacteristic(service) {
     let stateItem, stateItemType, stateItemInverted;
 
     if(this._config[CURRENT_TARGET_LOCK_CONFIG.stateItem]) {
-        [stateItem, stateItemType] = this._getAndCheckItemType(CURRENT_TARGET_LOCK_CONFIG.stateItem, ['Switch']);
+        [stateItem, stateItemType] = this._getAndCheckItemType(CURRENT_TARGET_LOCK_CONFIG.stateItem, ['Switch', 'Contact']);
         stateItemInverted = this._checkInvertedConf(CURRENT_TARGET_LOCK_CONFIG.stateItemInverted);
     } else {
         stateItem = item;
@@ -44,6 +44,8 @@ function lockStateTransformation(type, inverted, value) {
     const transformation = {
         "ON": inverted ? UNSECURED : SECURED,
         "OFF": inverted ? SECURED : UNSECURED,
+        "OPEN": inverted ? SECURED : UNSECURED,
+        "CLOSED": inverted ? UNSECURED : SECURED,
         [UNSECURED]: inverted ? "ON" : "OFF",
         [SECURED ]: inverted ? "OFF" : "ON"
     };

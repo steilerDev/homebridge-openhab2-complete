@@ -872,7 +872,7 @@ The HomeKit Lock Mechanism service is designed to expose and control the physica
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `stateItem` *(optional)*: The openHAB item, used to determine the state of the lock instead of `item`'s state
-  * Needs to be of type `Rollershutter`, `Number`, `Switch` or `Contact` within openHAB
+  * Needs to be of type `Switch` or `Contact` within openHAB
 * `stateItemInverted` *(optional)*: If `stateItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
