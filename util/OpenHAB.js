@@ -232,6 +232,31 @@ class OpenHAB {
         }
     }
 
+    getOpenHABAPIVersion() {
+        this._log.debug(`Trying to identify openHAB API Version for host (${this._hostname})...`);
+        let myURL = this._getURL(`/rest/`);
+        const response = syncRequest('GET', myURL);
+        if (response.statusCode !== 200) {
+            return new Error(`Unable to get item values: HTTP code ${response.statusCode}!`);
+        } else {
+            const parsedBody = JSON.parse(response.body);
+            let version = parseInt(parsedBody.version);
+            this._log.debug(`openHAB API Version for host (${this._hostname}) is (${version}).`);
+            return version;
+        }
+    }
+
+    getItemsTopic() {
+        if (typeof this._apiVersion === 'undefined') {
+            this._apiVersion = this.getOpenHABAPIVersion(); 
+        }
+        if(this._apiVersion >= 4) {
+            return 'openhab/items/';
+        }
+        else {
+            return 'smarthome/items/';
+        }
+    }
 
     subscribe(habItem, callback) {
         if(!this._subscriptions[habItem]) {
@@ -242,14 +267,14 @@ class OpenHAB {
     }
 
     startSubscription() {
-        let myURL = this._getURL('/rest/events',`topics=smarthome/items/`);
+        let myURL = this._getURL('/rest/events',`topics=${this.getItemsTopic()}`);
         const CLOSED = 2;
 
         let source = new EventSource(myURL);
         source.onmessage = function (eventPayload) {
             let eventData = JSON.parse(eventPayload.data);
             if (eventData.type === "ItemStateChangedEvent") {
-                let item = eventData.topic.replace("smarthome/items/", "").replace("/statechanged", "");
+                let item = eventData.topic.replace(this.getItemsTopic(), "").replace("/statechanged", "");
                 let value = this._cleanOpenHABState(JSON.parse(eventData.payload).value);
 
                 if(this._subscriptions[item] !== undefined) {
