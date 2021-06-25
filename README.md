@@ -78,7 +78,7 @@ Alternatively you can group accessories of the same `type` in a sub-array:
 ```
 
 ## Supported HAP Services
-The following is a list of all services that are currently supported and which values are required within the accessory configuration. Every accessory needs a `name` (as shown in HomeKit later) and a `type`. 
+The following is a list of all services that are currently supported and which values are required within the accessory configuration. Every accessory needs a `name` (as shown in HomeKit later) and a `type`. The combination of `name` and `type` needs to be unique and should not change in the hombridge configuration (you can safely rename the item within the Home.app after adding them). Changing `name` or `type` in the config will change the item's serial number, which would be registered as a new/different one.
 
 * Complex Accessories:
   * [Lightbulb](#lightbulb) 

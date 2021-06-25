@@ -5,7 +5,6 @@ const version = require('./package').version;
 const platformName = require('./package').name;
 const platformPrettyName = 'openHAB2-Complete';
 
-const SerialNumberGenerator = require('./util/SerialNumberGenerator');
 const {OpenHAB} = require('./util/OpenHAB');
 
 const {Accessory} = require('./util/Accessory');
@@ -122,7 +121,7 @@ const OpenHABComplete = class {
                     let groupAccessoryConfig = {};
 
                     if (configuration.name) {
-                        groupAccessoryConfig.serialNumber = SerialNumberGenerator.generate(configuration.name, configuration.type);
+                        groupAccessoryConfig.serialNumber = this._platform.api.hap.uuid.generate(configuration.name + "-" + configuration.type)
                         groupAccessoryConfig.name = configuration.name;
                         groupAccessoryConfig.version = version;
                         if (configuration.model) {
@@ -206,7 +205,7 @@ const OpenHABComplete = class {
                     // Single item
                     //
                     if (configuration.name) {
-                        configuration.serialNumber = SerialNumberGenerator.generate(configuration.name, configuration.type);
+                        configuration.serialNumber = this._platform.api.hap.uuid.generate(configuration.name + "-" + configuration.type)
                     } else {
                         throw new Error(`Invalid configuration: Accessory name is undefined: ${JSON.stringify(configuration)}`);
                     }
