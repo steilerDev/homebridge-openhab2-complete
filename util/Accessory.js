@@ -161,7 +161,7 @@ class Accessory {
                 accessory.addService(service)
             }
         }.bind(this))
-        return [accessory]
+        return accessory
     }
 }
 

@@ -102,7 +102,7 @@ const OpenHABComplete = class {
             this._platform.openHAB.startSubscription();
             this._platform.openHAB.syncItemValues();
             for(let val of _accessories) {
-                    this._platform.api.registerPlatformAccessories(pluginName, platformName, val.getAccessory());
+                    this._platform.api.registerPlatformAccessories(pluginName, platformName, [val.getAccessory()]);
             }
             this._log.info(`Finished loading ${_accessories.length} accessories from configuration`);
             this._log.info(`---`);
@@ -114,7 +114,7 @@ const OpenHABComplete = class {
      * accessory restored
      */
     configureAccessory(accessory) {
-        this._log.debug(`Restoring accessory ${accessory}`)
+        this._log.debug(`Restored ${accessory.UUID}, adding to list, in order to remove later!`)
         this.accessories.push(accessory);
     }
 
@@ -146,48 +146,50 @@ const OpenHABComplete = class {
                     } else {
                         throw new Error(`Invalid configuration: Accessory name is undefined: ${JSON.stringify(configuration)}`);
                     }
-                    if (!this.accessories.find(accessory => accessory.UUID === groupAccessoryConfig.serialNumber)) {
-                        this._log.debug(`Found accessory group in config: '${groupAccessoryConfig.name}' (${configuration.model})`);
-                        let accessoryGroup = [];
 
-                        // Get all accessory from the group
-                        for (let i = 0; i < configuration.items.length; i++) {
-                            let accessory = this.parseAccessoryConfiguration(configuration.items[i]);
-                            if (accessory !== undefined) {
-                                if (accessory instanceof Array) {
-                                    accessoryGroup = accessoryGroup.concat(accessory);
-                                } else {
-                                    accessoryGroup.push(accessory);
-                                }
-                            }
-                        }
-
-                        // Merge all provided services, except battery and accessory information services
-                        let groupAccessoryServices = [];
-                        for (let i = 0; i < accessoryGroup.length; i++) {
-                            let groupedAccessory = accessoryGroup[i];
-                            for (let n = 0; n < groupedAccessory._services.length; n++) {
-                                let groupedService = groupedAccessory._services[n];
-                                if (groupedService.UUID === UUID.AccessoryInformationService) {
-                                    this._log.debug(`Ignoring Accessory Information Service for grouped accessory ${groupAccessoryConfig.name}`)
-                                } else if (groupedService.UUID === UUID.BatteryService) {
-                                    this._log.debug(`Ignoring Battery Service for grouped accessory ${groupAccessoryConfig.name}`)
-                                } else {
-                                    groupedService.subtype = `${groupedAccessory.uuid_base}`;
-                                    groupAccessoryServices.push(groupedService);
-                                }
-                            }
-                        }
-                        this._log.debug(`Creating grouped accessory ${groupAccessoryConfig.name} (${configuration.model}) with ${accessoryGroup.length} accessories and ${groupAccessoryServices.length} services`);
-                        let groupAccessory = new Accessory(this._platform, groupAccessoryConfig);
-                        groupAccessory._services = groupAccessory._services.concat(groupAccessoryServices);
-                        groupAccessory._services.unshift(groupAccessory._getAccessoryInformationService(groupAccessoryConfig.model));
-                        this._log.info(`Created grouped accessory ${groupAccessoryConfig.name} (${configuration.model}) with ${accessoryGroup.length} accessories and ${groupAccessoryServices.length} services`);
-                        return groupAccessory;
-                    } else {
-                        this._log.debug(`Accessory group '${groupAccessoryConfig.name}' (${configuration.model}) already loaded from cache!`);
-                        return undefined
+                    const cachedAccessory = this.accessories.find(cachedAccessory => cachedAccessory.UUID === groupAccessoryConfig.serialNumber)
+                    if (cachedAccessory != undefined) {
+                        this._log.debug(`Accessory group '${groupAccessoryConfig.name}' (${configuration.model}) already loaded from cache, removing!`);
+                        this._platform.api.unregisterPlatformAccessories(pluginName, platformName, [cachedAccessory]);
                     }
+
+                    this._log.debug(`Found accessory group in config: '${groupAccessoryConfig.name}' (${configuration.model})`);
+                    let accessoryGroup = [];
+
+                    // Get all accessory from the group
+                    for (let i = 0; i < configuration.items.length; i++) {
+                        let accessory = this.parseAccessoryConfiguration(configuration.items[i]);
+                        if (accessory !== undefined) {
+                            if (accessory instanceof Array) {
+                                accessoryGroup = accessoryGroup.concat(accessory);
+                            } else {
+                                accessoryGroup.push(accessory);
+                            }
+                        }
+                    }
+
+                    // Merge all provided services, except battery and accessory information services
+                    let groupAccessoryServices = [];
+                    for (let i = 0; i < accessoryGroup.length; i++) {
+                        let groupedAccessory = accessoryGroup[i];
+                        for (let n = 0; n < groupedAccessory._services.length; n++) {
+                            let groupedService = groupedAccessory._services[n];
+                            if (groupedService.UUID === UUID.AccessoryInformationService) {
+                                this._log.debug(`Ignoring Accessory Information Service for grouped accessory ${groupAccessoryConfig.name}`)
+                            } else if (groupedService.UUID === UUID.BatteryService) {
+                                this._log.debug(`Ignoring Battery Service for grouped accessory ${groupAccessoryConfig.name}`)
+                            } else {
+                                groupedService.subtype = `${groupedAccessory.uuid_base}`;
+                                groupAccessoryServices.push(groupedService);
+                            }
+                        }
+                    }
+                    this._log.debug(`Creating grouped accessory ${groupAccessoryConfig.name} (${configuration.model}) with ${accessoryGroup.length} accessories and ${groupAccessoryServices.length} services`);
+                    let groupAccessory = new Accessory(this._platform, groupAccessoryConfig);
+                    groupAccessory._services = groupAccessory._services.concat(groupAccessoryServices);
+                    groupAccessory._services.unshift(groupAccessory._getAccessoryInformationService(groupAccessoryConfig.model));
+                    this._log.info(`Created grouped accessory ${groupAccessoryConfig.name} (${configuration.model}) with ${accessoryGroup.length} accessories and ${groupAccessoryServices.length} services`);
+                    return groupAccessory;
                 } else {
                    throw new Error(`Invalid configuration: Accessory group does not define items: ${JSON.stringify(configuration)}`);
                 }
@@ -221,18 +223,19 @@ const OpenHABComplete = class {
                     } else {
                         throw new Error(`Invalid configuration: Accessory name is undefined: ${JSON.stringify(configuration)}`);
                     }
-
-                    if (!this.accessories.find(accessory => accessory.UUID === configuration.serialNumber)) {
-                        this._log.debug(`Found accessory in config: '${configuration.name}' (${configuration.type})`);
-                        configuration.version = version;
-                        // Checked that: 'serialNumber' 'version' 'name' exists and 'type' is valid
-                        const accessory = factory(this._platform, configuration);
-                        this._log(`Added accessory ${configuration.name} (Type: ${configuration.type})`);
-                        return accessory;
-                    } else {
-                        this._log.debug(`Accessory '${configuration.name}' (${configuration.type}) already loaded from cache!`);
-                        return undefined
+                    
+                    const cachedAccessory = this.accessories.find(cachedAccessory => cachedAccessory.UUID === configuration.serialNumber)
+                    if (cachedAccessory != undefined) {
+                        this._log.debug(`Accessory '${configuration.name}' (${configuration.type}) already loaded from cache, removing!`);
+                        this._platform.api.unregisterPlatformAccessories(pluginName, platformName, [cachedAccessory]);
                     }
+                    
+                    this._log.debug(`Found accessory in config: '${configuration.name}' (${configuration.type})`);
+                    configuration.version = version;
+                    // Checked that: 'serialNumber' 'version' 'name' exists and 'type' is valid
+                    const accessory = factory(this._platform, configuration);
+                    this._log(`Added accessory ${configuration.name} (Type: ${configuration.type})`);
+                    return accessory;
                 }
             }
         } catch (e) {

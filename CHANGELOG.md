@@ -3,6 +3,7 @@
 ### V1.3.0 (planned)
 * OpenHAB 3 Support
 * Fixed UUID generation issue by using supplied function
+* Fixed `TypeError: service.on is not a function` error during item creation
 
 Issues
 * Closes #88
