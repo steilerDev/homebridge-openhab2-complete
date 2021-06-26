@@ -152,15 +152,22 @@ class Accessory {
     getAccessory() {
         this._log.debug(`Returning HAP Platform Accessory for ${this.name} (${this.uuid_base})`)
         let accessory = new this.API.platformAccessory(this.name, this.uuid_base);
+        
+        let defaultAccessoryInformation = accessory.getService(this.Service.AccessoryInformation)
+        if(defaultAccessoryInformation != undefined) {
+            this._log.info("Removing default accessory information")
+            accessory.removeService(defaultAccessoryInformation)
+        }
         //this._log.debug(JSON.stringify(this._services))
         this._services.forEach(function(service) {
-            if(service.UUID === "0000003E-0000-1000-8000-0026BB765291") {
-                this._log(`Skipping AccessoryInformationService for now`)
-            } else {
-                this._log(`Adding service ${service.UUID} to ${this.name}`)
+            //if(service.UUID === "0000003E-0000-1000-8000-0026BB765291") {
+            //    this._log(`Skipping AccessoryInformationService for now`)
+            //} else {
+            //    this._log(`Adding service ${service.UUID} to ${this.name}`)
                 accessory.addService(service)
-            }
-        }.bind(this))
+            //}
+        })
+        //}.bind(this))
         return accessory
     }
 }
