@@ -208,6 +208,7 @@ class OpenHAB {
                 this._log.error(`Received no items from openHAB, unable to sync states!`);
             }
         }
+        this._log.debug(`Done syncing all items & types!`);
     }
 
     syncItemValues() {
@@ -233,6 +234,7 @@ class OpenHAB {
                 this._log.error(`Received no items from openHAB, unable to sync states!`);
             }
         }
+        this._log.debug(`Done syncing all items values!`)
     }
 
     getOpenHABAPIVersion() {

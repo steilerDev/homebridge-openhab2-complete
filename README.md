@@ -1,4 +1,4 @@
-# Homebridge Plugin for OpenHAB2 - Complete Edition
+# Homebridge Plugin for OpenHAB2 - Complete Edition (works also with OpenHAB3!)
 > Exceeding features of [homebridge-openhab2](https://www.npmjs.com/package/homebridge-openhab2) and [openHAB's Homekit Plugin](https://www.openhab.org/addons/integrations/homekit/) since `v.0.3.0`
 
 [![NPM](https://nodei.co/npm/homebridge-openhab2-complete.png)](https://nodei.co/npm/homebridge-openhab2-complete/)

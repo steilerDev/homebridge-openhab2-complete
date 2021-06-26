@@ -1,10 +1,11 @@
 # Changelog of homebridge-openhab2-complete
 ## Roadmap
 ### V1.3.0 (planned)
-* Code audit & documentation
-* Homebridge verification, including:
-  * Handling all thrown exceptions
-  * Supporting GUI configuration
+* OpenHAB 3 Support
+* Fixed UUID generation issue by using supplied function
+
+Issues
+* Closes #88
 
 ## Changelog
 ### V1.2.0
@@ -19,7 +20,6 @@
 * Fixed missing `LEVEL_CONFIG` for Filter Maintenance Sensor, CO Sensor and CO2 Sensor
 * Reworked thermostat and added warning for Heater/Cooler, see README
 * Added `durationItemMax` to the Valve Service
-* Adding TV Service
 
 Issues:
 * Closes #60
