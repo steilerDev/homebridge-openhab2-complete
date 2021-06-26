@@ -1,7 +1,10 @@
 # Changelog of homebridge-openhab2-complete
-## Roadmap
+## Changelog
 ### V1.3.0
-**Breaking changes**:
+#### Important Information
+This is proabably the last release of this plugin. Since the native HomeKit integration of OpenHAB has significantly improved (still lacking some of the available Service of this plugin), I don't think there is much value in this plugin. As part of my OpenHAB 3 migration I  updated this code to support OH3, finally put some bug fixes that happened over the last year into a release and replaced the depricated `request` package. So I am certain this plugin will continue functioning, and I will continue merging PRs into upstream, but don't expect a new release, unless my test run of OH3's native HomeKit integration fails.
+
+#### Breaking changes
 I reworked the UUID generation, now using the included mechanism (Issue #88). This however will probably reset the items already added to Home.app (once!). Please be aware that there will probably be some work required to re-organize the Home.app!
 
 * OpenHAB 3 Support (Thanks @D-J-See and @DanielKnoop)
@@ -13,7 +16,6 @@ I reworked the UUID generation, now using the included mechanism (Issue #88). Th
 Issues
 * Closes #88
 
-## Changelog
 ### V1.2.0
 * Extended `NumericSensor` and `NumericSensorActor` capabilities to support `Rollershutter` and `Dimmer` types.
 * Homebridge no longer crashes if openHAB's host is not available
