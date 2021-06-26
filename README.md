@@ -1,5 +1,4 @@
 # Homebridge Plugin for OpenHAB2 - Complete Edition (works also with OpenHAB3!)
-> Exceeding features of [homebridge-openhab2](https://www.npmjs.com/package/homebridge-openhab2) and [openHAB's Homekit Plugin](https://www.openhab.org/addons/integrations/homekit/) since `v.0.3.0`
 
 [![NPM](https://nodei.co/npm/homebridge-openhab2-complete.png)](https://nodei.co/npm/homebridge-openhab2-complete/)
 
@@ -1258,19 +1257,6 @@ If you would like to contribute just send me a pull request. In order to add a n
    
 My accessories are using centrally defined characteristics inside `./accessory/characteristic`. See `NumericSensor.js` for a simple characteristic implementation and `TemperatureSensor.js` for a simple accessory using this characteristic. This is not a requirement, but highly recommended. 
 
-## Comparision
-| [homebridge-openhab2 plugin](https://www.npmjs.com/package/homebridge-openhab2) | openHAB2 - Complete Edition
---- | --- 
-Verly little configuration within homebridge/openHAB, only tags within `*.items` files and inclusion within sitemap, obviously requiring both to be created manually | Explicit declaration within `config.json` not requiring instable openHAB `Metadata Provider` (removes items if state is `NULL`) and de-couples homebridge configuration from openHAB
-Support only 1:1 mappings between Items and HomeKit services | Supports composite items (e.g. Thermostat, Security System, Battery States, etc.)
-Uses `SSE` to receive push notifications from openHAB about state change and requires sitemap definitions | Pulling of states through REST interface & push notifications from openHAB through `SSE` *without*  the requirement of a sitemap
-Thermostats never really worked | Thermostats working as expected
-4 accessory types supported | 29 different accessory types supported
-Light item in openHAB gets triggered multiple times from single user interaction | Light item in openHAB receives only one command per user interaction
-No support for items with notification capabilities | Many HomeKit services can notify the user about a state change. Those accessories are only supported in this plugin
-
-Concluding, I personally might only consider using the [OpenHAB homebridge plugin](https://www.npmjs.com/package/homebridge-openhab2) in smaller, less diverse installations. However my own installation has a a lot of different device types, that I want to fully include in HomeKit, therefore this plugin is the only feasible way for me and everyone alike.
-
 # Acknowledgments
 First of all, a massive thank you to all the users of this plugin, seeing so many positive responses to my work keeps me going and improving!
 
@@ -1278,6 +1264,7 @@ A couple of people helped me test this piece of software and by opening issues, 
 * Pieter Janssens (@piejanssens) for his [kind words on the openHAB community forum](https://community.openhab.org/t/homekit-holy-grail-homebridge-openhab2-complete/66167)
 * Grzegorz (@grzegorz914) for providing quick feedback and opening a couple of helpful PR's
 * @EjvindHald for at least the same amount of feedback
+* @D-J-See and @DanielKnoop for adding OH3 support, way before I was thinking about migrating to the new version.
 * Honorable mentions for finding my bugs and opening great, helpful and responsive issues:
   * @hartmood
   * @maisun

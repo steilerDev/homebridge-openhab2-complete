@@ -155,19 +155,13 @@ class Accessory {
         
         let defaultAccessoryInformation = accessory.getService(this.Service.AccessoryInformation)
         if(defaultAccessoryInformation != undefined) {
-            this._log.info("Removing default accessory information")
+            this._log.debug("Removing default accessory information")
             accessory.removeService(defaultAccessoryInformation)
         }
-        //this._log.debug(JSON.stringify(this._services))
+        
         this._services.forEach(function(service) {
-            //if(service.UUID === "0000003E-0000-1000-8000-0026BB765291") {
-            //    this._log(`Skipping AccessoryInformationService for now`)
-            //} else {
-            //    this._log(`Adding service ${service.UUID} to ${this.name}`)
-                accessory.addService(service)
-            //}
+            accessory.addService(service)
         })
-        //}.bind(this))
         return accessory
     }
 }

@@ -5,6 +5,7 @@ const request = require('request');
 const syncRequest = require('sync-request');
 const EventSource = require('eventsource');
 const {Cache} = require('./Cache');
+var needle = require('needle');
 
 // 30 mins ttl for cached item states
 const valueCacheTTL = 30 * 60 * 1000;
@@ -63,8 +64,8 @@ class OpenHAB {
     }
 
     isOnline() {
+        let myURL = this._getURL(`/rest/items`);
         try {
-          let myURL = this._getURL(`/rest/items`);
           const response = syncRequest('GET', myURL);
           this._log.debug(`Online request for openHAB (${myURL}) resulted in status code ${response.statusCode}`);
           return response.statusCode === 200;
@@ -139,25 +140,27 @@ class OpenHAB {
             this._valueCache.del(habItem);
         }
         let myURL = this._getURL(`/rest/items/${habItem}`);
-        request({
-            url: myURL,
-            method: 'POST',
-            body: command,
+        var plainTextHeader = {
             headers: {
                 'Content-Type': 'text/plain'
             }
-        },
-        function(error, response) {
-            if(error) {
-                callback(error);
-            } else if (response.statusCode === 404) {
-                callback(new Error(`Item does not exist!`));
-            } else if (response.statusCode === 400) {
-                callback(new Error(`Item command null`));
-            } else {
-                callback(null);
+        }
+        needle.post(
+            myURL, 
+            command,
+            plainTextHeader,
+            function(error, response) {
+                if(error) {
+                    callback(error);
+                } else if (response.statusCode === 404) {
+                    callback(new Error(`Item does not exist!`));
+                } else if (response.statusCode === 400) {
+                    callback(new Error(`Item command null`));
+                } else {
+                    callback(null);
+                }
             }
-        })
+        )
     }
 
     updateState(habItem, state, callback) {
@@ -166,12 +169,7 @@ class OpenHAB {
             this._valueCache.del(habItem);
         }
         let myURL = this._getURL(`/rest/items/${habItem}/state`);
-        request({
-                url: myURL,
-                method: 'PUT',
-                body: state
-        },
-        function(error, response) {
+        needle.put(myURL, state, function(error, response) {
             if(error) {
                 callback(error);
             } else if (response.statusCode === 404) {

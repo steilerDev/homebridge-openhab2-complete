@@ -1,9 +1,14 @@
 # Changelog of homebridge-openhab2-complete
 ## Roadmap
-### V1.3.0 (planned)
-* OpenHAB 3 Support
+### V1.3.0
+**Breaking changes**:
+I reworked the UUID generation, now using the included mechanism (Issue #88). This however will probably reset the items already added to Home.app (once!). Please be aware that there will probably be some work required to re-organize the Home.app!
+
+* OpenHAB 3 Support (Thanks @D-J-See and @DanielKnoop)
 * Fixed UUID generation issue by using supplied function
 * Fixed `TypeError: service.on is not a function` error during item creation
+* Honoring homebridge's item caching
+* Exchanged depricated `request` for `needle`
 
 Issues
 * Closes #88
