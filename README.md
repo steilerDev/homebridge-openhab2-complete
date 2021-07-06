@@ -9,7 +9,7 @@ This [homebridge](https://github.com/nfarina/homebridge) plugin for [openHAB](ht
 
 After testing openHAB3's HomeKit integration for a week, I decided to move back to homebridge, due to the instability of openHAB's implementation.
 
-As part of my OpenHAB 3 migration I  updated the code to support OH3, finally put some bug fixes that happened over the last year into the release and replaced the depricated `request` package. So I am certain this plugin will continue functioning, and I will continue merging PRs into upstream, but don't expect a new release, unless my test run of OH3's native HomeKit integration fails.
+As part of my OpenHAB 3 migration I  updated the code to support OH3, finally put some bug fixes that happened over the last year into the release and replaced the depricated `request` package. 
 
 To pull the Github version:
 ```
