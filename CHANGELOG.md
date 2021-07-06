@@ -1,5 +1,10 @@
 # Changelog of homebridge-openhab2-complete
 ## Changelog
+### V1.3.2
+  * Missed one occurence of the `request` dependency
+
+Issues
+* Closes #99
 ### V1.3.0
 #### Important Information
 This is proabably the last release of this plugin. Since the native HomeKit integration of OpenHAB has significantly improved (still lacking some of the available Service of this plugin), I don't think there is much value in this plugin. As part of my OpenHAB 3 migration I  updated this code to support OH3, finally put some bug fixes that happened over the last year into a release and replaced the depricated `request` package. So I am certain this plugin will continue functioning, and I will continue merging PRs into upstream, but don't expect a new release, unless my test run of OH3's native HomeKit integration fails.
