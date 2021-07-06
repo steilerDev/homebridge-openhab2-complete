@@ -88,10 +88,8 @@ class OpenHAB {
     _getStateWithoutCache(habItem, callback) {
         let myURL = this._getURL(`/rest/items/${habItem}/state`);
         this._log.debug(`Getting value for ${habItem} from openHAB`);
-        request({
-                url: myURL,
-                method: 'GET'
-            },
+        needle.get(
+            url, 
             function (error, response, body) {
                 let returnedError = null;
                 let returnedValue = null;
@@ -110,7 +108,8 @@ class OpenHAB {
                 if(callback !== null && callback !== undefined && typeof (callback) === "function") {
                     callback(returnedError, returnedValue);
                 }
-            }.bind(this))
+            }.bind(this)
+        )
     }
 
     getStateSync(habItem) {
