@@ -1,10 +1,17 @@
 # Changelog of homebridge-openhab2-complete
 ## Changelog
+### V1.3.3
+  * Fixed wrong variable name
+
+#### Issues
+* Closes #100
+
 ### V1.3.2
   * Missed one occurence of the `request` dependency
 
-Issues
+#### Issues
 * Closes #99
+
 ### V1.3.0
 #### Important Information
 This is proabably the last release of this plugin. Since the native HomeKit integration of OpenHAB has significantly improved (still lacking some of the available Service of this plugin), I don't think there is much value in this plugin. As part of my OpenHAB 3 migration I  updated this code to support OH3, finally put some bug fixes that happened over the last year into a release and replaced the depricated `request` package. So I am certain this plugin will continue functioning, and I will continue merging PRs into upstream, but don't expect a new release, unless my test run of OH3's native HomeKit integration fails.
@@ -18,7 +25,7 @@ I reworked the UUID generation, now using the included mechanism (Issue #88). Th
 * Honoring homebridge's item caching
 * Exchanged depricated `request` for `needle`
 
-Issues
+#### Issues
 * Closes #88
 
 ### V1.2.0
@@ -34,7 +41,7 @@ Issues
 * Reworked thermostat and added warning for Heater/Cooler, see README
 * Added `durationItemMax` to the Valve Service
 
-Issues:
+#### Issues:
 * Closes #60
 * Closes #70
 * Closes #73
@@ -61,7 +68,7 @@ Issues:
 * Added vertical and horizontal tilt angle's for `Window Covering`'s slats
 * Reworked `Security System` behaviour, using a single `String` item in comparision to a complex `Switch` construct
 
-Issues:
+#### Issues:
 * Closes #9
 * (Hopefully finally) closes #13
 * Closes #17
@@ -85,7 +92,7 @@ Issues:
 * Fixed a logic bug for inverted `Window Covering` Accessory using inverted `Rollershutter` items
 * Fixed light off bug
 
-Issues:
+#### Issues:
 * Closes #11, #12, #13
 
 ### V0.10.0
@@ -105,7 +112,7 @@ Issues:
 **Breaking changes**:
 * Renamed light sensor's accessory type from `lightSensor` to `lux`
 
-Issues:
+#### Issues:
 * Closes #8
 
 ### V0.9.0
@@ -114,7 +121,7 @@ Issues:
 * Fixed an issue, where not supported characteristics were still being exposed to HomeKit
 * Reworked thermostat to extend usage for AUTO mode and mode item
 
-Issues:
+#### Issues:
 * Closes #2, #4, #5, #7
 
 ### V0.8.2
@@ -168,7 +175,7 @@ Issues:
 * Supporting `Contact` and `Switch` type for Battery Warning Service
 * Added optional `stateItem` to Window Covering Service
 
-Breaking Changes:
+**Breaking Changes:**
 * Renamed `habBatteryItem` key in configurations with Battery Warning Characteristic to `batteryItem`
 * Renamed `habBatteryItemStateWarning` key in configurations with Battery Warning Characteristics `batteryItemInverted: "false" | "true"`
 

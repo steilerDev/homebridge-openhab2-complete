@@ -89,7 +89,7 @@ class OpenHAB {
         let myURL = this._getURL(`/rest/items/${habItem}/state`);
         this._log.debug(`Getting value for ${habItem} from openHAB`);
         needle.get(
-            url, 
+            myURL, 
             function (error, response, body) {
                 let returnedError = null;
                 let returnedValue = null;
