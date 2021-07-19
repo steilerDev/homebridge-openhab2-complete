@@ -243,10 +243,15 @@ This service describes a lightbulb.
     "name": "An items name, as shown in Homekit later",
     "type": "light",
     "item": "Itemname-within-OpenHAB"
+    "sendOnOnlyWhenOff": "false"
 }
 ```
 * `item`: The openHAB item controlled by this accessory
   * Needs to be of type `Switch`, `Dimmer` or `Color` within openHAB (HomeKit will correctly display brightness *-in case of `Dimmer` or `Color`-* and color settings *-in case of `Color`-*)
+* `sendOnOnlyWhenOff`: This addresses the different behaviour of lights as discussed in issue #57 and when enable uses @weakfl 's proposed fix
+  * Default: `"false"`
+  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
+
   
 ### Fan
 This service describes a fan.
