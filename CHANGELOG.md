@@ -1,7 +1,16 @@
 # Changelog of homebridge-openhab2-complete
 ## Changelog
+
+### V1.3.4
+* Added option to change light behaviour with `sendOnOnlyWhenOff` option
+* Fixed documentation
+
+#### Issues
+* Closes #57
+* Closes #102
+
 ### V1.3.3
-  * Fixed wrong variable name
+* Fixed wrong variable name
 
 #### Issues
 * Closes #100

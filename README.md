@@ -13,7 +13,7 @@ As part of my OpenHAB 3 migration I  updated the code to support OH3, finally pu
 
 To pull the Github version:
 ```
-npm install -f steilerDev/homebridge-openhab2-complete#master
+npm install -g -f steilerDev/homebridge-openhab2-complete#master
 ```
 
 ## Installation
@@ -248,7 +248,7 @@ This service describes a lightbulb.
 ```
 * `item`: The openHAB item controlled by this accessory
   * Needs to be of type `Switch`, `Dimmer` or `Color` within openHAB (HomeKit will correctly display brightness *-in case of `Dimmer` or `Color`-* and color settings *-in case of `Color`-*)
-* `sendOnOnlyWhenOff`: This addresses the different behaviour of lights as discussed in issue #57 and when enable uses @weakfl 's proposed fix
+* `sendOnOnlyWhenOff`: This addresses the different behaviour of lights as discussed in issue #57 and when enabled uses @weakfl 's proposed fix
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 
@@ -312,7 +312,7 @@ This service describes a thermostat.
     "heatingThresholdTempItem": "Itemname-within-OpenHAB",
     "coolingThresholdTempItem": "Itemname-within-OpenHAB",
     "modeItem": "Itemname-within-OpenHAB",
-    "modeItemCharacteristic": "HeatingCooling",
+    "modeItemCapability": "HeatingCooling",
     "minTemp": "-100",
     "maxTemp": "200",
     "minTempStep": "0.1"
@@ -359,7 +359,7 @@ This service describes a thermostat.
     * 1 ≙ `Heating`
     * 2 ≙ `Cooling`
     * 3 ≙ `Auto`
-* `modeItemCharacteristic` *(optional)*: If you are using `modeItem` the discrete values accepted and shown in the app can be restricted:
+* `modeItemCapability` *(optional)*: If you are using `modeItem` the discrete values accepted and shown in the app can be restricted:
   * Allowed values: `Heating` (will restrict `modeItem` to `0`, `1`, `3`), `Cooling` (will restrict `modeItem` to `0`, `2`, `3`) or `HeatingCooling` (will not restrict `modeItem`)
   * Default `HeatingCooling`
 * `minTemp` *(optional)*: If you need to change the minimum allowed temperature, the `currentTempItem` is reading

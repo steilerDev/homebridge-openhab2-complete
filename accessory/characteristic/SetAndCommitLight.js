@@ -87,14 +87,14 @@ function _commitFunction(service, type) {
         } else if (hue === undefined && saturation === undefined && brightness === undefined) {
             command = binary ? "ON" : "OFF";
         } else if (hue === undefined && saturation === undefined) {
-            this._log.error(`Using config: ${this._config.sendOnOnlyWhenOff}`)
+            this._log.debug(`Using special config: ${this._config.sendOnOnlyWhenOff}`)
             if(binary && (brightness === 0 || brightness === 100) && (this._config.sendOnOnlyWhenOff == undefined || this._config.sendOnOnlyWhenOff === "false" || !(service.getCharacteristic(this.Characteristic.On).value))) { // For some reaason when invoking Siri to turn on a light brightness is sometimes set to '0'
                 command = "ON";
             } else {
                 command = binary ? `${brightness}` : "OFF";
             }
         } else {
-            this._log.error(`Using config: ${this._config.sendOnOnlyWhenOff}`)
+            this._log.debug(`Using special config: ${this._config.sendOnOnlyWhenOff}`)
             if(binary && (brightness === 0 || brightness === 100) && (this._config.sendOnOnlyWhenOff == undefined || this._config.sendOnOnlyWhenOff === "false" || !(service.getCharacteristic(this.Characteristic.On).value))) { // For some reaason when invoking Siri to turn on a light brightness is sometimes set to '0'
                 command = "ON";
             } else {
