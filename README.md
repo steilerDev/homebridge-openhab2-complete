@@ -633,7 +633,7 @@ This service is used to control the audio input settings on an audio device (pri
     *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 
 ### Valve
-<!-- This service describes a generic valve or a specific `Faucet`, `Irigation System` or `Showerhead`. -->
+This service describes a generic valve or a specific `Faucet`, `Irigation System` or `Showerhead`.
 
 ```
 {
