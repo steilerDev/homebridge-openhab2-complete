@@ -1,6 +1,12 @@
 # Changelog of homebridge-openhab2-complete
 ## Changelog
 
+### V1.3.5 (to be released)
+* Removed `Faucet` and `Irrigation System` in favor of generic `Valve`
+
+#### Issues
+* Closes 
+
 ### V1.3.4
 * Added option to change light behaviour with `sendOnOnlyWhenOff` option
 * Fixed documentation

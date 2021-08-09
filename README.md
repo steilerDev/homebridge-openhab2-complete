@@ -113,12 +113,8 @@ The following is a list of all services that are currently supported and which v
   * [Microphone](#microphone)
     * Homebridge configuration type: `microphone`
 * Watering Accessories:
-  * [Faucet](#faucet)
-    * Homebridge configuration type: `faucet`
-  * [Valve](#valve)
+  * [Valve](#valve), which can be an 'Irrigation System' or 'Faucet'
     * Homebridge configuration type: `valve`
-  * [Irrigation System](#irrigation-system)
-    * Homebridge configuration type: `irrigation`
 * Position Based Actors:
   * [Window Covering](#window-covering)
     * Homebridge configuration type: `windowcovering`
@@ -636,25 +632,8 @@ This service is used to control the audio input settings on an audio device (pri
   
     *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 
-### Faucet
-This service describes a faucet.
-
-```
-{
-    "name": "An items name, as shown in Homekit later",
-    "type": "faucet",
-    "item": "Itemname-within-OpenHAB",
-    "inverted": "true"
-}
-```
-* `item`: The openHAB item showing, if the faucet is currently active 
-  * Needs to be of type `Switch` within openHAB
-* `inverted` *(optional)*: If `item`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
- 
 ### Valve
-This service describes a valve.
+<!-- This service describes a generic valve or a specific `Faucet`, `Irigation System` or `Showerhead`. -->
 
 ```
 {
@@ -683,48 +662,6 @@ This service describes a valve.
 * `valveType` *(optional)*: The type of valve described by this service.
   * Default: `generic`
   * Allowed values: `generic`, `irrigation`, `showerhead`, `faucet`
- 
-### Irrigation System
-This service describes an irrigation system.
-
-```
-{
-    "name": "An items name, as shown in Homekit later",
-    "type": "irrigation",
-    "item": "Itemname-within-OpenHAB",
-    "inverted": "true",
-    "inUseItem": "Itemname-within-OpenHAB",
-    "inUseItemInverted": "true",
-    "durationItem": "Itemname-within-OpenHAB",
-    "durationItemMax": "3600",
-    "programMode": "manual",
-    "programModeItem": "Itemname-within-OpenHAB"
-}
-```
-* `item`: The openHAB item showing, if the valve is currently active
-  * Needs to be of type `Switch` or `Contact` within openHAB
-* `inverted` *(optional)*: If `activeItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-* `inUseItem` Representing, if the valve is currently in use (if `Switch` is `ON`, `Contact` is `OPEN` or `Number` is greater than 0)
-  * Needs to be of type `Switch`, `Contact` or `Number` within openHAB
-* `inUseItemInverted` *(optional)*: If `inUseItem`'s state needs to be interpreted inverted, set this value to `"true"` 
-  * Default: `"false"`
-  * Allowed values: `"true"` & `"false"` *don't forget the quotes*
-* `durationItem` *(optional)*: This item will be set by HomeKit to show the duration for the watering. This item should also be decreased, to show the remaining watering time
-  * Needs to be of type `Number` within openHAB
-* `durationItemMax` *(optional)*: The maximum amount of seconds, the `durationItem` can be set to.
-  * Needs to be a float
-  * Default: `"3600"`
-* `programMode` *(optional)*: The current program mode of this accessory.
-  * Default: `noprogram`
-  * Allowed values: `noprogram`, `scheduled`, `manual`
-* `programModeItem` *(optional)*: If your accessory can dynamically report its program mode, use this item as an alternative to `programMode`.
-  * Needs to be of type `Number` within openHAB
-  * Only discrete values are recognized:
-    * 0 ≙ `No Program scheduled`
-    * 1 ≙ `Program scheduled`
-    * 2 ≙ `Manual Mode`
  
 ### Window Covering
 This service describes motorized window coverings or shades - examples include shutters, blinds, awnings etc.

@@ -5,9 +5,7 @@ const {addNumericSensorActorCharacteristic, addNumericSensorCharacteristic} = re
 const WATERING_CONF = {
     durationItem: "durationItem",
     durationItemMax: "durationItemMax",
-    valveType: "valveType",
-    programMode: "programMode",
-    programModeItem: "programModeItem"
+    valveType: "valveType"
 };
 
 let DEFAULT_MAX_DURATION = 3600;
@@ -58,34 +56,7 @@ function addDurationCharacteristic(service, optional) {
     addNumericSensorCharacteristic.bind(this)(service, remainingDurationCharacteristic, {item: WATERING_CONF.durationItem}, optional);
 }
 
-function addProgramModeCharacteristic(service, optional) {
-    if(this._config[WATERING_CONF.programModeItem]) {
-        addNumericSensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.ProgramMode), {item: WATERING_CONF.programModeItem}, optional);
-    } else {
-        let NO_PROGRAM_SCHEDULED = 0;               // = Characteristic.ProgramMode.NO_PROGRAM_SCHEDULED
-        let PROGRAM_SCHEDULED = 1;                  // = Characteristic.ProgramMode.PROGRAM_SCHEDULED
-        let PROGRAM_SCHEDULED_MANUAL_MODE_ = 2;     // = Characteristic.ProgramMode.PROGRAM_SCHEDULED_MANUAL_MODE_
-        let programMode;
-        switch (this._config[WATERING_CONF.programMode]) {
-            default:
-            case "noprogram":
-                programMode = NO_PROGRAM_SCHEDULED;
-                break;
-            case "scheduled":
-                programMode = PROGRAM_SCHEDULED;
-                break;
-            case "manual":
-                programMode = PROGRAM_SCHEDULED_MANUAL_MODE_;
-                break;
-        }
-        service.getCharacteristic(this.Characteristic.ProgramMode)
-            .on('get', function(callback) { callback(null, programMode) });
-    }
-
-}
-
 module.exports = {
     addDurationCharacteristic,
-    addValveTypeCharacteristic,
-    addProgramModeCharacteristic
+    addValveTypeCharacteristic
 };
