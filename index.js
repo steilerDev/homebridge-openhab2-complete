@@ -37,7 +37,7 @@ const OpenHABComplete = class {
            throw new Error(msg);
        } else {
             this._platform = {
-                openHAB: new OpenHAB(config.host, config.port, log),
+                openHAB: new OpenHAB(config, log),
                 api:  api,
                 log: log
             };

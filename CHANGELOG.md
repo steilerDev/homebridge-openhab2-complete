@@ -3,6 +3,7 @@
 
 ### V1.3.5 (to be released)
 * Removed `Faucet` and `Irrigation System` in favor of generic `Valve`
+* Added configuration options for HTTP(S) basic authentication
 
 #### Issues
 * Closes 
