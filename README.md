@@ -895,8 +895,8 @@ This service describes a slat which tilts on a vertical or a horizontal axis.
     "stateItem": "Itemname-within-OpenHAB",
     "stateItemInverted": "false",
     "item": "Itemname-within-OpenHAB",
-    "itemRangeStart: "itemRangeStart",
-    "itemRangeEnd: "itemRangeEnd",
+    "itemRangeStart": "itemRangeStart",
+    "itemRangeEnd": "itemRangeEnd",
     "slatType": "horizontal"
 }
 ```
@@ -1210,6 +1210,7 @@ Due to the very limited documentation on homebridge plugin development I have no
 
 If you have feedback or suggestions how to better represent the services as openHAB Items, feel free to open an [issue](https://github.com/steilerDev/homebridge-openhab2-complete/issues).
 
+### Contribute & Add new service/accessory
 If you would like to contribute just send me a pull request. In order to add a new service you have to modify/add the following parts:
 1. Create your own accessory class within `./accessory`
 2. The only *required* functions are `getServices()` (returning an array of `HAP.Service` with attached `HAP.Characteristic`) and `identify()` (which does not need to do anything). Those are implemented in the `Accessory` super class and don't need to be overridden. Make sure that `this._services` is populated and reflects your service
@@ -1217,6 +1218,31 @@ If you would like to contribute just send me a pull request. In order to add a n
 4. Finally expose `type` and `createAccessory` through `module.exports = {type, createAccessory}`
    
 My accessories are using centrally defined characteristics inside `./accessory/characteristic`. See `NumericSensor.js` for a simple characteristic implementation and `TemperatureSensor.js` for a simple accessory using this characteristic. This is not a requirement, but highly recommended. 
+
+### Connecting to HTTPS openHAB instances
+To connect to a server with a self-signed certificate, you have to add that certificate or your own Certificate Authority to NodeJS.
+
+When using Docker, this can be accomplished by putting the *.crt* file in a mounted directory (e.g. `/homebridge`) 
+and setting the Docker enviroment variable `NODE_EXTRA_CA_CERTS=/homebridge/ca.crt` (e.g. in `docker-compose.yml` under *environment*).
+
+Example `docker-compose.yml`:
+```yml
+version: '2'
+services:
+  homebridge:
+    image: oznu/homebridge:ubuntu
+    restart: always
+    network_mode: host
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - HOMEBRIDGE_CONFIG_UI=1
+      - HOMEBRIDGE_CONFIG_UI_PORT=8581
+      - TZ=Berlin/Germany
+      - NODE_EXTRA_CA_CERTS=/homebridge/CA.crt
+    volumes:
+      - ./data:/homebridge
+```
 
 # Acknowledgments
 First of all, a massive thank you to all the users of this plugin, seeing so many positive responses to my work keeps me going and improving!
