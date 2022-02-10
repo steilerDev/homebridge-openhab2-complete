@@ -13,15 +13,17 @@ const monitorInterval = 5 * 60 * 1000;
 
 class OpenHAB {
 
-    constructor(hostname, port, log) {
+    constructor(config, log) {
         this._log = log;
 
-        if(hostname.startsWith("http://") || hostname.startsWith("https://")) {
-            this._hostname = hostname;
+        if(config.host.startsWith("http://") || config.host.startsWith("https://")) {
+            this._hostname = config.host;
         } else {
-            this._hostname = `http://${hostname}`;
+            this._hostname = `http://${config.host}`;
         }
-        this._port = port;
+        this._port = config.port;
+        this._username = config.username;
+        this._password = config.password;
 
         this._valueCache = new Cache(log, valueCacheTTL, monitorInterval);
 
@@ -59,17 +61,22 @@ class OpenHAB {
         if(search) {
             newURL.search = search;
         }
-       return newURL.href;
+        let url = {};
+        url.public = newURL.href;
+        newURL.username = this._username;
+        newURL.password = this._password;
+        url.href = newURL.href;
+        return url;
     }
 
     isOnline() {
         let myURL = this._getURL(`/rest/items`);
         try {
           const response = syncRequest('GET', myURL);
-          this._log.debug(`Online request for openHAB (${myURL}) resulted in status code ${response.statusCode}`);
+          this._log.debug(`Online request for openHAB (${myURL.public}) resulted in status code ${response.statusCode}`);
           return response.statusCode === 200;
         } catch (e) {
-          this._log.warn(`Unable to retrieve openHAB URL ${myURL}: ${e}`);
+          this._log.warn(`Unable to retrieve openHAB URL ${myURL.public}: ${e}`);
           return false;
         }
     }
@@ -86,7 +93,7 @@ class OpenHAB {
     }
 
     _getStateWithoutCache(habItem, callback) {
-        let myURL = this._getURL(`/rest/items/${habItem}/state`);
+        let myURL = this._getURL(`/rest/items/${habItem}/state`).href;
         this._log.debug(`Getting value for ${habItem} from openHAB`);
         needle.get(
             myURL, 
@@ -118,7 +125,7 @@ class OpenHAB {
             return this._valueCache.get(habItem);
         } else {
             this._log.warn(`Getting value for ${habItem} from openHAB, because no cached state exists`);
-            let myURL = this._getURL(`/rest/items/${habItem}/state`);
+            let myURL = this._getURL(`/rest/items/${habItem}/state`).href;
             const response = syncRequest('GET', myURL);
             if (response.statusCode === 404) {
                 return new Error(`Item does not exist!`);
@@ -137,7 +144,7 @@ class OpenHAB {
             this._log.debug(`Invalidating cache for ${habItem}`);
             this._valueCache.del(habItem);
         }
-        let myURL = this._getURL(`/rest/items/${habItem}`);
+        let myURL = this._getURL(`/rest/items/${habItem}`).href;
         var plainTextHeader = {
             headers: {
                 'Content-Type': 'text/plain'
@@ -166,7 +173,7 @@ class OpenHAB {
             this._log.debug(`Invalidating cache for ${habItem}`);
             this._valueCache.del(habItem);
         }
-        let myURL = this._getURL(`/rest/items/${habItem}/state`);
+        let myURL = this._getURL(`/rest/items/${habItem}/state`).href;
         needle.put(myURL, state, function(error, response) {
             if(error) {
                 callback(error);
@@ -187,7 +194,7 @@ class OpenHAB {
 
     syncItemTypes() {
         this._log.info(`Syncing all items & types from openHAB`);
-        let myURL = this._getURL(`/rest/items`, `recursive=false&fields=name%2Ctype%2Ceditable`);
+        let myURL = this._getURL(`/rest/items`, `recursive=false&fields=name%2Ctype%2Ceditable`).href;
         const response = syncRequest('GET', myURL);
         if (response.statusCode !== 200) {
             return new Error(`Unable to get items: HTTP code ${response.statusCode}!`);
@@ -209,7 +216,7 @@ class OpenHAB {
 
     syncItemValues() {
         this._log.info(`Syncing all item values from openHAB`);
-        let myURL = this._getURL(`/rest/items`, `recursive=false&fields=name%2Cstate%2Ceditable`);
+        let myURL = this._getURL(`/rest/items`, `recursive=false&fields=name%2Cstate%2Ceditable`).href;
         const response = syncRequest('GET', myURL);
         if (response.statusCode !== 200) {
             return new Error(`Unable to get item values: HTTP code ${response.statusCode}!`);
@@ -268,7 +275,7 @@ class OpenHAB {
     }
 
     startSubscription() {
-        let myURL = this._getURL('/rest/events',`topics=${this.getItemsTopic()}`);
+        let myURL = this._getURL('/rest/events',`topics=${this.getItemsTopic()}`).href;
         const CLOSED = 2;
 
         let source = new EventSource(myURL);

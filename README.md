@@ -28,7 +28,7 @@ Some people are experiencing dependency issues between homebridge's node version
 ## Configuration
 This is a platform plugin, that will register all accessories within the Bridge provided by homebridge. The following shows the general homebridge configuration (`config.json`), see the [Supported HAP Services below](#supported-hap-services), in order to get the detailed configuration for each service.
 
-```
+```json
 {
     "bridge": {
         ...
@@ -43,6 +43,8 @@ This is a platform plugin, that will register all accessories within the Bridge 
             "platform": "openHAB2-Complete",
             "host": "http://192.168.0.100",
             "port": "8080",
+            "username": "homebridge",
+            "password": "homebridge",
             "accessories": [
                 {
                     "name": "An items name, as shown in Homekit later",
@@ -59,10 +61,12 @@ This is a platform plugin, that will register all accessories within the Bridge 
 * `platform` has to be `"openHAB2-Complete"`
 * `host`: The IP or hostname of your openHAB instance. The Protocol specifier (`http://`) is optional, defaults to `http://` (independent of the specified port)
 * `port`: *(optional)* If not specified the default port of the specified `host` protocol is used.
+* `username`: *(optional)* Username for HTTP(S) basic auth.
+* `password`: *(optional)* Password for HTTP(S) basic auth.
 * `accessory`: An array of accessories exposed to HomeKit, see the next chapter for available services and their configurations.
 
 Alternatively you can group accessories of the same `type` in a sub-array:
-```
+```json
 ...
     "platforms": [
         {
@@ -168,7 +172,7 @@ The following services are also defined by the HomeKit protocol, but since I don
 ## Configuration for every accessory
 ### Grouping
 Since iOS 13 multiple accessories can be grouped within a single accessory. This can be -as far as I have tested- done in an arbitrary way. The syntax to define a grouped item is as follows:
-```
+```json
 {
     {
         "type": "group",
@@ -181,19 +185,22 @@ Since iOS 13 multiple accessories can be grouped within a single accessory. This
                 "type": "homebridge-openhab2-complete item type",
                 "name": "An items name, as shown in Homekit later",
                 "item": "Itemname-within-OpenHAB"
-            }, {
+            }, 
+            {
                 "type": "homebridge-openhab2-complete item type",
                 "items": [
                     {
                         "name": "An items name, as shown in Homekit later",
                         "item": "Itemname-within-OpenHAB",
-                    }, {
+                    },
+                    {
                         ...
                     }
                 ]
             }
         ]
     }
+}
 ```
 * `type`: Needs to be `"group"`
 * `name`: The name as shown in HomeKit later (in some instances I have experienced that this name is dropped in favor of the first item's name)
@@ -203,7 +210,7 @@ Since iOS 13 multiple accessories can be grouped within a single accessory. This
 
 ### Battery Levels and Warnings
 Every accessory can be configured to show battery warnings and battery levels. The following configuration can be optionally added to every item:
-```
+```json
 {
     "batteryItem": "Itemname-within-OpenHAB",
     "batteryItemThreshold": "10",
@@ -234,11 +241,11 @@ Every accessory can be configured to show battery warnings and battery levels. T
 ### Lightbulb
 This service describes a lightbulb.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "light",
-    "item": "Itemname-within-OpenHAB"
+    "item": "Itemname-within-OpenHAB",
     "sendOnOnlyWhenOff": "false"
 }
 ```
@@ -252,7 +259,7 @@ This service describes a lightbulb.
 ### Fan
 This service describes a fan.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "fan",
@@ -265,7 +272,7 @@ This service describes a fan.
 ### Security System
 This service describes a security system.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "security",
@@ -294,7 +301,7 @@ This service describes a thermostat.
 
 *Important notes on Thermostat Capabilities*
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "thermostat",
@@ -371,7 +378,7 @@ This service describes a thermostat.
 ### Humidifier/Dehumidifier
 This service describes a humidifier and/or dehumidifier accessory.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "humidifier",
@@ -453,7 +460,7 @@ The Heater/Cooler implementation within HomeKit clashes with OpenHAB. The Heater
 *Important notes on Heater/Cooler*
 
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "heatercooler",
@@ -471,7 +478,7 @@ The Heater/Cooler implementation within HomeKit clashes with OpenHAB. The Heater
     "tempUnit": "Celsius",
     "minTemp": "-100",
     "maxTemp": "200",
-    "minTempStep": "0.1"
+    "minTempStep": "0.1",
     "minFanSpeed": "0",
     "maxFanSpeed": "100",
     "minFanStep": "1"
@@ -539,7 +546,7 @@ The Heater/Cooler implementation within HomeKit clashes with OpenHAB. The Heater
 ### Air Purifier
 This service describes an air purifier accessory.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "airpurifier",
@@ -586,9 +593,9 @@ This service describes an air purifier accessory.
 ### Speaker
 This service is used to control the audio output settings on a speaker device.
 
-**Note:** Even though `Speaker` is part of Apple's HAP specification, this accessory is shown as "not supported" in the Home.app.
+**Note:** Even though `Speaker` is part of Apple's HAP specification, this accessory is shown as "not supported" in the Home app.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "speaker",
@@ -611,8 +618,8 @@ This service is used to control the audio output settings on a speaker device.
 ### Microphone
 This service is used to control the audio input settings on an audio device (primarily used for microphones).
 
-**Note:** Even though `Microphone` is part of Apple's HAP specification, this accessory is shown as "not supported" in the Home.app.
-```
+**Note:** Even though `Microphone` is part of Apple's HAP specification, this accessory is shown as "not supported" in the Home app.
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "microphone",
@@ -635,7 +642,7 @@ This service is used to control the audio input settings on an audio device (pri
 ### Valve
 This service describes a generic valve or a specific `Faucet`, `Irigation System` or `Showerhead`.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "valve",
@@ -666,7 +673,7 @@ This service describes a generic valve or a specific `Faucet`, `Irigation System
 ### Window Covering
 This service describes motorized window coverings or shades - examples include shutters, blinds, awnings etc.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "windowcovering", 
@@ -737,7 +744,7 @@ This service describes motorized window coverings or shades - examples include s
 ### Door 
 This service describes a motorized door
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "door", 
@@ -773,7 +780,7 @@ This service describes a motorized door
 ### Window
 This service describes a motorized window
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "window", 
@@ -809,7 +816,7 @@ This service describes a motorized window
 ### Lock Mechanism
 The HomeKit Lock Mechanism service is designed to expose and control the physical lock mechanism on a device.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "lock", 
@@ -833,7 +840,7 @@ The HomeKit Lock Mechanism service is designed to expose and control the physica
 ### Garage Door Opener 
 This service describes a garage door opener tat controls a single door. If a garage has more than one door, then each door should have its own Garage Door Opener Service.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "garage", 
@@ -879,17 +886,17 @@ This service describes a garage door opener tat controls a single door. If a gar
 ### Slat 
 This service describes a slat which tilts on a vertical or a horizontal axis.
 
-**Note:** Even though `Slat` is part of Apple's HAP specification, this accessory is shown as "not supported" in the Home.app.
+**Note:** Even though `Slat` is part of Apple's HAP specification, this accessory is shown as "not supported" in the Home app.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "slat",
     "stateItem": "Itemname-within-OpenHAB",
     "stateItemInverted": "false",
     "item": "Itemname-within-OpenHAB",
-    "itemRangeStart: "itemRangeStart",
-    "itemRangeEnd: "itemRangeEnd",
+    "itemRangeStart": "itemRangeStart",
+    "itemRangeEnd": "itemRangeEnd",
     "slatType": "horizontal"
 }
 ```
@@ -924,7 +931,7 @@ This service describes a slat which tilts on a vertical or a horizontal axis.
 ### Temperature Sensor
 This service describes a temperature sensor.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "temp",
@@ -955,7 +962,7 @@ This service describes a temperature sensor.
 ### Humidity Sensor
 This service describes a humidity sensor.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "humidity",
@@ -970,7 +977,7 @@ This service describes a humidity sensor.
 ### Light Sensor
 This service describes a light sensor.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "lux",
@@ -985,7 +992,7 @@ This service describes a light sensor.
 ### Air Quality Sensor
 This service describes an air quality sensor.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "air",
@@ -1005,7 +1012,7 @@ This service describes an air quality sensor.
 ### Switch
 This service describes a binary switch.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "switch",
@@ -1023,7 +1030,7 @@ This service describes a binary switch.
 ### Outlet
 This service describes an outlet.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "outlet",
@@ -1048,7 +1055,7 @@ This service describes an outlet.
 ### Motion Sensor
 This service describes a motion sensor.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "motion",
@@ -1065,7 +1072,7 @@ This service describes a motion sensor.
 ### Occupancy Sensor
 This service describes an occupancy sensor.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "occupancy",
@@ -1082,7 +1089,7 @@ This service describes an occupancy sensor.
 ### Leak Sensor
 This service describes a leak sensor.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "leak",
@@ -1099,7 +1106,7 @@ This service describes a leak sensor.
 ### Carbon Monoxide Sensor
 This service describes a carbon monoxide sensor.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "co",
@@ -1121,7 +1128,7 @@ This service describes a carbon monoxide sensor.
 ### Carbon Dioxide Sensor
 This service describes a carbon dioxide sensor.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "co2",
@@ -1143,7 +1150,7 @@ This service describes a carbon dioxide sensor.
 ### Contact Sensor
 This service describes a contact sensor.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "contact",
@@ -1160,7 +1167,7 @@ This service describes a contact sensor.
 ### Smoke Sensor
 This service describes a smoke sensor.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "smoke",
@@ -1177,7 +1184,7 @@ This service describes a smoke sensor.
 ### Filter Maintenance Sensor
 This service describes a filter maintenance sensor.
 
-```
+```json
 {
     "name": "An items name, as shown in Homekit later",
     "type": "filter",
@@ -1203,6 +1210,7 @@ Due to the very limited documentation on homebridge plugin development I have no
 
 If you have feedback or suggestions how to better represent the services as openHAB Items, feel free to open an [issue](https://github.com/steilerDev/homebridge-openhab2-complete/issues).
 
+### Contribute & Add new service/accessory
 If you would like to contribute just send me a pull request. In order to add a new service you have to modify/add the following parts:
 1. Create your own accessory class within `./accessory`
 2. The only *required* functions are `getServices()` (returning an array of `HAP.Service` with attached `HAP.Characteristic`) and `identify()` (which does not need to do anything). Those are implemented in the `Accessory` super class and don't need to be overridden. Make sure that `this._services` is populated and reflects your service
@@ -1210,6 +1218,31 @@ If you would like to contribute just send me a pull request. In order to add a n
 4. Finally expose `type` and `createAccessory` through `module.exports = {type, createAccessory}`
    
 My accessories are using centrally defined characteristics inside `./accessory/characteristic`. See `NumericSensor.js` for a simple characteristic implementation and `TemperatureSensor.js` for a simple accessory using this characteristic. This is not a requirement, but highly recommended. 
+
+### Connecting to HTTPS openHAB instances
+To connect to a server with a self-signed certificate, you have to add that certificate or your own Certificate Authority to NodeJS.
+
+When using Docker, this can be accomplished by putting the *.crt* file in a mounted directory (e.g. `/homebridge`) 
+and setting the Docker enviroment variable `NODE_EXTRA_CA_CERTS=/homebridge/ca.crt` (e.g. in `docker-compose.yml` under *environment*).
+
+Example `docker-compose.yml`:
+```yml
+version: '2'
+services:
+  homebridge:
+    image: oznu/homebridge:ubuntu
+    restart: always
+    network_mode: host
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - HOMEBRIDGE_CONFIG_UI=1
+      - HOMEBRIDGE_CONFIG_UI_PORT=8581
+      - TZ=Berlin/Germany
+      - NODE_EXTRA_CA_CERTS=/homebridge/CA.crt
+    volumes:
+      - ./data:/homebridge
+```
 
 # Acknowledgments
 First of all, a massive thank you to all the users of this plugin, seeing so many positive responses to my work keeps me going and improving!
