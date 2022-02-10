@@ -4,9 +4,10 @@
 ### V1.3.5 (to be released)
 * Removed `Faucet` and `Irrigation System` in favor of generic `Valve`
 * Added configuration options for HTTP(S) basic authentication
+* Swing item now read-write
 
 #### Issues
-* Closes 
+* Closes #105
 
 ### V1.3.4
 * Added option to change light behaviour with `sendOnOnlyWhenOff` option

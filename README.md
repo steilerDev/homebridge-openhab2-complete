@@ -432,7 +432,7 @@ This service describes a humidifier and/or dehumidifier accessory.
   
     *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `swingItem`: *(optional)* The openHAB item showing, if swing is active
-  * Needs to be of type `Switch` or `Contact` within openHAB
+  * Needs to be of type `Switch` within openHAB
 * `swingItemInverted` *(optional)*: If `swingItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
@@ -513,7 +513,7 @@ The Heater/Cooler implementation within HomeKit clashes with OpenHAB. The Heater
   
     *(Note: When using `Dimmer` or `Rollershutter` type and OpenHAB receives a non numeric command like `ON`, `OFF`, `INCREASE`, `DECREASE`, `UP` or `DOWN` this might lead to unexpected behaviour and/or non-responsive HomeKit items. This exception is not covered by this plugin and the user needs to ensure a consistent state)*
 * `swingItem`: *(optional)* The openHAB item showing, if swing is active
-  * Needs to be of type `Switch` or `Contact` within openHAB
+  * Needs to be of type `Switch` within openHAB
 * `swingItemInverted` *(optional)*: If `swingItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
@@ -572,7 +572,7 @@ This service describes an air purifier accessory.
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*
 * `swingItem`: *(optional)* The openHAB item showing, if swing is active
-  * Needs to be of type `Switch` or `Contact` within openHAB
+  * Needs to be of type `Switch` within openHAB
 * `swingItemInverted` *(optional)*: If `swingItem`'s state needs to be interpreted inverted, set this value to `"true"` 
   * Default: `"false"`
   * Allowed values: `"true"` & `"false"` *don't forget the quotes*

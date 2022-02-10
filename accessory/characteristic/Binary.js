@@ -112,7 +112,15 @@ function addSmokeDetectedCharacteristic(service) {
 }
 
 function addSwingModeCharacteristic(service, optional) {
-    addBinarySensorCharacteristic.bind(this)(service, service.getCharacteristic(this.Characteristic.SwingMode), {item: "swingItem", inverted: "swingItemInverted"}, optional);
+    let  = {item: "swingItem", inverted: "swingItemInverted"}
+    let inverted = this._checkInvertedConf(BINARY_CONFIG.inverted);
+    let transformation = {
+        "OFF": inverted ? 1 : 0,
+        "ON": inverted ? 0 : 1,
+        [inverted ? 0 : 1]: "ON",
+        [inverted ? 1 : 0]: "OFF"
+    };
+    addBinarySensorActorCharacteristicWithTransformation.bind(this)(service, service.getCharacteristic(this.Characteristic.SwingMode), SWING_CONFIG, transformation, optional);
 }
 
 function addObstructionDetectedCharacteristic(service, optional) {
