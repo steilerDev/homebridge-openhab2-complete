@@ -15,19 +15,19 @@
             "port": {
                 "title": "OpenHAB Port",
                 "type": "string",
-                "description": "*(optional)* If not specified the default port of the specified `host` protocol is used",
+                "description": "If not specified the default port of the specified `host` protocol is used",
                 "required": false
             },
             "username": {
                 "title": "OpenHAB Username",
                 "type": "string",
-                "description": "*(optional)* Username for HTTP(S) basic auth",
+                "description": "Username for HTTP(S) basic auth",
                 "required": false
             },
             "password": {
                 "title": "OpenHAB Password",
                 "type": "string",
-                "description": "*(optional)* Password for HTTP(S) basic auth",
+                "description": "Password for HTTP(S) basic auth",
                 "required": false
             },
             "accessories": {
@@ -36,12 +36,12 @@
                 "description": "An array of accessories exposed to HomeKit",
                 "required": true,
                 "items": [{
-                    "title": "Lightbulb",
+                    "title": "Accessory",
                     "type": "object",
-                    "description": "This service describes a lightbulb",
                     "properties": {
                         "type": {
                             "title": "The accessory type",
+                            "type": "string",
                             "oneOf": [
                                 { "title": "Lightbulb", "enum": ["light"] },
                                 { "title": "Fan", "enum": ["fan"] },
@@ -50,7 +50,7 @@
                             ]
                         },
                         "item": {
-                            "title": "The OpenHAB Item",
+                            "title": "The OpenHAB item name",
                             "type": "string",
                             "required": true
                         }
