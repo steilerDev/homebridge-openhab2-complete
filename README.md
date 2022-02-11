@@ -60,10 +60,10 @@ This is a platform plugin, that will register all accessories within the Bridge 
 ```
 * `platform` has to be `"openHAB2-Complete"`
 * `host`: The IP or hostname of your openHAB instance. The Protocol specifier (`http://`) is optional, defaults to `http://` (independent of the specified port)
-* `port`: *(optional)* If not specified the default port of the specified `host` protocol is used.
-* `username`: *(optional)* Username for HTTP(S) basic auth.
-* `password`: *(optional)* Password for HTTP(S) basic auth.
-* `accessory`: An array of accessories exposed to HomeKit, see the next chapter for available services and their configurations.
+* `port`: *(optional)* If not specified the default port of the specified `host` protocol is used
+* `username`: *(optional)* Username for HTTP(S) basic auth
+* `password`: *(optional)* Password for HTTP(S) basic auth
+* `accessory`: An array of accessories exposed to HomeKit, see the next chapter for available services and their configurations
 
 Alternatively you can group accessories of the same `type` in a sub-array:
 ```json
@@ -1252,6 +1252,7 @@ A couple of people helped me test this piece of software and by opening issues, 
 * Grzegorz (@grzegorz914) for providing quick feedback and opening a couple of helpful PR's
 * @EjvindHald for at least the same amount of feedback
 * @D-J-See and @DanielKnoop for adding OH3 support, way before I was thinking about migrating to the new version.
+* @florian-h05 for cleaning up my docs and adding HTTP(S) basic auth support
 * Honorable mentions for finding my bugs and opening great, helpful and responsive issues:
   * @hartmood
   * @maisun
