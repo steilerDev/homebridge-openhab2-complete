@@ -35,7 +35,7 @@
                 "type": "array",
                 "description": "An array of accessories exposed to HomeKit",
                 "required": true,
-                "items": [{
+                "items": {
                     "title": "Accessory",
                     "type": "object",
                     "properties": {
@@ -50,12 +50,22 @@
                             ]
                         },
                         "item": {
-                            "title": "The OpenHAB item name",
+                            "title": "OpenHAB item",
                             "type": "string",
                             "required": true
+                        },
+                        "sendOnOnlyWhenOff": {
+                            "title": "Send on only when off",
+                            "type": "string",
+                            "default": "true",
+                            "oneOf": [
+                                { "title": "True", "enum": ["true"]},
+                                { "title": "False", "enum": ["false"]}
+                            ],
+                            "description": "This addresses the different behaviour of lights as discussed in issue #57 and when enabled uses @weakfl 's proposed fix"
                         }
                     }
-                }]
+                }
             }
         }
     }
