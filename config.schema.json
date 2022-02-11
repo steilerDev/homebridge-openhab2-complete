@@ -62,6 +62,9 @@
                                 { "title": "True", "enum": ["true"]},
                                 { "title": "False", "enum": ["false"]}
                             ],
+                            "condition": {
+                                "functionBody": "return model.accessories[arrayIndices].type === 'light';"
+                            },
                             "description": "This addresses the different behaviour of lights as discussed in issue #57 and when enabled uses @weakfl 's proposed fix"
                         }
                     }
