@@ -63,8 +63,10 @@ class OpenHAB {
         }
         let url = {};
         url.public = newURL.href;
-        newURL.username = this._username;
-        newURL.password = this._password;
+        if (this._username && this._password) {
+            newURL.username = this._username;
+            newURL.password = this._password;
+        }
         url.href = newURL.href;
         return url;
     }
@@ -259,7 +261,7 @@ class OpenHAB {
             this._apiVersion = this.getOpenHABAPIVersion(); 
         }
         if(this._apiVersion >= 4) {
-            return 'openhab/items/';
+            return 'openhab/items/*';
         }
         else {
             return 'smarthome/items/';
@@ -282,7 +284,7 @@ class OpenHAB {
         source.onmessage = function (eventPayload) {
             let eventData = JSON.parse(eventPayload.data);
             if (eventData.type === "ItemStateChangedEvent") {
-                let item = eventData.topic.replace(this.getItemsTopic(), "").replace("/statechanged", "");
+                let item = eventData.topic.replace(this.getItemsTopic().replace("*", ""), "").replace("/statechanged", "");
                 let value = this._cleanOpenHABState(JSON.parse(eventData.payload).value);
 
                 if(this._subscriptions[item] !== undefined) {
