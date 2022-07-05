@@ -7,6 +7,11 @@ const BINARY_CONFIG = {
     inverted: "inverted"
 };
 
+const SWING_CONFIG = {
+    item: "swingItem",
+    inverted: "swingItemInverted"
+};
+
 const {CURRENT_TARGET_DOOR_CONFIG} = require('./CurrentTargetPositionDiscrete');
 
 
@@ -112,8 +117,7 @@ function addSmokeDetectedCharacteristic(service) {
 }
 
 function addSwingModeCharacteristic(service, optional) {
-    let  = {item: "swingItem", inverted: "swingItemInverted"}
-    let inverted = this._checkInvertedConf(BINARY_CONFIG.inverted);
+    let inverted = this._checkInvertedConf(SWING_CONFIG.inverted);
     let transformation = {
         "OFF": inverted ? 1 : 0,
         "ON": inverted ? 0 : 1,
