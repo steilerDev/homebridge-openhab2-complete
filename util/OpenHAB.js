@@ -247,7 +247,7 @@ class OpenHAB {
         let myURL = this._getURL(`/rest/`);
         const response = syncRequest('GET', myURL);
         if (response.statusCode !== 200) {
-            return new Error(`Unable to get item values: HTTP code ${response.statusCode}!`);
+            return new Error(`Unable to get openHAB API Version: HTTP code ${response.statusCode}!`);
         } else {
             const parsedBody = JSON.parse(response.body);
             let version = parseInt(parsedBody.version);

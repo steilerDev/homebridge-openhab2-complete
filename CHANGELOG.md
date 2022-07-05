@@ -1,10 +1,13 @@
 # Changelog of homebridge-openhab2-complete
 ## Changelog
 
-### V1.3.5 (to be released)
+### V1.3.5
 * Removed `Faucet` and `Irrigation System` in favor of generic `Valve`
 * Added configuration options for HTTP(S) basic authentication
+  * Making basic auth optional (Thanks @Matsuo3rd)
 * Swing item now read-write
+* Fixed swing item usage in Binary.js (Thanks @Matsuo3rd)
+* Complying with openHAB's correct event subscription filtering (see https://github.com/openhab/openhab-core/pull/2986, thanks @Matsuo3rd)
 
 #### Issues
 * Closes #105

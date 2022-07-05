@@ -1247,7 +1247,7 @@ services:
 # Acknowledgments
 First of all, a massive thank you to all the users of this plugin, seeing so many positive responses to my work keeps me going and improving!
 
-A couple of people helped me test this piece of software and by opening issues, pointing me into new and interesting directions and showing me ways to improve this plugin. A couple of them are very persistent and I want to thank you guys:
+A couple of people helped me test this piece of software, by opening issues, pointing me into new and interesting directions and showing me ways to improve this plugin. A couple of them are very persistent and I want to thank you guys:
 * Pieter Janssens (@piejanssens) for his [kind words on the openHAB community forum](https://community.openhab.org/t/homekit-holy-grail-homebridge-openhab2-complete/66167)
 * Grzegorz (@grzegorz914) for providing quick feedback and opening a couple of helpful PR's
 * @EjvindHald for at least the same amount of feedback
@@ -1258,3 +1258,4 @@ A couple of people helped me test this piece of software and by opening issues, 
   * @maisun
   * @apfelflo89
   * @CHTHSCH
+  * @Matsuo3rd
