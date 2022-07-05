@@ -1,0 +1,75 @@
+{
+    "pluginAlias": "openHAB2-Complete",
+    "pluginType": "platform",
+    "singular": false,
+    "headerDisplay": "A homebridge plugin for openHAB 2 and 3, that has the expectation to fully support all Services offered by Apple's Homekit Accessory Protocol (HAP)",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "host": {
+                "title": "OpenHAB Host",
+                "type": "string",
+                "description": "The IP or hostname of your openHAB instance. The Protocol specifier (`http://`) is optional, defaults to `http://` (independent of the specified port)",
+                "required": true
+            },
+            "port": {
+                "title": "OpenHAB Port",
+                "type": "string",
+                "description": "If not specified the default port of the specified `host` protocol is used",
+                "required": false
+            },
+            "username": {
+                "title": "OpenHAB Username",
+                "type": "string",
+                "description": "Username for HTTP(S) basic auth",
+                "required": false
+            },
+            "password": {
+                "title": "OpenHAB Password",
+                "type": "string",
+                "description": "Password for HTTP(S) basic auth",
+                "required": false
+            },
+            "accessories": {
+                "title": "OpenHAB Accessories",
+                "type": "array",
+                "description": "An array of accessories exposed to HomeKit",
+                "required": true,
+                "items": {
+                    "title": "Accessory",
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "title": "The accessory type",
+                            "type": "string",
+                            "oneOf": [
+                                { "title": "Lightbulb", "enum": ["light"] },
+                                { "title": "Fan", "enum": ["fan"] },
+                                { "title": "Security System", "enum": ["security"] },
+                                { "title": "Thermostat", "enum": ["thermostat"] }
+                            ]
+                        },
+                        "item": {
+                            "title": "OpenHAB item",
+                            "type": "string",
+                            "required": true
+                        },
+                        "sendOnOnlyWhenOff": {
+                            "title": "Send on only when off",
+                            "type": "string",
+                            "default": "true",
+                            "oneOf": [
+                                { "title": "True", "enum": ["true"]},
+                                { "title": "False", "enum": ["false"]}
+                            ],
+                            "condition": {
+                                "functionBody": "return model.accessories[arrayIndices].type === 'light';"
+                            },
+                            "description": "This addresses the different behaviour of lights as discussed in issue #57 and when enabled uses @weakfl 's proposed fix"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
