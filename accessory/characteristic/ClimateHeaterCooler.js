@@ -74,6 +74,13 @@ function addTargetHeaterCoolerStateCharacteristic(service) {
                 callback(null, mode);
             })
             .on('set', function(_, callback) { callback() }.bind(this));
+
+        if (mode == HEAT || mode == COOL) {
+            service.getCharacteristic(this.Characteristic.TargetHeaterCoolerState).setProps({
+                minValue: mode,
+                maxValue: mode
+            });
+        }
     }
 }
 
