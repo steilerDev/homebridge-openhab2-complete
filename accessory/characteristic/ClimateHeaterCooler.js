@@ -122,7 +122,7 @@ function _getHeaterCoolerState(mode, heatingItem, coolingItem, callback) {
             }, callback);
             break;
         case "cooling":
-            getState.bind(this, coolingItem, {
+            getState.bind(this)(coolingItem, {
                 "ON": COOLING,
                 "OFF": IDLE
             }, callback);
