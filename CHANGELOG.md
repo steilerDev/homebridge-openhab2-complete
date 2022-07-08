@@ -1,6 +1,9 @@
 # Changelog of homebridge-openhab2-complete
 ## Changelog
 
+### V1.3.6 (unreleased)
+* Hide unnecessary Heater Cooler modes (Thanks @Matsuo3rd)
+
 ### V1.3.5
 * Removed `Faucet` and `Irrigation System` in favor of generic `Valve`
 * Added configuration options for HTTP(S) basic authentication
