@@ -76,6 +76,13 @@ function addTargetHumidifierDehumidifierStateCharacteristic(service) {
                 callback(null, mode);
             })
             .on('set', function(_, callback) { callback() }.bind(this));
+
+        if (mode == HUMIDIFIER || mode == DEHUMIDIFIER) {
+            service.getCharacteristic(this.Characteristic.TargetHumidifierDehumidifierState).setProps({
+                minValue: mode,
+                maxValue: mode
+            });
+        }
     }
 }
 
@@ -83,7 +90,7 @@ function _transformHumidifierDehumidifierState(thisItemMode, characteristic, val
     let INACTIVE = 0;       // = Characteristic.CurrentHumidifierDehumidifierState.INACTIVE
     let IDLE = 1;           // = Characteristic.CurrentHumidifierDehumidifierState.IDLE
     let HUMIDIFYING = 2;    // = Characteristic.CurrentHumidifierDehumidifierState.HUMIDIFYING
-    let DEHUMIDIFYING = 2;  // = Characteristic.CurrentHumidifierDehumidifierState.DEHUMIDIFYING
+    let DEHUMIDIFYING = 3;  // = Characteristic.CurrentHumidifierDehumidifierState.DEHUMIDIFYING
 
     let currentState = characteristic.value;
 
@@ -124,7 +131,7 @@ function _getHumidifierDehumidifierState(mode, humidifierItem, dehumidifierItem,
             }, callback);
             break;
         case "dehumidify":
-            getState.bind(this, dehumidifierItem, {
+            getState.bind(this)(dehumidifierItem, {
                 "ON": DEHUMIDIFYING,
                 "OFF": IDLE
             }, callback);
