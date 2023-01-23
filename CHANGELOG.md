@@ -4,6 +4,7 @@
 ### V1.3.6 (unreleased)
 * Hide unnecessary Heater Cooler modes (Thanks @Matsuo3rd)
 * Fix minTemp & maxTemp scaling (Thanks @Matsuo3rd)
+* Misc. fixes on humidifier / dehumidifier (Thanks @Matsuo3rd)
 
 ### V1.3.5
 * Removed `Faucet` and `Irrigation System` in favor of generic `Valve`
